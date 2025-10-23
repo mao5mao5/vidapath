@@ -177,6 +177,32 @@ export default {
     },
 
     async endDraw(drawnFeature) {
+      // 为临时注释生成唯一ID
+      const tempId = 'temp_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+      
+      // 创建临时的注释对象，用于立即显示
+      let tempAnnot = new Annotation({
+        id: tempId,
+        location: this.getWktLocation(drawnFeature),
+        image: this.image.id,
+        slice: this.slice.id,
+        user: this.activeLayers[0].id,
+        term: this.termsToAssociate,
+        track: this.tracksToAssociate
+      });
+      
+      // 添加状态标识
+      tempAnnot.isTemporary = true;
+      tempAnnot.isSaving = true;
+
+      // 立即在画布上显示注释，提升用户体验
+      this.$eventBus.$emit('addAnnotation', tempAnnot);
+      this.$eventBus.$emit('selectAnnotation', {index: this.index, annot: tempAnnot});
+      
+      // 清除绘制的临时图形
+      this.clearDrawnFeatures();
+
+      // 在后台异步保存到服务器
       this.activeLayers.forEach(async (layer, idx) => {
         let annot = new Annotation({
           location: this.getWktLocation(drawnFeature),
@@ -192,17 +218,31 @@ export default {
           annot.userByTerm = this.termsToAssociate.map(term => ({term, user: [this.currentUser.id]}));
           annot.imageGroup = this.imageGroupId;
           updateAnnotationLinkProperties(annot);
-          this.$eventBus.$emit('addAnnotation', annot);
+          
+          // 发送事件替换临时注释
+          this.$eventBus.$emit('replaceTemporaryAnnotation', {
+            tempId: tempId,
+            savedAnnot: annot
+          });
+          
           if (idx === this.nbActiveLayers - 1) {
+            // 确保最后一个图层的注释被选中
             this.$eventBus.$emit('selectAnnotation', {index: this.index, annot});
           }
 
           this.$store.commit(this.imageModule + 'addAction', {annot, type: Action.CREATE});
         } catch (err) {
           console.log(err);
+          // 通知注释保存失败，更新UI状态
+          this.$eventBus.$emit('annotationSaveFailed', {
+            tempId: tempId,
+            annot: annot, // 传递原始注释用于重试
+            error: err
+          });
           this.$notify({type: 'error', text: this.$t('notif-error-annotation-creation')});
         }
 
+        // SAM处理保持不变
         if (this.activeTool === 'magic-wand') {
           try {
             const annotationId = annot.id;
@@ -214,6 +254,40 @@ export default {
           }
         }
       });
+    },
+
+    // 添加重试保存方法
+    async retrySaveAnnotation(annot) {
+      try {
+        // 显示重试中状态
+        annot.isSaving = true;
+        annot.saveFailed = false;
+        this.$eventBus.$emit('editAnnotation', annot);
+        
+        // 重新保存注释
+        await annot.save();
+        
+        // 更新注释信息
+        annot.userByTerm = this.termsToAssociate.map(term => ({term, user: [this.currentUser.id]}));
+        annot.imageGroup = this.imageGroupId;
+        updateAnnotationLinkProperties(annot);
+        
+        // 发送事件替换临时注释
+        this.$eventBus.$emit('replaceTemporaryAnnotation', {
+          tempId: annot.id,
+          savedAnnot: annot
+        });
+        
+        this.$store.commit(this.imageModule + 'addAction', {annot, type: Action.CREATE});
+        this.$notify({type: 'success', text: this.$t('notif-success-annotation-creation')});
+      } catch (err) {
+        console.log(err);
+        // 保存失败，更新状态
+        annot.isSaving = false;
+        annot.saveFailed = true;
+        this.$eventBus.$emit('editAnnotation', annot);
+        this.$notify({type: 'error', text: this.$t('notif-error-annotation-creation')});
+      }
     },
 
     async endCorrection(feature) {

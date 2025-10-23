@@ -289,6 +289,33 @@ export default {
         return;
       }
 
+      // 添加对临时注释的特殊样式处理
+      if (annot.isTemporary) {
+        // 为临时注释添加虚线边框样式
+        let tempStyle = state.style.defaultStyle.clone();
+        let stroke = tempStyle.getStroke();
+        if (stroke) {
+          stroke.setLineDash([5, 5]); // 虚线样式
+          stroke.setWidth(3);
+        }
+        let fill = tempStyle.getFill();
+        if (fill) {
+          // 降低填充透明度
+          let color = fill.getColor();
+          color[3] = 0.3; // 更透明
+          fill.setColor(color);
+        }
+        
+        let styles = [tempStyle];
+        
+        // 如果保存失败，添加特殊标识
+        if (annot.saveFailed) {
+          styles.push(createTextStyle('!', '22px', new Fill({color: '#ff0000'}), null));
+        }
+        
+        return styles;
+      }
+
       // QUESTION: what to do with clusters (returned count does not take into account the selected terms) ?
       // Possible solutions:
       // 1. in backend, for clusters, send array with composition of cluster (x for term 1, y for term 2, z for term1-2)

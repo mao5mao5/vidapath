@@ -179,6 +179,43 @@ export default {
         }
       }
     },
+    
+    replaceTemporaryAnnotationHandler({ tempId, savedAnnot }) {
+      // 查找并替换临时注释
+      if (this.$refs.olSource) {
+        let tempFeature = this.$refs.olSource.getFeatureById(tempId);
+        if (tempFeature) {
+          // 移除临时注释
+          this.$refs.olSource.removeFeature(tempFeature);
+        }
+        
+        // 添加保存后的注释
+        if (this.annotBelongsToLayer(savedAnnot)) {
+          this.$refs.olSource.addFeature(this.createFeature(savedAnnot));
+        }
+      }
+    },
+    
+    annotationSaveFailedHandler({ tempId, annot, error }) {
+      // 处理注释保存失败的情况
+      if (this.$refs.olSource) {
+        let tempFeature = this.$refs.olSource.getFeatureById(tempId);
+        if (tempFeature) {
+          // 为失败的注释添加标识
+          let featureAnnot = tempFeature.get('annot');
+          if (featureAnnot) {
+            featureAnnot.saveFailed = true;
+            featureAnnot.errorMessage = error.message || 'Failed to save annotation';
+            featureAnnot.originalAnnot = annot; // 保存原始注释用于重试
+            tempFeature.set('annot', featureAnnot);
+            
+            // 触发重渲染
+            this.$refs.olSource.changed();
+          }
+        }
+      }
+    },
+
     deleteAnnotationHandler(annot) {
       if (this.annotBelongsToLayer(annot) && this.$refs.olSource) {
         let olFeature = this.$refs.olSource.getFeatureById(annot.id);
@@ -385,6 +422,8 @@ export default {
     this.$eventBus.$on('reviewAnnotation', this.reviewAnnotationHandler);
     this.$eventBus.$on('editAnnotation', this.editAnnotationHandler);
     this.$eventBus.$on('deleteAnnotation', this.deleteAnnotationHandler);
+    this.$eventBus.$on('replaceTemporaryAnnotation', this.replaceTemporaryAnnotationHandler);
+    this.$eventBus.$on('annotationSaveFailed', this.annotationSaveFailedHandler);
   },
   beforeDestroy() {
     // unsubscribe from all events
@@ -394,6 +433,8 @@ export default {
     this.$eventBus.$off('reviewAnnotation', this.reviewAnnotationHandler);
     this.$eventBus.$off('editAnnotation', this.editAnnotationHandler);
     this.$eventBus.$off('deleteAnnotation', this.deleteAnnotationHandler);
+    this.$eventBus.$off('replaceTemporaryAnnotation', this.replaceTemporaryAnnotationHandler);
+    this.$eventBus.$off('annotationSaveFailed', this.annotationSaveFailedHandler);
   }
 };
 </script>
