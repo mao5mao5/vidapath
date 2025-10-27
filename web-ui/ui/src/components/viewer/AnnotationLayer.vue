@@ -180,7 +180,7 @@ export default {
       }
     },
     
-    replaceTemporaryAnnotationHandler({ tempId, savedAnnot }) {
+    replaceTemporaryAnnotationHandler({tempId, savedAnnot}) {
       // 查找并替换临时注释
       if (this.$refs.olSource) {
         let tempFeature = this.$refs.olSource.getFeatureById(tempId);
@@ -196,7 +196,7 @@ export default {
       }
     },
     
-    annotationSaveFailedHandler({ tempId, annot, error }) {
+    annotationSaveFailedHandler({tempId, annot, error}) {
       // 处理注释保存失败的情况
       if (this.$refs.olSource) {
         let tempFeature = this.$refs.olSource.getFeatureById(tempId);
