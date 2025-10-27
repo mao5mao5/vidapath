@@ -310,7 +310,7 @@ export default {
         
         // 如果保存失败，添加特殊标识
         if (annot.saveFailed) {
-          styles.push(createTextStyle('!', '22px', new Fill({color: '#ff0000'}), null));
+          styles.push(createTextStyle('!', '22px', new fill({color: '#ff0000'}), null));
         }
         
         return styles;
