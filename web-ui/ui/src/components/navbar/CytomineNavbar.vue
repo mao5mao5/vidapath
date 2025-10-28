@@ -16,7 +16,10 @@
 <nav class="navbar is-light" role="navigation">
   <div class="navbar-brand">
     <router-link to="/" exact class="navbar-item">
-      <img src="@/assets/logo.svg" id="logo" alt="Cytomine">
+      <div class="logo-container">
+        <img src="@/assets/icon.svg" id="logo" alt="VidaPath">
+        <h1>VidaPath</h1>
+      </div>
     </router-link>
     <a role="" class="navbar-burger" :class="{'is-active':openedTopMenu}" @click="openedTopMenu=!openedTopMenu">
       <span></span> <span></span> <span></span>
@@ -39,7 +42,7 @@
         <i class="fas fa-download"></i>
         {{ $t('storage') }}
       </router-link>
-      <router-link to="/ontology" class="navbar-item">
+      <!-- <router-link to="/ontology" class="navbar-item">
         <i class="fas fa-hashtag"></i>
         {{ $t('ontologies') }}
       </router-link>
@@ -50,7 +53,7 @@
       <router-link v-if="currentUser.adminByNow" to="/admin" class="navbar-item">
         <i class="fas fa-wrench"></i>
         {{ $t('admin-menu') }}
-      </router-link>
+      </router-link> -->
     </div>
 
     <div class="navbar-end">
@@ -194,6 +197,11 @@ export default {
 </script>
 
 <style lang="scss">
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
 #logo {
   height: 2rem;
   font-family: "cytomine";
