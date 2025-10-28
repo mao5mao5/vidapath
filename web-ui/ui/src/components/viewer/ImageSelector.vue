@@ -177,12 +177,27 @@ export default {
     }, 500),
     async addImage(image) {
       try {
-        await image.fetch(); // refetch image to ensure we have latest version
-        let slice = await image.fetchReferenceSlice();
-        await this.$store.dispatch(this.viewerModule + 'addImage', {image, slices: [slice]});
+        // 检查图像是否已经添加到查看器中
+        let existingImageIndex = this.viewerImagesIds.indexOf(image.id);
+        if (existingImageIndex !== -1) {
+          // 如果图像已经存在，切换到该图像
+          let imageIndexes = Object.keys(this.$store.getters['currentProject/currentViewer'].images);
+          let imageIndex = imageIndexes.find(index => 
+            this.$store.getters['currentProject/currentViewer'].images[index].imageInstance.id === image.id
+          );
+          this.$store.commit(this.viewerModule + 'setActiveImage', imageIndex);
+          this.imageSelectorEnabled = false;
+        } else {
+          // 如果图像不存在，替换当前活动图像
+          await image.fetch(); // refetch image to ensure we have latest version
+          let slice = await image.fetchReferenceSlice();
+          let activeImageIndex = this.$store.getters['currentProject/currentViewer'].activeImage;
+          await this.$store.dispatch(`${this.viewerModule}images/${activeImageIndex}/setImageInstance`, {image, slices: [slice]});
+          this.imageSelectorEnabled = false;
+        }
       } catch (error) {
         console.log(error);
-        this.$notify({type: 'error', text: this.$t('notif-error-add-viewer-image')});
+        // this.$notify({type: 'error', text: this.$t('notif-error-add-viewer-image')});
       }
     },
     async fetchImages(loading = true) {

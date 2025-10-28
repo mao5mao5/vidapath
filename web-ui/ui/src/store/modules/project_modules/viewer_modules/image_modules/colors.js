@@ -150,19 +150,19 @@ export default {
   },
 
   actions: {
-    async initialize({commit, dispatch}, {image, slices}) {
+    async initialize({commit}, {image}) {
       commit('setIdImage', image.id);
       commit('setNbBitsPerSample', image.bitPerSample);
       commit('setNbSamplesPerChannel', image.samplePerPixel);
-      await dispatch('refreshApparentChannels', {image});
-      let channels = slices.map(slice => slice.channel);
-      commit('setChannelsVisibility', channels);
+      // await dispatch('refreshApparentChannels', {image});
+      // let channels = slices.map(slice => slice.channel);
+      // commit('setChannelsVisibility', channels);
     },
-    async setImageInstance({commit, dispatch}, {image}) {
+    setImageInstance({commit}, {image}) {
       commit('setIdImage', image.id);
       commit('setNbBitsPerSample', image.bitPerSample);
       commit('setNbSamplesPerChannel', image.samplePerPixel);
-      await dispatch('refreshApparentChannels', {image});
+      // await dispatch('refreshApparentChannels', {image});
     },
     async refreshApparentChannels({commit}, {image}) {
       let apparentChannels = formatApparentChannels(
