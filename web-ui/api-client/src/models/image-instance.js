@@ -332,9 +332,9 @@ export default class ImageInstance extends Model {
   }
 
   async fetchChannelHistogramBounds() {
-    if (this.isNew()) {
-      throw new Error('Cannot get channel histogram bounds for an image with no ID.');
-    }
+    // if (this.isNew()) {
+    //   throw new Error('Cannot get channel histogram bounds for an image with no ID.');
+    // }
 
     let {data} = await Cytomine.instance.api.get(`${this.callbackIdentifier}/${this.id}/channelhistogram/bounds.json`);
     return data.collection;

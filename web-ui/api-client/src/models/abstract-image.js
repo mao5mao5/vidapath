@@ -142,9 +142,9 @@ export default class AbstractImage extends Model {
    * @returns {Array<sample: Number, min: Number, max: Number>} The histogram statistics
    */
   async fetchHistogramStats() {
-    if (this.isNew()) {
-      throw new Error('Cannot get histogram statistics for an abstract image with no ID.');
-    }
+    // if (this.isNew()) {
+    //   throw new Error('Cannot get histogram statistics for an abstract image with no ID.');
+    // }
 
     if (!this._histogramStats) {
       let {data} = await Cytomine.instance.api.get(`${this.callbackIdentifier}/${this.id}/histogram/stats.json`);

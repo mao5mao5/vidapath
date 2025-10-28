@@ -68,9 +68,9 @@ export default class SliceInstance extends Model {
   }
 
   async fetchChannelHistogramBounds() {
-    if (this.isNew()) {
-      throw new Error('Cannot get channel histogram bounds for a slice with no ID.');
-    }
+    // if (this.isNew()) {
+    //   throw new Error('Cannot get channel histogram bounds for a slice with no ID.');
+    // }
 
     let {data} = await Cytomine.instance.api.get(`${this.callbackIdentifier}/${this.id}/channelhistogram/bounds.json`);
     return data.collection;
