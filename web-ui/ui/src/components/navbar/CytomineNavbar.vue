@@ -27,13 +27,13 @@
   </div>
   <div id="topMenu" class="navbar-menu" :class="{'is-active':openedTopMenu}">
     <div class="navbar-start">
-      <navbar-dropdown
+      <!-- <navbar-dropdown
       icon="fa-folder-open"
       v-if="this.nbActiveProjects > 0"
       :title="$t('workspace')"
       :listPathes="['/project/']">
         <navigation-tree />
-      </navbar-dropdown>
+      </navbar-dropdown> -->
       <router-link to="/projects" class="navbar-item">
         <i class="fas fa-list-alt"></i>
         {{ $t('projects') }}
@@ -57,9 +57,9 @@
     </div>
 
     <div class="navbar-end">
-      <cytomine-searcher />
+      <!-- <cytomine-searcher /> -->
       <!-- TODO IAM -->
-      <navbar-dropdown
+      <!-- <navbar-dropdown
         :icon="currentUser.adminByNow ? 'fa-star' : 'fa-user'"
         :title="currentUser.fullName"
         :tag="currentUser.adminByNow ? {type: 'is-danger', text: $t('admin')} : null"
@@ -82,15 +82,15 @@
         <a class="navbar-item" @click="logout()">
           <span class="icon"><i class="fas fa-power-off fa-xs"></i></span> {{ $t('logout') }}
         </a>
-      </navbar-dropdown>
+      </navbar-dropdown> -->
 
       <navbar-dropdown icon="fa-question-circle" :title="$t('help')" :classes="['is-right']">
         <a class="navbar-item" @click="openHotkeysModal()">
           <span class="icon"><i class="far fa-keyboard fa-xs"></i></span> {{$t('shortcuts')}}
         </a>
-        <a class="navbar-item" @click="openAboutModal()">
+        <!-- <a class="navbar-item" @click="openAboutModal()">
           <span class="icon"><i class="fas fa-info-circle fa-xs"></i></span> {{$t('about-cytomine')}}
-        </a>
+        </a> -->
       </navbar-dropdown>
     </div>
   </div>
@@ -196,7 +196,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .logo-container {
   display: flex;
   align-items: center;
@@ -221,9 +221,35 @@ export default {
 .navbar {
   font-weight: 600;
   z-index: 500 !important;
+  background-color: #041646 !important; /*藏蓝色背景*/
+  color: white !important;
 
   .fas, .far {
     padding-right: 0.5rem;
+  }
+  
+  .navbar-item, .navbar-link {
+    background-color: #031340 !important; /* 悬停时保持藏蓝色 */
+    color: white !important;
+  }
+  
+  .navbar-item:hover, .navbar-link:hover {
+    background-color: #031340 !important; /* 悬停时保持藏蓝色 */
+    color: white !important;
+  }
+  
+  .navbar-dropdown .navbar-item:hover {
+    background-color: #031340 !important; /* 下拉菜单项悬停时稍微亮一点的蓝色 */
+    color: white !important;
+  }
+  
+  .navbar-burger {
+    color: white !important;
+  }
+  
+  .navbar-burger:hover {
+    background-color: #1E3A8A !important;
+    color: white !important;
   }
 }
 </style>

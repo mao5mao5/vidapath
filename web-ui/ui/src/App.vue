@@ -185,7 +185,7 @@ body {
   height: 100%;
   width: 100%;
   flex-direction: column;
-  background: #d4d4d4;
+  background: #010317;
 }
 
 .box.error {
