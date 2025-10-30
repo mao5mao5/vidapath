@@ -65,7 +65,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 LABEL org.opencontainers.image.authors="uliege@cytomine.org" \
       org.opencontainers.image.url="https://uliege.cytomine.org/" \
       org.opencontainers.image.documentation="https://doc.uliege.cytomine.org/" \
-      org.opencontainers.image.source="https://github.com/cytomine/cytomine" \
+      org.opencontainers.image.source="https://github.com/mao5mao5/cytomine" \
       org.opencontainers.image.vendor="Cytomine ULiège"
 
 CMD ["fastapi", "run", "app/main.py"]

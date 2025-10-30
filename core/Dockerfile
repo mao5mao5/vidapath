@@ -66,7 +66,7 @@ ARG OPENJDK_VERSION
 LABEL org.opencontainers.image.authors="dev@cytomine.com" \
       org.opencontainers.image.url="https://uliege.cytomine.org/" \
       org.opencontainers.image.documentation="https://doc.uliege.cytomine.org/" \
-      org.opencontainers.image.source="https://github.com/cytomine/Cytomine-core" \
+      org.opencontainers.image.source="https://github.com/mao5mao5/Cytomine-core" \
       org.opencontainers.image.vendor="Cytomine ULiège" \
       org.opencontainers.image.version="${CORE_VERSION}" \
       org.opencontainers.image.revision="${CORE_REVISION}" \

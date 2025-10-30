@@ -12,7 +12,7 @@ keywords:
   - whole-slide-imaging
 home: https://uliege.cytomine.org/
 sources:
-  - https://github.com/cytomine/cytomine
+  - https://github.com/mao5mao5/cytomine
 maintainers:
   - name: Cytomine ULiège
     email: uliege@cytomine.org

@@ -54,7 +54,7 @@ ARG NGINX_VERSION
 LABEL org.opencontainers.image.authors='support@cytomine.com' \
       org.opencontainers.image.url='https://www.cytomine.org/' \
       org.opencontainers.image.documentation='https://doc.cytomine.org/' \
-      org.opencontainers.image.source='https://github.com/cytomine/Cytomine-nginx/' \
+      org.opencontainers.image.source='https://github.com/mao5mao5/Cytomine-nginx/' \
       org.opencontainers.image.vendor='Cytomine Corporation SA' \
       org.opencontainers.image.version=${IMAGE_VERSION} \
       org.opencontainers.image.revision=${IMAGE_REVISION} \

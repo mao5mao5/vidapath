@@ -100,7 +100,7 @@ RUN python plugins.py \
 LABEL org.opencontainers.image.authors='uliege@cytomine.org' \
       org.opencontainers.image.url='https://uliege.cytomine.org/' \
       org.opencontainers.image.documentation='https://doc.uliege.cytomine.org/' \
-      org.opencontainers.image.source='https://github.com/cytomine/cytomine/tree/main/pims' \
+      org.opencontainers.image.source='https://github.com/mao5mao5/cytomine/tree/main/pims' \
       org.opencontainers.image.vendor='Cytomine ULiege' \
       org.opencontainers.image.deps.openjpeg.url=${OPENJPEG_URL} \
       org.opencontainers.image.deps.openjpeg.version=${OPENJPEG_VERSION} \

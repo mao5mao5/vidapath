@@ -62,7 +62,7 @@ ARG UBI_VERSION
 LABEL org.opencontainers.image.authors="uliege@cytomine.org" \
     org.opencontainers.image.url="https://uliege.cytomine.org/" \
     org.opencontainers.image.documentation="https://doc.uliege.cytomine.org/" \
-    org.opencontainers.image.source="https://github.com/cytomine/cytomine/tree/main/iam" \
+    org.opencontainers.image.source="https://github.com/mao5mao5/cytomine/tree/main/iam" \
     org.opencontainers.image.vendor="Cytomine ULiège" \
     org.opencontainers.image.version="${IMAGE_VERSION}" \
     org.opencontainers.image.revision="${IMAGE_REVISION}" \

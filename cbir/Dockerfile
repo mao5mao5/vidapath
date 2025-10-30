@@ -65,7 +65,7 @@ ARG CBIR_REVISION
 LABEL org.opencontainers.image.authors="uliege@cytomine.org" \
       org.opencontainers.image.url="https://uliege.cytomine.org/" \
       org.opencontainers.image.documentation="https://doc.uliege.cytomine.org/" \
-      org.opencontainers.image.source="https://github.com/cytomine/cytomine" \
+      org.opencontainers.image.source="https://github.com/mao5mao5/cytomine" \
       org.opencontainers.image.vendor="Cytomine ULiege" \
       org.opencontainers.image.version="${CBIR_VERSION}" \
       org.opencontainers.image.revision="${CBIR_REVISION}"
