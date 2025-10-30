@@ -21,7 +21,7 @@ function getDefaultState() {
   return {
     user: null,
     account: null,
-    expandedSidebar: true,
+    expandedSidebar: false,
     increment: 0,
     shortTermToken: null
   };

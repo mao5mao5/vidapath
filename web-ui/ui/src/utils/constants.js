@@ -19,7 +19,7 @@ export default {
   DIGITAL_ZOOM_INCREMENT: 4,
   // features switches
   APPENGINE_ENABLED: false,
-  PRELOADED_SLICES: 50,
+  PRELOADED_SLICES: 200,
   MAX_MERGEABLE_CHANNELS: 36,
   // Refresh intervals (expressed in milliseconds)
   VIEWER_ANNOTATIONS_REFRESH_INTERVAL: 10000,

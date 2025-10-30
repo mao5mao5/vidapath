@@ -14,7 +14,7 @@
 
 <template>
 <div class="sidebar-wrapper" :class="{expanded: expanded}" ref="sidebar">
-  <nav class="sidebar" @click="clickHandler">
+  <nav class="sidebar">
     <h1 class="project-name">{{`${$t('project')}: ${project.name}`}}</h1>
     <ul>
       <template v-if="isTabDisplayed('images')">
@@ -25,7 +25,7 @@
           </a>
         </router-link>
       </template>
-      <router-link v-if="isTabDisplayed('image-groups')" tag="li" :to="`/project/${project.id}/image-groups`">
+      <!-- <router-link v-if="isTabDisplayed('image-groups')" tag="li" :to="`/project/${project.id}/image-groups`">
         <a>
           <i class="far fa-images"></i>
           {{ $t('image-groups') }}
@@ -48,21 +48,21 @@
           <i class="fas fa-info-circle"></i>
           {{ $t('information') }}
         </a>
-        </router-link>
+        </router-link> -->
     </ul>
     <ul class="bottom-menu">
-      <router-link v-if="isTabDisplayed('configuration')" tag="li" :to="`/project/${project.id}/configuration`">
+      <!-- <router-link v-if="isTabDisplayed('configuration')" tag="li" :to="`/project/${project.id}/configuration`">
         <a>
           <i class="fas fa-cogs"></i>
           {{ $t('configuration') }}
         </a>
-      </router-link>
+      </router-link> -->
     </ul>
   </nav>
 
-  <div class="arrow-sidebar" @click="expanded = false">
+  <!-- <div class="arrow-sidebar" @click="expanded = false">
     <i></i>
-  </div>
+  </div> -->
 </div>
 </template>
 

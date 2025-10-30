@@ -835,7 +835,7 @@ export default {
 <style lang="scss">
 @import '~vuelayers/lib/style.css';
 
-$backgroundPanelBar: #555;
+$backgroundPanelBar: #030124;
 $widthPanelBar: 2.8rem;
 $backgroundPanel: #f2f2f2;
 $colorPanelLink: #eee;

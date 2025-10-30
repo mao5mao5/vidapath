@@ -15,7 +15,7 @@
 <template>
 <nav class="navbar is-light" role="navigation">
   <div class="navbar-brand">
-    <router-link to="/" exact class="navbar-item">
+    <router-link to="/projects" exact class="navbar-item">
       <div class="logo-container">
         <img src="@/assets/icon.svg" id="logo" alt="VidaPath">
         <h1>VidaPath</h1>
@@ -84,14 +84,14 @@
         </a>
       </navbar-dropdown> -->
 
-      <navbar-dropdown icon="fa-question-circle" :title="$t('help')" :classes="['is-right']">
+      <!-- <navbar-dropdown icon="fa-question-circle" :title="$t('help')" :classes="['is-right']">
         <a class="navbar-item" @click="openHotkeysModal()">
           <span class="icon"><i class="far fa-keyboard fa-xs"></i></span> {{$t('shortcuts')}}
         </a>
-        <!-- <a class="navbar-item" @click="openAboutModal()">
+        <a class="navbar-item" @click="openAboutModal()">
           <span class="icon"><i class="fas fa-info-circle fa-xs"></i></span> {{$t('about-cytomine')}}
-        </a> -->
-      </navbar-dropdown>
+        </a>
+      </navbar-dropdown> -->
     </div>
   </div>
   <div class="hidden" v-shortkey.once="openHotkeysModalShortcut" @shortkey="openHotkeysModal"></div>
@@ -200,6 +200,7 @@ export default {
 .logo-container {
   display: flex;
   align-items: center;
+  height: 30px;
 }
 
 #logo {

@@ -29,7 +29,7 @@ import PageNotFound from './components/PageNotFound.vue';
 const routes = [
   {
     path: '/',
-    component: GlobalDashboard,
+    component: ListProjects,
   },
   {
     path: '/projects',
