@@ -103,15 +103,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$background: #444;
-$activeBackground: #4f4f4f;
-$hoverBackground: #82aad8;
+$background: #030124;
+$activeBackground: #021035;
+$hoverBackground: #032a57;
 $color: #ccc;
 $activeColor: #eee;
 $hoverColor: white;
-$arrowBackground: #484848;
-$border: #383838;
-$arrowColor: #888;
+$arrowBackground: #020a4a;
+$border: #0b0b98;
+$arrowColor: #f6f2f2;
 
 .sidebar-wrapper {
   display: flex;

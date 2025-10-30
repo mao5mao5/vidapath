@@ -24,8 +24,7 @@
   </div>
 
   <div class="scale-line-position" v-if="mousePosition">
-    <div style="float: left;">x: {{Math.round(mousePosition[0])}}</div>
-    <div>y: {{Math.round(mousePosition[1])}}</div>
+    <div style="float: left;">x: {{Math.round(mousePosition[0])}}, y:{{Math.round(mousePosition[1])}}</div>
   </div>
 </div>
 </template>
@@ -74,13 +73,13 @@ export default {
 
 <style scoped>
 .scale-line {
-  background: white;
+  background: rgba(255, 255, 255, 0.8);
   position: absolute;
   padding: 0.4em 0.8em;
   display: block;
   right: 4rem;
   bottom: 1rem;
-  font-size: 9px;
+  font-size: 0.8em;
   font-family: Helvetica;
   min-width: 100px;
 }

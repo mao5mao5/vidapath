@@ -82,7 +82,7 @@
           </button>
         </td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td colspan="2" class="buttons-wrapper">
           <div class="buttons">
             <button v-if="canEdit" class="button is-small" @click="calibrationModal = true">
@@ -96,8 +96,8 @@
             </a>
           </div>
         </td>
-      </tr>
-      <tr>
+      </tr> -->
+      <!-- <tr>
         <td colspan="2" class="buttons-wrapper">
           <div class="buttons navigation has-addons">
             <button class="button is-small" @click="previousImage()" :disabled="isFirstImage">
@@ -108,8 +108,8 @@
             </button>
           </div>
         </td>
-      </tr>
-      <tr v-if="hasGroup">
+      </tr> -->
+      <!-- <tr v-if="hasGroup">
         <td colspan="2" class="buttons-wrapper">
           <div class="buttons navigation has-addons">
             <button class="button is-small" @click="previousImageInGroup()">
@@ -120,7 +120,7 @@
             </button>
           </div>
         </td>
-      </tr>
+      </tr> -->
     </tbody>
   </table>
 

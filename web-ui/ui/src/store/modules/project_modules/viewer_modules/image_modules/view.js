@@ -20,7 +20,7 @@ export default {
       zoom: null, // will be initialized to appropriate value (depending on container size) in CytomineImage
       center: [0, 0],
       rotation: 0,
-      digitalZoom: true,
+      digitalZoom: false,
       overviewCollapsed: false,
       highlighted: false,
       scaleLineCollapsed: false,

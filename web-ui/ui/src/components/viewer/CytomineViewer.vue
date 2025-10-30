@@ -20,11 +20,6 @@
 </div>
 <div v-else class="cytomine-viewer">
   <b-loading :is-full-page="false" :active="loading" />
-
-  <div class="ae-sidebar">
-    <app-engine-sidebar></app-engine-sidebar>
-  </div>
-
   <div v-if="!loading" class="maps-wrapper">
     <div class="map-cell"
       v-for="(cell, i) in cells"
@@ -55,7 +50,6 @@ import {get} from '@/utils/store-helpers';
 
 import CytomineImage from './CytomineImage';
 import ImageSelector from './ImageSelector';
-import AppEngineSidebar from '@/components/appengine/sidebar/AppEngineSidebar';
 
 import viewerModuleModel from '@/store/modules/project_modules/viewer';
 
@@ -69,7 +63,6 @@ export default {
   components: {
     CytomineImage,
     ImageSelector,
-    AppEngineSidebar
   },
   data() {
     return {
