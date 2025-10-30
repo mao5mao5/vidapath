@@ -102,28 +102,28 @@
             </div>
           </li>
 
-          <li v-if="isPanelDisplayed('digital-zoom')">
+          <!-- <li v-if="isPanelDisplayed('digital-zoom')">
             <a @click="togglePanel('digital-zoom')" :class="{active: activePanel === 'digital-zoom'}">
               <i class="fas fa-search"></i>
             </a>
             <digital-zoom class="panel-options" v-show="activePanel === 'digital-zoom'" :index="index"
                           @resetZoom="$refs.view.animate({zoom: image.zoom})"
                           @fitZoom="fitZoom" />
-          </li>
+          </li> -->
 
-          <li v-if="isPanelDisplayed('link') && nbImages > 1">
+          <!-- <li v-if="isPanelDisplayed('link') && nbImages > 1">
             <a @click="togglePanel('link')" :class="{active: activePanel === 'link'}">
               <i class="fas fa-link"></i>
             </a>
             <link-panel class="panel-options" v-show="activePanel === 'link'" :index="index" />
-          </li>
+          </li> -->
 
-          <li v-if="isPanelDisplayed('color-manipulation')">
+          <!-- <li v-if="isPanelDisplayed('color-manipulation')">
             <a @click="togglePanel('colors')" :class="{active: activePanel === 'colors'}">
               <i class="fas fa-adjust"></i>
             </a>
             <color-manipulation class="panel-options" v-show="activePanel === 'colors'" :index="index" />
-          </li>
+          </li> -->
 
           <li v-if="isPanelDisplayed('image-layers')">
             <a @click="togglePanel('layers')" :class="{active: activePanel === 'layers'}">
@@ -134,7 +134,7 @@
             />
           </li>
 
-          <li v-if="isPanelDisplayed('ontology') && terms && terms.length > 0">
+          <!-- <li v-if="isPanelDisplayed('ontology') && terms && terms.length > 0">
             <a @click="togglePanel('ontology')" :class="{active: activePanel === 'ontology'}">
               <i class="fas fa-hashtag"></i>
             </a>
@@ -160,7 +160,7 @@
               <i class="fas fa-check-circle"></i>
             </a>
             <review-panel class="panel-options" v-show="activePanel === 'review'" :index="index" />
-          </li>
+          </li> -->
         </template>
       </ul>
     </div>

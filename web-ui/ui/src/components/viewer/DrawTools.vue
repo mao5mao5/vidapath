@@ -188,7 +188,7 @@
         </span>
       </button>
 
-      <button
+      <!-- <button
         v-if="isToolDisplayed('magic-wand')"
         :disabled="disabledDraw"
         :title="disabledDrawMessage"
@@ -198,11 +198,11 @@
         @click="activateTool('magic-wand')"
       >
         <span class="icon is-small"><i class="fas fa-magic"></i></span>
-      </button>
+      </button> -->
     </div>
   </template>
 
-  <template v-else>
+  <!-- <template v-else>
     <div class="buttons has-addons are-small">
       <button
         :disabled="isToolDisabled('accept')"
@@ -223,7 +223,7 @@
       <span class="icon is-small"><i class="fas fa-minus"></i></span>
     </button>
     </div>
-  </template>
+  </template> -->
 
   <div class="buttons has-addons are-small">
       <button
@@ -248,7 +248,7 @@
     </button>
   </div>
 
-  <div class="buttons has-addons are-small">
+  <!-- <div class="buttons has-addons are-small">
     <button
       v-if="isToolDisplayed('fill')"
       :disabled="isToolDisabled('fill')"
@@ -268,7 +268,7 @@
       @click="activateEditTool('modify')"
     >
       <span class="icon is-small"><i class="fas fa-edit"></i></span>
-    </button>
+    </button> 
 
     <button
       v-if="isToolDisplayed('union')"
@@ -290,7 +290,7 @@
       @click="activateEditTool('correct-remove')"
     >
       <span class="icon is-small"><i class="superscript fas fa-minus"></i><i class="fas fa-pencil-alt"></i></span>
-    </button>
+    </button> 
 
     <button
       v-if="isToolDisplayed('move')"
@@ -334,9 +334,9 @@
     >
       <span class="icon is-small"><i class="far fa-trash-alt"></i></span>
     </button>
-  </div>
+  </div> -->
 
-  <div class="buttons has-addons are-small" v-if="isToolDisplayed('copy-paste')">
+  <!-- <div class="buttons has-addons are-small" v-if="isToolDisplayed('copy-paste')">
     <button
       :disabled="isToolDisabled('copy')"
       v-tooltip="$t('copy')"
@@ -397,9 +397,9 @@
         </span>
       </button>
     </div>
-  </div>
+  </div> -->
 
-  <div class="buttons has-addons are-small"
+  <!-- <div class="buttons has-addons are-small"
        v-if="isInImageGroup && (isToolDisplayed('link') || isToolDisplayed('unlink'))">
     <div class="special-paste-selection" v-click-outside="() => showAnnotationLinkSelector = false">
       <button
@@ -423,9 +423,9 @@
     >
       <span class="icon is-small"><icon-unlink-annotations /></span>
     </button>
-  </div>
+  </div> -->
 
-  <div v-if="isToolDisplayed('undo-redo')" class="buttons has-addons are-small">
+  <!-- <div v-if="isToolDisplayed('undo-redo')" class="buttons has-addons are-small">
     <button
       :disabled="actions.length === 0"
       v-tooltip="$t('undo')"
@@ -443,7 +443,7 @@
     >
       <span class="icon is-small"><i class="fas fa-redo"></i></span>
     </button>
-  </div>
+  </div> -->
 </div>
 </template>
 
