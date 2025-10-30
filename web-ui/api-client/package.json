@@ -6,7 +6,7 @@
   "unpkg": "dist/cytomine-client.min.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cytomine/Cytomine-js-client.git"
+    "url": "https://github.com/mao5mao5/Cytomine-js-client.git"
   },
   "scripts": {
     "dev": "webpack-cli --mode=development --watch --info-verbosity verbose",

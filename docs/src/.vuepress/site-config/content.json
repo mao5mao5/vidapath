@@ -7,7 +7,7 @@
   "footer": "Made by ULiège Cytomine R&D team.",
   "team": "Cytomine ULiège R&D",
   "repositories": {
-    "cytomine": "https://github.com/cytomine"
+    "cytomine": "https://github.com/mao5mao5"
   },
   "style": {
     "accentColor": "#3eaf7c"
@@ -16,14 +16,14 @@
     "demo": "https://demo.cytomine.be"
   },
   "socials": {
-    "github": "https://github.com/cytomine",
+    "github": "https://github.com/mao5mao5",
     "imagesc": "https://forum.image.sc/tag/cytomine",
     "twitter": "https://twitter.com/cytomine_uliege"
   },
   "urls": {
-    "docRepo": "https://github.com/cytomine/cytomine",
+    "docRepo": "https://github.com/mao5mao5/cytomine",
     "docUrl": "https://doc.uliege.cytomine.org",
-    "githubIssue": "https://github.com/cytomine/cytomine/issues",
+    "githubIssue": "https://github.com/mao5mao5/cytomine/issues",
     "siteUrl": "https://uliege.cytomine.org"
   },
   "homePage": {

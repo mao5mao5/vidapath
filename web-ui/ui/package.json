@@ -1,5 +1,5 @@
 {
-  "name": "cytomine-web-ui",
+  "name": "vidapath-ui",
   "version": "3.1.1",
   "scripts": {
     "serve": "npm run watch-translations & vue-cli-service serve",

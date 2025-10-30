@@ -1,6 +1,6 @@
 {
   "id" : "ac3f3ff4-1bc7-4250-a650-e716639fa2fa",
-  "realm" : "cytomine",
+  "realm" : "VidaPath",
   "notBefore" : 0,
   "defaultSignatureAlgorithm" : "RS256",
   "revokeRefreshToken" : false,
