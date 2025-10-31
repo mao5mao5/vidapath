@@ -33,9 +33,6 @@ FROM ${PROXY_CACHE}/node:${NODE_VERSION}-bookworm-slim AS dev-server
 
 WORKDIR /app
 
-# Install pnpm package manager
-RUN npm install -g pnpm
-
 COPY ./ui/scripts/configuration.json ./ui/public/configuration.json
 
 CMD ["npm", "run", "serve", "-w", "ui"]
