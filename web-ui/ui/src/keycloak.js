@@ -2,7 +2,7 @@ import Keycloak from 'keycloak-js';
 
 const initOptions = {
   url: `${window.location.origin}/iam`,
-  realm: 'cytomine',
+  realm: 'vidapath',
   clientId: 'core',
   enableLogging: true
 };
