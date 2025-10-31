@@ -33,6 +33,16 @@ FROM ${PROXY_CACHE}/node:${NODE_VERSION}-bookworm-slim AS dev-server
 
 WORKDIR /app
 
+# 复制package文件
+COPY ./lerna.json /app/lerna.json
+COPY ./package.json /app/package.json
+COPY ./package-lock.json /app/package-lock.json
+COPY ./ui/package.json /app/ui/package.json
+COPY ./api-client/package.json /app/api-client/package.json
+
+# 安装依赖
+RUN npm install
+
 COPY ./ui/scripts/configuration.json ./ui/public/configuration.json
 
 CMD ["npm", "run", "serve", "-w", "ui"]
