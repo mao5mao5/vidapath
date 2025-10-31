@@ -106,6 +106,8 @@ services:
     restart: unless-stopped
     depends_on:
       - postgis
+    volumes:
+      - ./iam:/opt/keycloak/data/import
     environment:
       KC_ADMIN_EMAIL: mail@mail.com
       KC_DB_PASSWORD: password
@@ -113,8 +115,8 @@ services:
       KC_DB_URL_HOST: postgis
       KC_DB_URL_PORT: 5432
       KC_DB_USERNAME: iam
-      KC_HOSTNAME: 127.0.0.1
-      KC_HOSTNAME_ADMIN: 127.0.0.1
+      KC_HOSTNAME: 192.168.101.232
+      KC_HOSTNAME_ADMIN: 192.168.101.232
       KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_BACKCHANNEL: true
       KC_HOSTNAME_STRICT_HTTPS: false
@@ -160,7 +162,7 @@ services:
       SCHEDULER_REGISTRY_ADVERTISED_URL: 172.16.238.4:5000
       SCHEDULER_USE_HOST_NETWORK: true
       SCHEDULER_TASKS_NAMESPACE: app-engine-tasks
-      KUBERNETES_MASTER: https://k3s:6443/
+      KUBERNETES_MASTER: https://k3s:6444/
     networks:
       host_network:
         ipv4_address: 172.16.238.10
@@ -175,6 +177,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime
     environment:
+      SERVER_URL: http://192.168.101.232
       IMAGE_SERVER_PRIVATE_KEY: d70607f5-c478-403c-be11-3dbc1716d1cf
       IMAGE_SERVER_PUBLIC_KEY: 9a8b8369-2446-44cb-b0af-604a74e1dcdb
       INTERNAL_PROXY_URL: http://nginx
@@ -283,7 +286,7 @@ services:
       # This is just so that we get the kubeconfig file out
       - .kube/shared:/output/
     ports:
-      - 6443:6443
+      - 6444:6444
     networks:
       host_network:
         ipv4_address: 172.16.238.15
