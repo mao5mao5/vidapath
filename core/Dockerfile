@@ -3,11 +3,10 @@ ARG CORE_VERSION
 ARG CORE_REVISION
 ARG GRADLE_VERSION=7.6-jdk17
 ARG OPENJDK_VERSION=17-slim-bullseye
-ARG PROXY_CACHE=registry.cytomine.org/docker
 
 #######################################################################################
 # Stage: core dependencies download via gradle
-FROM ${PROXY_CACHE}/gradle:${GRADLE_VERSION}-alpine AS deps-downloader
+FROM gradle:${GRADLE_VERSION}-alpine AS deps-downloader
 
 # We first copy the build.gradle file and the binaries stored in the source repository.
 # This way, we retrieve all gradle dependencies at the beginning. All these steps will be
@@ -23,7 +22,7 @@ RUN gradle clean build --no-daemon --console=verbose
 
 #######################################################################################
 ## Stage: building the core jar file
-FROM ${PROXY_CACHE}/gradle:${GRADLE_VERSION}-alpine AS jar-builder
+FROM gradle:${GRADLE_VERSION}-alpine AS jar-builder
 
 ENV GRADLE_USER_HOME=/opt/gradle/.gradle
 COPY --from=deps-downloader /opt/gradle/.gradle /opt/gradle/.gradle
@@ -40,7 +39,7 @@ RUN sed -i -- 's/version: 0.0.0/version: '$CORE_VERSION'/g' /app/src/main/resour
 
 #######################################################################################
 ## Stage: Cytomine core development image
-FROM ${PROXY_CACHE}/gradle:${GRADLE_VERSION}-jammy AS dev-server
+FROM gradle:${GRADLE_VERSION}-jammy AS dev-server
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -56,7 +55,7 @@ CMD ["/bin/sh"]
 
 #######################################################################################
 ## Stage: Cytomine core image
-FROM ${PROXY_CACHE}/openjdk:${OPENJDK_VERSION} AS production
+FROM openjdk:${OPENJDK_VERSION} AS production
 
 ARG CORE_VERSION
 ARG CORE_REVISION

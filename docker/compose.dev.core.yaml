@@ -4,22 +4,33 @@ services:
     image: cytomine/core:dev-latest
     build:
       context: ./core
-      target: dev-server
-    ports:
-      - "${DEV_CORE_PORT:-8080}:8080"
-      - "${DEV_SSH_CORE_PORT:-10022}:22"
-    command: ["/bin/sh"]
-    stdin_open: true
-    tty: true
+      target: production
     volumes:
-      - ./core:/app
       - /etc/localtime:/etc/localtime
-      # gradle cache for faster build
-      - ./cache/core/.gradle:/.gradle
-      # IntelliJ builds (to avoid file permission issues)
-      - ./cache/core/build:/build
     environment:
-      GRADLE_USER_HOME: /.gradle
+      SERVER_URL: http://192.168.101.232
+      IMAGE_SERVER_PRIVATE_KEY: d70607f5-c478-403c-be11-3dbc1716d1cf
+      IMAGE_SERVER_PUBLIC_KEY: 9a8b8369-2446-44cb-b0af-604a74e1dcdb
+      INTERNAL_PROXY_URL: http://nginx
+      APPENGINE_API_URL: http://nginx
+      JAVAMELODY_PASS: x6wp8Lg7K1fxr/7oa5gQD/NF7hqirE15g0P1STj5hCs
+      JAVAMELODY_PATH: /javamelody-core
+      JAVAMELODY_USER: admin
+      JWT_SECRET: d0K3EqpNgHn1huF_N1kXw.s4P1Wq;V3'W_UL4pY.EEDC+~wnmKQy3F+_3+gUGZJmnMGUl73.R+bOcQa8lv6lpG5VB~AI_3wMWtAP^TVY5xffO7PPKus_tP5~v6s8kH7Q7'CjqPqXL.D4plG3NJGKumP0IyoWulSwWvYpWx9SQ1D+mQZVvCbIWuM~N;M16~clqB_MRecEXXb~CRfw;ydav~her+s6+'WItURgb2rKkPSAc93kuySIjEYNa_;8zIJ0
+      MONGO_DB_NAME: cytomine
+      MONGO_HOST: mongo
+      MONGO_PASS: password
+      MONGO_PORT: 27017
+      MONGO_USER: admin
+      POSTGIS_DB_NAME: docker
+      POSTGIS_HOST: postgis
+      POSTGIS_PASS: password
+      POSTGIS_PORT: 5432
+      POSTGIS_USER: docker
+      STORAGE_PATH: /data/images
+    networks:
+      host_network:
+        ipv4_address: 172.16.238.11
 
   postgis:
     ports:

@@ -176,7 +176,6 @@ services:
       - postgis
     volumes:
       - /etc/localtime:/etc/localtime
-      - ./core/build/libs/cytomine.jar:/app/cytomine.jar
     environment:
       SERVER_URL: http://192.168.101.232
       IMAGE_SERVER_PRIVATE_KEY: d70607f5-c478-403c-be11-3dbc1716d1cf
