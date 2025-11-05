@@ -20,28 +20,39 @@
 </div>
 <div v-else class="cytomine-viewer">
   <b-loading :is-full-page="false" :active="loading" />
-  <div v-if="!loading" class="maps-wrapper">
-    <div class="map-cell"
-      v-for="(cell, i) in cells"
-      :key="i"
-      :style="`height:${elementHeight}%; width:${elementWidth}%;`"
-      :class="{highlighted: cell && cell.highlighted}"
-    >
-      <cytomine-image
-        v-if="cell && cell.image && cell.slices"
-        :index="cell.index"
-        :key="`${cell.index}-${cell.image.id}`"
-        @close="closeMap(cell.index)"
+  <a-layout v-if="!loading" style="height: 100%">
+    <a-layout-sider collapsible v-model="collapsed">
+      <image-list
+        :images="viewer.images"
+        :active-image="viewer.activeImage"
+        @select-image="setActiveImage"
+        @close-image="closeMap"
       />
-    </div>
+    </a-layout-sider>
+    <a-layout-content>
+      <div class="maps-wrapper">
+        <div class="map-cell"
+          v-for="(cell, i) in cells"
+          :key="i"
+          :style="`height:${elementHeight}%; width:${elementWidth}%;`"
+          :class="{highlighted: cell && cell.highlighted}"
+        >
+          <cytomine-image
+            v-if="cell && cell.image && cell.slices"
+            :index="cell.index"
+            :key="`${cell.index}-${cell.image.id}`"
+            @close="closeMap(cell.index)"
+          />
+        </div>
 
-    <image-selector />
+        <image-selector />
 
-    <!-- Emit event when a hotkey is pressed (to rework once https://github.com/iFgR/vue-shortkey/issues/78 is implemented) -->
-    <div class="hidden" v-shortkey.once="shortkeysMapping" @shortkey="shortkeyEvent"></div>
+        <!-- Emit event when a hotkey is pressed (to rework once https://github.com/iFgR/vue-shortkey/issues/78 is implemented) -->
+        <div class="hidden" v-shortkey.once="shortkeysMapping" @shortkey="shortkeyEvent"></div>
 
-  </div>
-
+      </div>
+    </a-layout-content>
+  </a-layout>
 </div>
 </template>
 
@@ -50,6 +61,7 @@ import {get} from '@/utils/store-helpers';
 
 import CytomineImage from './CytomineImage';
 import ImageSelector from './ImageSelector';
+import ImageList from './ImageList';
 
 import viewerModuleModel from '@/store/modules/project_modules/viewer';
 
@@ -63,6 +75,7 @@ export default {
   components: {
     CytomineImage,
     ImageSelector,
+    ImageList,
   },
   data() {
     return {
@@ -70,7 +83,8 @@ export default {
       errorBadImageProject: false,
       loading: true,
       reloadInterval: null,
-      idViewer: null
+      idViewer: null,
+      collapsed: false,
     };
   },
   computed: {
@@ -184,6 +198,9 @@ export default {
       }
 
       this.idViewer = Math.random().toString(36).substr(2, 9);
+    },
+    setActiveImage(index) {
+      this.$store.commit(this.viewerModule + 'setActiveImage', index);
     },
 
     closeMap(index) {
