@@ -13,86 +13,25 @@
  limitations under the License.-->
 
 <template>
-<div>
-  <div class="image-selector-wrapper" v-show="imageSelectorEnabled">
-    <b-loading :is-full-page="false" :active="loading" />
-      <div class="header">
-        <div>
-          <b-input class="search-images" :value="searchString" @input="debounceSearchString"
-                   :placeholder="$t('search-placeholder')"
-                   type="search" icon="search"
-          />
-          <div class="filter">
-            <div class="filter-label">
-              {{$t('tags')}}
-            </div>
-            <div class="filter-body">
-              <cytomine-multiselect v-model="selectedTags" :options="availableTags"
-                label="name" track-by="id" :multiple="true" :allPlaceholder="$t('all')" />
-            </div>
 
-            <div class="filter-label">
-              {{$t('image-groups')}}
-            </div>
-            <div class="filter-body">
-              <cytomine-multiselect
-                  v-model="selectedImageGroups"
-                  :options="availableImageGroups"
-                  :label="'name'"
-                  track-by="id"
-                  multiple
-                  :allPlaceholder="$t('all-image-groups')"
-              />
-            </div>
-          </div>
-        </div>
-
-        <button class="delete" @click="imageSelectorEnabled = false"></button>
-      </div>
-    <template v-if="!loading">
-      <div class="content-wrapper" v-if="error">
-        <b-message type="is-danger" has-icon icon-size="is-small">
-          <h2> {{ $t('error') }} </h2>
-          <p> {{ $t('unexpected-error-info-message') }} </p>
-        </b-message>
-      </div>
-      <div v-else class="image-selector">
+  <div class="image-selector-wrapper" :class="{ collapsed: collapsed }">
+      <div>
         <div class="card" v-for="image in images" :key="image.id" :class="{active: alreadyAdded(image)}">
           <a
             class="card-image"
             @click="addImage(image)"
             :style="'background-image: url(' + appendShortTermToken(imageThumbUrl(image), shortTermToken) + ')'"
           ></a>
-          <div class="card-content">
-            <div class="content">
-              <a @click="addImage(image)">
-                <image-name :image="image" />
-              </a>
-            </div>
+          <div class="card-content" @click="addImage(image)">
+           <image-name :image="image" />
           </div>
         </div>
-
         <button class="button" v-if="nbImagesDisplayed < nbFilteredImages" @click="more()">
           {{$t('button-more')}}
         </button>
-
-        <div class="has-text-grey no-result" v-if="nbFilteredImages === 0">
-          <em>{{$t('no-result')}}</em>
-        </div>
-
         <div class="space">&nbsp;</div>
       </div>
-    </template>
   </div>
-
-  <a
-    class="image-selector-button"
-    @click="imageSelectorEnabled = true"
-    v-tooltip="{content: $t('add-image'), placement: 'left'}"
-  >
-    <i class="fas fa-plus"></i>
-  </a>
-</div>
 </template>
 
 <script>
@@ -104,6 +43,7 @@ import CytomineMultiselect from '@/components/form/CytomineMultiselect';
 import {ImageGroupCollection, ImageInstanceCollection, TagCollection} from 'cytomine-client';
 import _ from 'lodash';
 import {appendShortTermToken} from '@/utils/token-utils.js';
+import {ref} from 'vue';
 
 const storeOptions = {rootModuleProp: 'storeModule'};
 const localSyncMultiselectFilter = (filterName, options) => syncMultiselectFilter(null, filterName, options, storeOptions);
@@ -113,6 +53,10 @@ export default {
   components: {
     ImageName,
     CytomineMultiselect
+  },
+  setup() {
+    const collapsed = ref(true);
+    return { collapsed };
   },
   data() {
     return {
@@ -137,12 +81,20 @@ export default {
     viewerModule() {
       return this.$store.getters['currentProject/currentViewerModule'];
     },
-    imageSelectorEnabled: {
+    // imageSelectorEnabled has been replaced by collapsed state in a-layout-sider
+    // The store state is now synchronized with the collapsed property
+    collapsed: {
       get() {
-        return this.$store.getters['currentProject/currentViewer'].imageSelector;
+        // Initialize from store if available, otherwise use default value
+        const viewer = this.$store.getters['currentProject/currentViewer'];
+        if (viewer && viewer.imageSelector !== undefined) {
+          return !viewer.imageSelector;
+        }
+        return true; // default to collapsed
       },
       set(value) {
-        this.$store.commit(this.viewerModule + 'setImageSelector', value);
+        // Update store when collapsed state changes
+        this.$store.commit(this.viewerModule + 'setImageSelector', !value);
       }
     },
     viewerImagesIds() {
@@ -298,17 +250,17 @@ export default {
 
 <style scoped>
 .image-selector-wrapper {
-  position: absolute;
-  left: 0;
-  bottom: 0;
+  background-color: transparent;
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   display: flex;
   flex-direction: column;
-  background: #f5f5f5;
   width: 100%;
-  height: 20em;
+  height: 100%;
   z-index: 150;
+  overflow: auto;
 }
+
+
 
 .header {
   padding: 0.75em;
@@ -361,11 +313,24 @@ export default {
 }
 
 .card {
+  background-color: transparent;
   display: inline-block;
   min-width: 12em;
   flex: 0;
   box-sizing: border-box;
   margin: 0.75em;
+  border: 2px solid #203153;
+  border-radius: 8px;
+  transition: all 0.3s ease; /* 添加过渡效果 */
+}
+
+.card:hover {
+  border-color: #409eff; /* 鼠标悬停时显示蓝色边框 */
+  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.2); /* 添加蓝色阴影 */
+}
+
+.card.active {
+  border-color: #409eff; /* 选中状态显示蓝色边框 */
 }
 
 .card-image {
@@ -375,12 +340,23 @@ export default {
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
-  background-color: white;
-  border-bottom: 1px solid #ddd;
+  background-color: transparent;
+  border-radius: 8px;
 }
 
 .card-content {
-  padding: 0.75em;
+  padding: 0.1em;
+  font-size: 0.8rem;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  text-align: center;
+  color: white !important; /* 提高样式优先级 */
+  height: 2em;
+}
+
+.content {
+  text-align: center;
+  color: white !important; /* 提高样式优先级 */
   font-size: 0.8rem;
   overflow-wrap: break-word;
   overflow: hidden;
@@ -391,28 +367,12 @@ export default {
   margin-left: 0.5em;
 }
 
-.image-selector-button {
-  background: #95b5db;
-  border: 0.35rem solid white;
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 2.8rem;
-  color: white;
-  font-size: 1.8rem;
-  box-sizing: border-box;
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-  z-index: 100;
-}
+/* .image-selector-button has been removed as it's no longer needed with a-layout-sider */
 
-.active {
-  box-shadow: 0 2px 3px rgba(39, 120, 173, 0.75), 0 0 0 1px rgba(39, 120, 173, 0.75);
+/* .active {
+  box-shadow: 0 2px 3px rgba(16, 133, 210, 0.75), 0 0 0 1px rgba(39, 120, 173, 0.75);
   font-weight: 600;
-}
+} */
 
 .no-result {
   margin: 2em;

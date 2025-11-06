@@ -18,7 +18,7 @@
     <p> {{ $t(permissionError ? 'insufficient-permission' : 'not-found-error') }} </p>
   </div>
   <div v-else class="project-container">
-    <project-sidebar v-if="!loading" :key="idProject" />
+    <!-- <project-sidebar v-if="!loading" :key="idProject" /> -->
 
     <div class="app-content">
       <b-loading :is-full-page="false" :active="loading" />

@@ -18,12 +18,9 @@
     <router-link to="/projects" exact class="navbar-item">
       <div class="logo-container">
         <img src="@/assets/icon.svg" id="logo" alt="VidaPath">
-        <h1>VidaPath</h1>
+        <h1 class="brand">VidaPath</h1>
       </div>
     </router-link>
-    <a role="" class="navbar-burger" :class="{'is-active':openedTopMenu}" @click="openedTopMenu=!openedTopMenu">
-      <span></span> <span></span> <span></span>
-    </a>
   </div>
   <div id="topMenu" class="navbar-menu" :class="{'is-active':openedTopMenu}">
     <div class="navbar-start">
@@ -198,9 +195,16 @@ export default {
 
 <style lang="scss" scoped>
 .logo-container {
+  color: white;
   display: flex;
   align-items: center;
   height: 30px;
+}
+
+.navbar-brand{
+  .brand{
+    color: white;
+  }
 }
 
 #logo {
@@ -214,15 +218,15 @@ export default {
 /* Special styling for IE */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   #logo {
-    height: 40px !important;
-    max-height: none !important;
+    height: 40px;
+    max-height: none ;
   }
 }
 
 .navbar {
   font-weight: 600;
-  z-index: 500 !important;
-  background-color: #041646 !important; /*藏蓝色背景*/
+  z-index: 500;
+  background-color: #1e2939 !important;
   color: white !important;
 
   .fas, .far {
@@ -230,26 +234,17 @@ export default {
   }
   
   .navbar-item, .navbar-link {
-    background-color: #031340 !important; /* 悬停时保持藏蓝色 */
+    background-color: transparent !important;
     color: white !important;
   }
   
   .navbar-item:hover, .navbar-link:hover {
-    background-color: #031340 !important; /* 悬停时保持藏蓝色 */
+    background-color: #28364d !important;
     color: white !important;
   }
   
   .navbar-dropdown .navbar-item:hover {
-    background-color: #031340 !important; /* 下拉菜单项悬停时稍微亮一点的蓝色 */
-    color: white !important;
-  }
-  
-  .navbar-burger {
-    color: white !important;
-  }
-  
-  .navbar-burger:hover {
-    background-color: #1E3A8A !important;
+    background-color: #28364d !important;
     color: white !important;
   }
 }

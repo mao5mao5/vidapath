@@ -30,6 +30,10 @@ import store from './store/store.js';
 import Buefy from 'buefy';
 Vue.use(Buefy, {defaultIconPack: 'fas'});
 
+import Antd from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
+Vue.use(Antd);
+
 import VeeValidate, {Validator} from 'vee-validate';
 Validator.extend('positive', value => Number(value) > 0);
 Vue.use(VeeValidate, {
