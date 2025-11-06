@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { Card } from 'ant-design-vue';
 
 export default {
   name: 'ImageList',
