@@ -64,7 +64,6 @@ import { useViewerStore } from '#/store/modules/viewer';
 import { useCurrentProjectStore } from '#/store/modules/current-project';
 import CytomineImage from './CytomineImage.vue';
 import ImageSelector from './ImageSelector.vue';
-import ImageList from './ImageList.vue';
 
 // Stores
 const viewerStore = useViewerStore();

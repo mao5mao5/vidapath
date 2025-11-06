@@ -22,12 +22,8 @@
             @click="addImage(image)"
             :style="'background-image: url(' + appendShortTermToken(imageThumbUrl(image), shortTermToken) + ')'"
           ></a>
-          <div class="card-content">
-            <div class="content">
-              <a @click="addImage(image)">
-                <image-name :image="image" />
-              </a>
-            </div>
+          <div class="card-content" @click="addImage(image)">
+           <image-name :image="image" />
           </div>
         </div>
         <button class="button" v-if="nbImagesDisplayed < nbFilteredImages" @click="more()">
@@ -323,7 +319,18 @@ export default {
   flex: 0;
   box-sizing: border-box;
   margin: 0.75em;
-  border: 1px solid #ddd;
+  border: 2px solid #203153;
+  border-radius: 8px;
+  transition: all 0.3s ease; /* 添加过渡效果 */
+}
+
+.card:hover {
+  border-color: #409eff; /* 鼠标悬停时显示蓝色边框 */
+  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.2); /* 添加蓝色阴影 */
+}
+
+.card.active {
+  border-color: #409eff; /* 选中状态显示蓝色边框 */
 }
 
 .card-image {
@@ -334,6 +341,7 @@ export default {
   background-size: cover;
   background-repeat: no-repeat;
   background-color: transparent;
+  border-radius: 8px;
 }
 
 .card-content {
@@ -341,7 +349,18 @@ export default {
   font-size: 0.8rem;
   overflow-wrap: break-word;
   overflow: hidden;
+  text-align: center;
+  color: white !important; /* 提高样式优先级 */
   height: 2em;
+}
+
+.content {
+  text-align: center;
+  color: white !important; /* 提高样式优先级 */
+  font-size: 0.8rem;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  height: 5em;
 }
 
 .space {
@@ -350,10 +369,10 @@ export default {
 
 /* .image-selector-button has been removed as it's no longer needed with a-layout-sider */
 
-.active {
+/* .active {
   box-shadow: 0 2px 3px rgba(16, 133, 210, 0.75), 0 0 0 1px rgba(39, 120, 173, 0.75);
   font-weight: 600;
-}
+} */
 
 .no-result {
   margin: 2em;

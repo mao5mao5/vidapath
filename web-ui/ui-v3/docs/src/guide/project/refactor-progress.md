@@ -146,17 +146,12 @@
    - 修复了潜在的类型问题
    - 修复了导入路径问题，使用正确的路径别名
 
-4. **viewer/ImageList.vue** → **viewer/ImageList.vue**
+4. **viewer/ImageSelector.vue** → **viewer/ImageSelector.vue**
    - 从Options API迁移到Composition API
    - 从Buefy组件迁移到Ant Design Vue组件
    - 保留了原有的功能和UI设计
 
-5. **viewer/ImageSelector.vue** → **viewer/ImageSelector.vue**
-   - 从Options API迁移到Composition API
-   - 从Buefy组件迁移到Ant Design Vue组件
-   - 保留了原有的功能和UI设计
-
-6. **WebComponentViewer.vue** → **WebComponentViewer.vue**
+5. **WebComponentViewer.vue** → **WebComponentViewer.vue**
    - 创建用于集成Vue 2 Web Components的Vue 3组件
    - 支持在Vue 3环境中使用Vue 2构建的Web Components
    - 添加了路由参数处理

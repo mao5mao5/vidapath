@@ -837,7 +837,7 @@ export default {
 
 $backgroundPanelBar: #030124;
 $widthPanelBar: 2.8rem;
-$backgroundPanel: #f2f2f2;
+$backgroundPanel: #030124;
 $colorPanelLink: #eee;
 $colorHoverPanelLink: white;
 $colorBorderPanelLink: #222;

@@ -56,7 +56,6 @@ import {get} from '@/utils/store-helpers';
 
 import CytomineImage from './CytomineImage';
 import ImageSelector from './ImageSelector';
-import ImageList from './ImageList';
 
 import viewerModuleModel from '@/store/modules/project_modules/viewer';
 
@@ -70,7 +69,6 @@ export default {
   components: {
     CytomineImage,
     ImageSelector,
-    ImageList,
   },
   data() {
     return {
