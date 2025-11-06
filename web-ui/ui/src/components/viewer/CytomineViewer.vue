@@ -22,12 +22,7 @@
   <b-loading :is-full-page="false" :active="loading" />
   <a-layout v-if="!loading" style="height: 100%">
     <a-layout-sider collapsible v-model="collapsed">
-      <image-list
-        :images="viewer.images"
-        :active-image="viewer.activeImage"
-        @select-image="setActiveImage"
-        @close-image="closeMap"
-      />
+         <image-selector />
     </a-layout-sider>
     <a-layout-content>
       <div class="maps-wrapper">
@@ -45,7 +40,7 @@
           />
         </div>
 
-        <image-selector />
+     
 
         <!-- Emit event when a hotkey is pressed (to rework once https://github.com/iFgR/vue-shortkey/issues/78 is implemented) -->
         <div class="hidden" v-shortkey.once="shortkeysMapping" @shortkey="shortkeyEvent"></div>
