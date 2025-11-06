@@ -5,7 +5,6 @@ import AppInfoPage from './components/appengine/AppInfoPage.vue';
 import AppLayout from '@/components/appengine/AppLayout.vue';
 import AppLocalPage from '@/components/appengine/AppLocalPage.vue';
 import AppStorePage from '@/components/appengine/AppStorePage.vue';
-import GlobalDashboard from './components/GlobalDashboard.vue';
 import ListProjects from './components/project/ListProjects.vue';
 import CytomineStorage from './components/storage/CytomineStorage.vue';
 import ListOntologies from './components/ontology/ListOntologies.vue';
