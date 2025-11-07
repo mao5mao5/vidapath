@@ -1,6 +1,7 @@
 # List ARGs here for better readability.
 ARG CORE_VERSION
 ARG CORE_REVISION
+ARG JAVA_VERSION=17-jre
 ARG GRADLE_VERSION=7.6-jdk17
 ARG OPENJDK_VERSION=17-slim-bullseye
 
@@ -59,17 +60,18 @@ FROM openjdk:${OPENJDK_VERSION} AS production
 
 ARG CORE_VERSION
 ARG CORE_REVISION
+ARG JAVA_VERSION
 ARG GRADLE_VERSION
-ARG OPENJDK_VERSION
 
-LABEL org.opencontainers.image.authors="dev@cytomine.com" \
+LABEL org.opencontainers.image.authors="uliege@cytomine.org" \
       org.opencontainers.image.url="https://uliege.cytomine.org/" \
       org.opencontainers.image.documentation="https://doc.uliege.cytomine.org/" \
       org.opencontainers.image.source="https://github.com/mao5mao5/Cytomine-core" \
       org.opencontainers.image.vendor="Cytomine ULiège" \
       org.opencontainers.image.version="${CORE_VERSION}" \
       org.opencontainers.image.revision="${CORE_REVISION}" \
-      org.opencontainers.image.deps.openjdk.version="${OPENJDK_VERSION}" \
+      org.opencontainers.image.deps.java.distribution="eclipse-temurin" \
+      org.opencontainers.image.deps.java.version="${JAVA_VERSION}" \
       org.opencontainers.image.deps.gradle.version="${GRADLE_VERSION}"
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -78,8 +80,8 @@ ENV LANG=C.UTF-8
 # base librairies and configuration
 RUN apt-get update -y \
     && apt-get install --no-install-recommends --no-install-suggests -y \
-      logrotate=3.18* \
-      gettext=0.21* \
+      logrotate \
+      gettext \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i "/su root syslog/c\su root root" /etc/logrotate.conf
 
