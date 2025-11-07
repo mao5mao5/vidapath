@@ -3,7 +3,7 @@ ARG CORE_VERSION
 ARG CORE_REVISION
 ARG JAVA_VERSION=17-jre
 ARG GRADLE_VERSION=7.6-jdk17
-ARG OPENJDK_VERSION=17-slim-bullseye
+ARG OPENJDK_VERSION=25-ea-17-slim-bullseye
 
 #######################################################################################
 # Stage: core dependencies download via gradle
