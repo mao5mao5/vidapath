@@ -15,6 +15,14 @@
 <template>
 <div class="map-container" @click="isActiveImage = true" ref="container">
   <template v-if="!loading && zoom !== null">
+    <div class="map-tools"> 
+      <ul class="map-tools-list">
+        <li><a title="Zoom in" @click="zoomIn()"><i class="fas fa-search-plus"></i></a></li>
+        <li><a title="Zoom out" @click="zoomOut()"><i class="fas fa-search-minus"></i></a></li>
+        <li><a title="Pan" @click="activatePan()"><i class="fas fa-arrows-alt"></i></a></li>
+      </ul>
+    </div>
+
     <vl-map
       :data-projection="projectionName"
       :load-tiles-while-animating="true"
@@ -482,6 +490,15 @@ export default {
     }
   },
   methods: {
+    zoomIn() {
+      this.$refs.view.animate({zoom: this.zoom + 1, duration: 250});
+    },
+    zoomOut() {
+      this.$refs.view.animate({zoom: this.zoom - 1, duration: 250});
+    },
+    activatePan() {
+      this.$store.dispatch(this.imageModule + 'draw/activateTool', 'pan');
+    },
     setInitialZoom() {
       if (this.zoom !== null) {
         return; // not the first time the viewer is opened => zoom was already initialized
@@ -835,23 +852,19 @@ export default {
 <style lang="scss">
 @import '~vuelayers/lib/style.css';
 
-$backgroundPanelBar: #030124;
+$backgroundPanelBar:#101828;
 $widthPanelBar: 2.8rem;
-$backgroundPanel: #030124;
+$backgroundPanel: #101828;
 $colorPanelLink: #eee;
 $colorHoverPanelLink: white;
-$colorBorderPanelLink: #222;
+$colorBorderPanelLink: #3e3e3e;
 $colorOpenedPanelLink: #6c95c8;
 
 .map-container {
   display:flex;
-  position: relative;
+  background-color: #101828;
   width: 100%;
   height: 100%;
-}
-
-.map {
-  flex-grow: 1;
 }
 
 .draw-tools {
@@ -979,6 +992,7 @@ $colorOpenedPanelLink: #6c95c8;
 .ol-zoom, .ol-rotate {
   background: none !important;
   z-index: 20;
+  display: none;
 }
 
 .ol-rotate:not(.custom) {
@@ -1012,7 +1026,7 @@ $colorOpenedPanelLink: #6c95c8;
 .custom-overview {
   position: absolute;
   bottom: 0.5em;
-  left: 0.5em;
+  left: 4em;
   background: rgba(255, 255, 255, 0.8);
   display: flex;
   flex-direction: column;
@@ -1056,5 +1070,67 @@ $colorOpenedPanelLink: #6c95c8;
   right: $widthPanelBar;
   z-index: 40;
   pointer-events: none;
+}
+
+.map-tools {
+
+  background: $backgroundPanelBar;
+
+  display: flex;
+
+  font-size: 0.9em;
+  border-left: 1px solid $colorBorderPanelLink;
+}
+
+
+
+.map-tools-list {
+
+  padding: 0;
+
+  margin: 0;
+
+  list-style: none;
+
+}
+
+
+
+.map-tools-list > li {
+
+  position: relative;
+
+}
+
+
+
+.map-tools-list > li > a {
+
+  position: relative;
+
+  display: block;
+
+  width: $widthPanelBar;
+
+  padding: 0.35rem 0.8rem;
+
+  font-size: 1.25rem;
+
+  color: $colorPanelLink;
+
+  text-decoration: none;
+
+  text-align: center;
+
+  cursor: pointer;
+
+}
+
+
+
+.map-tools-list > li > a:hover {
+
+  color: $colorHoverPanelLink;
+
 }
 </style>

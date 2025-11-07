@@ -250,7 +250,7 @@ export default {
 
 <style scoped>
 .image-selector-wrapper {
-  background-color: transparent;
+  background-color: #1e2938;
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   display: flex;
   flex-direction: column;
@@ -258,6 +258,7 @@ export default {
   height: 100%;
   z-index: 150;
   overflow: auto;
+  border: 1px solid #3e3e3e;
 }
 
 
@@ -313,7 +314,7 @@ export default {
 }
 
 .card {
-  background-color: transparent;
+  background-color: #101828;
   display: inline-block;
   min-width: 12em;
   flex: 0;
