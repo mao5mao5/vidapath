@@ -435,12 +435,17 @@ export default {
 <style scoped>
 .panel-block {
   padding-top: 0.8em;
+  background-color: #1e1e1e;
+  color: #ffffff;
 }
 
 .panel-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #3a3a3a;
 }
 
 .search-block {
@@ -452,11 +457,256 @@ export default {
   margin-bottom: 1rem;
   border-radius: 10px;
   padding: 1rem 1.5em;
-  background: #f8f8f8;
+  background: #252525;
+  color: #ffffff;
 }
 
 .legend p:not(:last-child) {
   margin-bottom: 0.4em;
+}
+
+/* 暗黑模式下的过滤器区域 */
+.filters {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+.filter-label {
+  color: #ffffff;
+}
+
+/* 暗黑模式下的表格样式 */
+:deep(.table) {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+:deep(.table tr) {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+:deep(.table tr:hover) {
+  background-color: #4d4d4d;
+}
+
+:deep(.table th) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+:deep(.table td) {
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+/* 暗黑模式下的分页控件 */
+:deep(.pagination) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+}
+
+:deep(.pagination .button) {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-color: #555;
+}
+
+:deep(.pagination .button:hover) {
+  background-color: #4d4d4d;
+  border-color: #666;
+}
+
+:deep(.pagination .button[disabled]) {
+  background-color: #252525;
+  color: #aaa;
+  border-color: #3a3a3a;
+}
+
+/* 暗黑模式下的输入框 */
+:deep(.input) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #555;
+}
+
+:deep(.input::placeholder) {
+  color: #aaa;
+}
+
+:deep(.input:focus) {
+  border-color: #6899d0;
+  box-shadow: 0 0 0 0.2rem rgba(104, 153, 208, 0.25);
+}
+
+/* 暗黑模式下的按钮 */
+:deep(.button) {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-color: #555;
+}
+
+:deep(.button:hover) {
+  background-color: #4d4d4d;
+  border-color: #666;
+}
+
+:deep(.button.is-link) {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-color: #555;
+}
+
+:deep(.button.is-link:hover) {
+  background-color: #4d4d4d;
+  border-color: #666;
+}
+
+:deep(.button.is-small) {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-color: #555;
+}
+
+:deep(.button.is-small:hover) {
+  background-color: #4d4d4d;
+  border-color: #666;
+}
+
+/* 暗黑模式下的多选框 */
+:deep(.multiselect) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #555;
+}
+
+:deep(.multiselect:focus) {
+  border-color: #6899d0;
+  box-shadow: 0 0 0 0.2rem rgba(104, 153, 208, 0.25);
+}
+
+:deep(.multiselect__tags) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #555;
+}
+
+:deep(.multiselect__input) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+}
+
+:deep(.multiselect__input::placeholder) {
+  color: #aaa;
+}
+
+:deep(.multiselect__content) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+:deep(.multiselect__element) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+}
+
+:deep(.multiselect__element:hover) {
+  background-color: #4d4d4d;
+}
+
+:deep(.multiselect__option) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+}
+
+:deep(.multiselect__option:hover) {
+  background-color: #4d4d4d;
+}
+
+:deep(.multiselect__option--selected) {
+  background-color: #3a3a3a;
+  color: #ffffff;
+}
+
+:deep(.multiselect__option--selected:hover) {
+  background-color: #4d4d4d;
+}
+
+/* 暗黑模式下的滑块 */
+:deep(.slider) {
+  background-color: #252525;
+}
+
+:deep(.slider .slider-track) {
+  background-color: #3a3a3a;
+}
+
+:deep(.slider .slider-fill) {
+  background-color: #3a3a3a;
+}
+
+:deep(.slider .slider-thumb) {
+  background-color: #ffffff;
+  border-color: #555;
+}
+
+:deep(.slider .slider-thumb:hover) {
+  background-color: #ffffff;
+  border-color: #666;
+}
+
+/* 暗黑模式下的折叠面板 */
+:deep(.collapse) {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+:deep(.collapse .collapse-trigger) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+:deep(.collapse .collapse-content) {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+/* 暗黑模式下的加载动画 */
+:deep(.loading) {
+  background-color: rgba(30, 30, 30, 0.7);
+  color: #ffffff;
+}
+
+/* 暗黑模式下的错误提示框 */
+.box.error {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+/* 暗黑模式下的链接 */
+:deep(a) {
+  color: #ffffff;
+}
+
+:deep(a:hover) {
+  color: #cccccc;
+}
+
+:deep(a.button) {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-color: #555;
+}
+
+:deep(a.button:hover) {
+  background-color: #4d4d4d;
+  border-color: #666;
 }
 </style>
 
@@ -472,5 +722,58 @@ export default {
 
 .list-projects-wrapper td, .list-projects-wrapper th {
   vertical-align: middle !important;
+}
+
+/* 暗黑模式下的表格全局样式 */
+.table-projects :deep(.table) {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.table-projects :deep(.table tr) {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.table-projects :deep(.table tr:hover) {
+  background-color: #4d4d4d;
+}
+
+.table-projects :deep(.table th) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+.table-projects :deep(.table td) {
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+/* 暗黑模式下滚动条样式 */
+.list-projects-wrapper::-webkit-scrollbar,
+.panel-block::-webkit-scrollbar,
+.filters::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.list-projects-wrapper::-webkit-scrollbar-track,
+.panel-block::-webkit-scrollbar-track,
+.filters::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.list-projects-wrapper::-webkit-scrollbar-thumb,
+.panel-block::-webkit-scrollbar-thumb,
+.filters::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+.list-projects-wrapper::-webkit-scrollbar-thumb:hover,
+.panel-block::-webkit-scrollbar-thumb:hover,
+.filters::-webkit-scrollbar-thumb:hover {
+  background: #777;
 }
 </style>
