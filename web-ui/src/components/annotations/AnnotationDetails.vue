@@ -16,21 +16,19 @@
 <div class="annotation-details">
   <table class="table">
     <tbody>
-      <tr v-if="showImageInfo">
+      <tr >
         <td><strong>{{$t('image')}}</strong></td>
         <td>
-          <router-link :to="`/project/${annotation.project}/image/${annotation.image}`">
             <image-name :image="image" />
-          </router-link>
         </td>
       </tr>
 
-      <tr v-if="showChannelInfo">
+      <!-- <tr >
         <td><strong>{{$t('channel')}}</strong></td>
         <td>
           <channel-name :channel="sliceChannel" />
         </td>
-      </tr>
+      </tr> -->
 
       <template v-if="isPropDisplayed('geometry-info')">
         <tr v-if="annotation.area > 0">
@@ -43,7 +41,7 @@
           <td>{{ `${annotation.perimeter.toFixed(3)} ${annotation.perimeterUnit}` }}</td>
         </tr>
 
-        <tr v-if="profile">
+        <!-- <tr v-if="profile">
           <td>
             <strong v-if="isPoint">{{$t('profile')}}</strong>
             <strong v-else>{{$t('profile-projection')}}</strong>
@@ -56,7 +54,7 @@
             <strong>{{spatialProjection}}</strong>
           </td>
           <td><button class="button is-small" @click="openSpatialProfileModal">{{$t('inspect-button')}}</button></td>
-        </tr>
+        </tr> -->
       </template>
 
       <tr v-if="isPropDisplayed('description')">
@@ -106,7 +104,7 @@
       </tr>
 
       <!-- TRACKS -->
-      <tr v-if="isPropDisplayed('tracks') && maxRank > 1">
+      <!-- <tr v-if="isPropDisplayed('tracks') && maxRank > 1">
         <td colspan="2">
           <h5>{{$t('tracks')}}</h5>
           <b-tag v-for="{track} in associatedTracks" :key="track.id">
@@ -142,31 +140,31 @@
           </div>
           <em v-else-if="!associatedTracks.length">{{$t('no-track')}}</em>
         </td>
-      </tr>
+      </tr> -->
 
-      <tr v-if="isPropDisplayed('tags')">
+      <!-- <tr v-if="isPropDisplayed('tags')">
         <td colspan="2">
           <h5>{{$t('tags')}}</h5>
           <cytomine-tags :object="annotation" :canEdit="canEdit" />
         </td>
-      </tr>
+      </tr> -->
 
       <!-- PROPERTIES -->
-      <tr v-if="isPropDisplayed('properties')">
+      <!-- <tr v-if="isPropDisplayed('properties')">
         <td colspan="2">
           <h5>{{$t('properties')}}</h5>
           <cytomine-properties :object="annotation" :canEdit="canEdit" @update="$emit('updateProperties')" />
         </td>
-      </tr>
+      </tr> -->
 
-      <tr v-if="isPropDisplayed('attached-files')">
+      <!-- <tr v-if="isPropDisplayed('attached-files')">
         <td colspan="2">
           <h5>{{$t('attached-files')}}</h5>
           <attached-files :object="annotation" :canEdit="canEdit" />
         </td>
-      </tr>
+      </tr> -->
 
-      <template>
+      <!-- <template>
         <tr>
           <td colspan="2">
             <h5>{{ $t('similar-annotations') }}</h5>
@@ -175,9 +173,9 @@
             </button>
           </td>
         </tr>
-      </template>
+      </template> -->
 
-      <template v-if="isPropDisplayed('linked-annotations')">
+      <!-- <template v-if="isPropDisplayed('linked-annotations')">
         <tr>
           <td colspan="2">
             <h5>{{$t('linked-annotations')}}</h5>
@@ -193,7 +191,7 @@
               />
           </td>
         </tr>
-      </template>
+      </template> -->
 
       <template v-if="isPropDisplayed('creation-info')">
         <tr>
@@ -256,14 +254,14 @@
       {{ $t('button-view-in-image') }}
     </router-link>
 
-    <a v-else class="button is-link is-small is-fullwidth" @click="$emit('centerView')">
+    <a-button v-else class="button is-link is-small is-fullwidth"  @click="$emit('centerView')" type="primary">
       {{ $t('button-center-view-on-annot') }}
-    </a>
+    </a-button>
 
     <div class="level">
-      <a @click="openCrop(annotation)" class="level-item button is-small">
+      <!-- <a @click="openCrop(annotation)" class="level-item button is-small">
         {{ $t('button-view-crop') }}
-      </a>
+      </a> -->
 
       <button class="level-item button is-small" @click="copyURL()">
         {{ $t('button-copy-url') }}
@@ -609,23 +607,30 @@ export default {
 
 <style scoped>
 .annotation-details {
-  position: relative;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  color: #ffffff;
 }
 
 .table {
   width: 100%;
-  margin-bottom: 0.7em !important;
-  background: transparent;
+  background: #2d2d2d;
+  color: #ffffff;
 }
 
 .table th, .table td {
   vertical-align: middle;
+  color: #ffffff;
+  border-color: #3a3a3a;
+}
+
+.table tr:hover {
+  background-color: #3a3a3a;
 }
 
 h5 {
   font-weight: 600;
   margin-bottom: 0.6em;
+  color: #ffffff;
 }
 
 .actions {
@@ -634,11 +639,44 @@ h5 {
 
 .actions .button {
   margin: 3px;
-  box-sizing: border-box;
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-color: #555;
+  /* box-sizing: border-box; */
+}
+
+.actions .button:hover {
+  background-color: #4d4d4d;
+  border-color: #666;
+}
+
+.actions .button.is-danger {
+  background-color: #a94442;
+  border-color: #873634;
+}
+
+.actions .button.is-danger:hover {
+  background-color: #c9302c;
+  border-color: #a72522;
+}
+
+.actions .button.is-link {
+  background-color: #3a3a3a;
+  border-color: #555;
+}
+
+.actions .button.is-link:hover {
+  background-color: #4d4d4d;
+  border-color: #666;
 }
 
 a.is-fullwidth {
   width: auto;
+  color: #ffffff;
+}
+
+a.is-fullwidth:hover {
+  color: #cccccc;
 }
 
 .add-term-wrapper, .add-track-wrapper {
@@ -651,13 +689,14 @@ a.is-fullwidth {
   left: 0;
   z-index: 500;
   padding-top: 5px;
-  background: white;
+  background: #2d2d2d;
   width: 100%;
   max-height: 30vh;
   overflow: auto;
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   border-radius: 4px;
   margin-top: 4px;
+  color: #ffffff;
 }
 
 /**
@@ -668,11 +707,54 @@ a.is-fullwidth {
 */
 ::v-deep .sl-vue-tree-node-item {
   font-size: 0.9em;
+  color: #ffffff;
 }
 
 ::v-deep .tag {
     margin-right: 5px;
     margin-bottom: 5px !important;
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: #3a3a3a;
+    color: #ffffff;
+    border: 1px solid #555;
+}
+
+::v-deep .tag:hover {
+    background-color: #4d4d4d;
+}
+
+::v-deep .input,
+::v-deep .textarea,
+::v-deep .select select {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #555;
+}
+
+::v-deep .input::placeholder,
+::v-deep .textarea::placeholder,
+::v-deep .select select::placeholder {
+  color: #aaa;
+}
+
+::v-deep .input:focus,
+::v-deep .textarea:focus,
+::v-deep .select select:focus {
+  border-color: #6899d0;
+  box-shadow: 0 0 0 0.2rem rgba(104, 153, 208, 0.25);
+}
+
+::v-deep .button {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+::v-deep .button:hover {
+  background-color: #4d4d4d;
+  border-color: #666;
+}
+
+::v-deep strong {
+  color: #ffffff;
 }
 </style>

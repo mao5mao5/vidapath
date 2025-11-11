@@ -13,28 +13,7 @@
  limitations under the License.-->
 
 <template>
-  <div class="annotation-details-playground" ref="playground">
-    <vue-draggable-resizable
-      v-if="selectedFeature && selectedFeature.properties && reload"
-      v-show="displayAnnotDetails"
-      class="draggable"
-      :parent="true"
-      :resizable="false"
-      drag-handle=".drag"
-      @dragstop="dragStop"
-      :w="width" h='auto' :x="positionAnnotDetails.x" :y="positionAnnotDetails.y"
-      ref="detailsPanel"
-    >
-      <div class="actions">
-        <h1>{{ $t('current-selection') }}</h1>
-        <button class="drag button is-small close">
-          <i class="fas fa-arrows-alt"></i>
-        </button>
-        <button class="button is-small close" @click="displayAnnotDetails = false">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-
+  <div ref="playground">
       <div class="annotation-details-container">
         <annotation-details
           v-if="selectedFeature.properties.annot.hasOwnProperty('user')"
@@ -66,7 +45,6 @@
           @centerView="$emit('centerView', ($event) ? $event : annot)"
         />
       </div>
-
       <!-- HACK for prev/next linked annotation shortkeys -->
       <annotation-links-preview
         v-show="false"
@@ -78,7 +56,6 @@
         :images="images"
         @select="$emit('select', $event)"
       />
-    </vue-draggable-resizable>
   </div>
 </template>
 
@@ -245,30 +222,31 @@ export default {
 
 <style scoped>
 .annotation-details-playground {
-  position: absolute;
-  left: 3.5rem;
+  position: block;
+  /* left: 3.5rem;
   top: 3.5rem;
   right: 4.5rem;
-  bottom: 2em;
+  bottom: 2em; */
   pointer-events: none; /* to allow selection of elements below it */
   /* background: rgba(255, 255, 255, 0.2);
   border: 2px dashed rgba(0, 0, 0, 0.5); */
 }
 
 .draggable {
-  background: #f2f2f2;
+  background: #2d2d2d;
   display: flex;
   flex-direction: column;
   border-radius: 5px;
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.5), 0 0 0 1px rgba(10, 10, 10, 0.5);
   pointer-events: auto;
+  color: #ffffff;
 }
 
 .actions {
   padding: 0.35em;
   text-align: right;
-  background-color: #e5e5e5;
-  border-bottom: 1px solid #b5b5b5;
+  background-color: #3a3a3a;
+  border-bottom: 1px solid #555;
   border-radius: 5px 5px 0 0;
   display: flex;
   align-items: center;
@@ -280,17 +258,50 @@ h1 {
   flex: 1;
   text-align: left;
   margin-left: 0.4em;
+  color: #ffffff;
 }
 
 .actions .button {
   margin-left: 0.25rem;
   width: 1.75rem;
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+.actions .button:hover {
+  background-color: #4d4d4d;
 }
 
 .annotation-details-container {
   padding: 0.6em;
   overflow: auto;
   height: 100%;
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+/* 深色模式滚动条样式 */
+.annotation-details-container::-webkit-scrollbar,
+.draggable::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.annotation-details-container::-webkit-scrollbar-track,
+.draggable::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.annotation-details-container::-webkit-scrollbar-thumb,
+.draggable::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+.annotation-details-container::-webkit-scrollbar-thumb:hover,
+.draggable::-webkit-scrollbar-thumb:hover {
+  background: #777;
 }
 </style>
 
@@ -302,5 +313,62 @@ h1 {
 
 .annotation-details-playground .draggable {
   z-index: 15 !important;
+}
+
+/* 深色模式下覆盖全局样式 */
+.annotation-details-playground :deep(.table) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+}
+
+.annotation-details-playground :deep(.table td),
+.annotation-details-playground :deep(.table th) {
+  border-color: #3a3a3a;
+}
+
+.annotation-details-playground :deep(.table tr:hover) {
+  background-color: #3a3a3a;
+}
+
+.annotation-details-playground :deep(.tag) {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+.annotation-details-playground :deep(.tag:hover) {
+  background-color: #4d4d4d;
+}
+
+.annotation-details-playground :deep(.button) {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+.annotation-details-playground :deep(.button:hover) {
+  background-color: #4d4d4d;
+  border-color: #666;
+}
+
+.annotation-details-playground :deep(.input),
+.annotation-details-playground :deep(.textarea),
+.annotation-details-playground :deep(.select select) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #555;
+}
+
+.annotation-details-playground :deep(.input::placeholder),
+.annotation-details-playground :deep(.textarea::placeholder),
+.annotation-details-playground :deep(.select select::placeholder) {
+  color: #aaa;
+}
+
+.annotation-details-playground :deep(.input:focus),
+.annotation-details-playground :deep(.textarea:focus),
+.annotation-details-playground :deep(.select select:focus) {
+  border-color: #6899d0;
+  box-shadow: 0 0 0 0.2rem rgba(104, 153, 208, 0.25);
 }
 </style>
