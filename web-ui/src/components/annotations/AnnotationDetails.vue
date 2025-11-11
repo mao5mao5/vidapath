@@ -605,32 +605,34 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .annotation-details {
   font-size: 1rem;
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 .table {
   width: 100%;
-  background: #2d2d2d;
-  color: #ffffff;
+  background: $dark-table-bg;
+  color: $dark-text-primary;
 }
 
 .table th, .table td {
   vertical-align: middle;
-  color: #ffffff;
-  border-color: #3a3a3a;
+  color: $dark-text-primary;
+  border-color: $dark-table-border;
 }
 
 .table tr:hover {
-  background-color: #3a3a3a;
+  background-color: $dark-table-hover-bg;
 }
 
 h5 {
   font-weight: 600;
   margin-bottom: 0.6em;
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 .actions {
@@ -639,40 +641,40 @@ h5 {
 
 .actions .button {
   margin: 3px;
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border-color: $dark-button-border;
   /* box-sizing: border-box; */
 }
 
 .actions .button:hover {
-  background-color: #4d4d4d;
-  border-color: #666;
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
 }
 
 .actions .button.is-danger {
-  background-color: #a94442;
-  border-color: #873634;
+  background-color: $dark-button-danger-bg;
+  border-color: $dark-button-danger-border;
 }
 
 .actions .button.is-danger:hover {
-  background-color: #c9302c;
-  border-color: #a72522;
+  background-color: $dark-button-danger-hover-bg;
+  border-color: $dark-button-danger-hover-border;
 }
 
 .actions .button.is-link {
-  background-color: #3a3a3a;
-  border-color: #555;
+  background-color: $dark-button-link-bg;
+  border-color: $dark-button-link-border;
 }
 
 .actions .button.is-link:hover {
-  background-color: #4d4d4d;
-  border-color: #666;
+  background-color: $dark-button-link-hover-bg;
+  border-color: $dark-button-link-hover-border;
 }
 
 a.is-fullwidth {
   width: auto;
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 a.is-fullwidth:hover {
@@ -689,14 +691,14 @@ a.is-fullwidth:hover {
   left: 0;
   z-index: 500;
   padding-top: 5px;
-  background: #2d2d2d;
+  background: $dark-bg-secondary;
   width: 100%;
   max-height: 30vh;
   overflow: auto;
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   border-radius: 4px;
   margin-top: 4px;
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 /**
@@ -707,54 +709,54 @@ a.is-fullwidth:hover {
 */
 ::v-deep .sl-vue-tree-node-item {
   font-size: 0.9em;
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 ::v-deep .tag {
     margin-right: 5px;
     margin-bottom: 5px !important;
-    background-color: #3a3a3a;
-    color: #ffffff;
-    border: 1px solid #555;
+    background-color: $dark-tag-bg;
+    color: $dark-text-primary;
+    border: 1px solid $dark-tag-border;
 }
 
 ::v-deep .tag:hover {
-    background-color: #4d4d4d;
+    background-color: $dark-tag-hover-bg;
 }
 
 ::v-deep .input,
 ::v-deep .textarea,
 ::v-deep .select select {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
 }
 
 ::v-deep .input::placeholder,
 ::v-deep .textarea::placeholder,
 ::v-deep .select select::placeholder {
-  color: #aaa;
+  color: $dark-text-disabled;
 }
 
 ::v-deep .input:focus,
 ::v-deep .textarea:focus,
 ::v-deep .select select:focus {
-  border-color: #6899d0;
-  box-shadow: 0 0 0 0.2rem rgba(104, 153, 208, 0.25);
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
 }
 
 ::v-deep .button {
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border: 1px solid #555;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-button-border;
 }
 
 ::v-deep .button:hover {
-  background-color: #4d4d4d;
-  border-color: #666;
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
 }
 
 ::v-deep strong {
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 </style>

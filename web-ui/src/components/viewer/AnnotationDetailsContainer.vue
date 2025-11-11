@@ -220,7 +220,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .annotation-details-playground {
   position: block;
   /* left: 3.5rem;
@@ -233,20 +235,20 @@ export default {
 }
 
 .draggable {
-  background: #2d2d2d;
+  background: $dark-bg-secondary;
   display: flex;
   flex-direction: column;
   border-radius: 5px;
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.5), 0 0 0 1px rgba(10, 10, 10, 0.5);
   pointer-events: auto;
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 .actions {
   padding: 0.35em;
   text-align: right;
-  background-color: #3a3a3a;
-  border-bottom: 1px solid #555;
+  background-color: $dark-bg-panel;
+  border-bottom: 1px solid $dark-border-color;
   border-radius: 5px 5px 0 0;
   display: flex;
   align-items: center;
@@ -258,27 +260,27 @@ h1 {
   flex: 1;
   text-align: left;
   margin-left: 0.4em;
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 .actions .button {
   margin-left: 0.25rem;
   width: 1.75rem;
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border: 1px solid #555;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-button-border;
 }
 
 .actions .button:hover {
-  background-color: #4d4d4d;
+  background-color: $dark-button-hover-bg;
 }
 
 .annotation-details-container {
   padding: 0.6em;
   overflow: auto;
   height: 100%;
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 /* 深色模式滚动条样式 */
@@ -290,22 +292,24 @@ h1 {
 
 .annotation-details-container::-webkit-scrollbar-track,
 .draggable::-webkit-scrollbar-track {
-  background: #2d2d2d;
+  background: $dark-scrollbar-track;
 }
 
 .annotation-details-container::-webkit-scrollbar-thumb,
 .draggable::-webkit-scrollbar-thumb {
-  background: #555;
+  background: $dark-scrollbar-thumb;
   border-radius: 4px;
 }
 
 .annotation-details-container::-webkit-scrollbar-thumb:hover,
 .draggable::-webkit-scrollbar-thumb:hover {
-  background: #777;
+  background: $dark-scrollbar-thumb-hover;
 }
 </style>
 
-<style>
+<style lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .dragging .button.drag {
   background-color: #6899d0;
   color: #fff;
@@ -317,58 +321,58 @@ h1 {
 
 /* 深色模式下覆盖全局样式 */
 .annotation-details-playground :deep(.table) {
-  background-color: #2d2d2d;
-  color: #ffffff;
+  background-color: $dark-table-bg;
+  color: $dark-text-primary;
 }
 
 .annotation-details-playground :deep(.table td),
 .annotation-details-playground :deep(.table th) {
-  border-color: #3a3a3a;
+  border-color: $dark-table-border;
 }
 
 .annotation-details-playground :deep(.table tr:hover) {
-  background-color: #3a3a3a;
+  background-color: $dark-table-hover-bg;
 }
 
 .annotation-details-playground :deep(.tag) {
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border: 1px solid #555;
+  background-color: $dark-tag-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-tag-border;
 }
 
 .annotation-details-playground :deep(.tag:hover) {
-  background-color: #4d4d4d;
+  background-color: $dark-tag-hover-bg;
 }
 
 .annotation-details-playground :deep(.button) {
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border: 1px solid #555;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-button-border;
 }
 
 .annotation-details-playground :deep(.button:hover) {
-  background-color: #4d4d4d;
-  border-color: #666;
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
 }
 
 .annotation-details-playground :deep(.input),
 .annotation-details-playground :deep(.textarea),
 .annotation-details-playground :deep(.select select) {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
 }
 
 .annotation-details-playground :deep(.input::placeholder),
 .annotation-details-playground :deep(.textarea::placeholder),
 .annotation-details-playground :deep(.select select::placeholder) {
-  color: #aaa;
+  color: $dark-text-disabled;
 }
 
 .annotation-details-playground :deep(.input:focus),
 .annotation-details-playground :deep(.textarea:focus),
 .annotation-details-playground :deep(.select select:focus) {
-  border-color: #6899d0;
-  box-shadow: 0 0 0 0.2rem rgba(104, 153, 208, 0.25);
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
 }
 </style>

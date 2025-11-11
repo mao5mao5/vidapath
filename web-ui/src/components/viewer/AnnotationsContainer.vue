@@ -175,37 +175,39 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .annotations-container {
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 .dark-collapse {
-  background-color: #1e1e1e;
+  background-color: $dark-bg-primary;
 }
 
 .dark-collapse :deep(.ant-collapse-header) {
-  background-color: #2d2d2d;
-  color: #ffffff;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
   border-radius: 4px 4px 0 0;
 }
 
 .dark-panel {
-  background-color: #1e1e1e;
-  border: 1px solid #3a3a3a;
+  background-color: $dark-bg-primary;
+  border: 1px solid $dark-border-color;
   margin-bottom: 1px;
 }
 
 .dark-panel :deep(.ant-collapse-content) {
-  background-color: #1e1e1e;
-  border: 1px solid #3a3a3a;
+  background-color: $dark-bg-primary;
+  border: 1px solid $dark-border-color;
   border-top: 0;
 }
 
 .dark-content {
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 .annotations-container :deep(.ant-collapse-content-box) {
@@ -219,38 +221,38 @@ export default {
 }
 
 .dark-content::-webkit-scrollbar-track {
-  background: #2d2d2d;
+  background: $dark-scrollbar-track;
 }
 
 .dark-content::-webkit-scrollbar-thumb {
-  background: #555;
+  background: $dark-scrollbar-thumb;
   border-radius: 4px;
 }
 
 .dark-content::-webkit-scrollbar-thumb:hover {
-  background: #777;
+  background: $dark-scrollbar-thumb-hover;
 }
 
 /* 深色模式下的图标颜色 */
 .dark-collapse :deep(.anticon) {
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 /* 深色模式下的按钮 */
 .dark-collapse :deep(.ant-btn) {
-  background-color: #3a3a3a;
-  border-color: #555;
-  color: #ffffff;
+  background-color: $dark-button-bg;
+  border-color: $dark-button-border;
+  color: $dark-text-primary;
 }
 
 .dark-collapse :deep(.ant-btn:hover) {
-  background-color: #4d4d4d;
-  border-color: #666;
-  color: #ffffff;
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+  color: $dark-text-primary;
 }
 
 /* 确保折叠面板标题文字为白色 */
 .dark-collapse :deep(.ant-collapse-header) {
-  color: #ffffff !important;
+  color: $dark-text-primary !important;
 }
 </style>
