@@ -432,20 +432,22 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .panel-block {
   padding-top: 0.8em;
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 .panel-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #3a3a3a;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 .search-block {
@@ -457,8 +459,8 @@ export default {
   margin-bottom: 1rem;
   border-radius: 10px;
   padding: 1rem 1.5em;
-  background: #252525;
-  color: #ffffff;
+  background: $dark-bg-tertiary;
+  color: $dark-text-primary;
 }
 
 .legend p:not(:last-child) {
@@ -467,231 +469,231 @@ export default {
 
 /* 暗黑模式下的过滤器区域 */
 .filters {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #3a3a3a;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 .filter-label {
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 /* 暗黑模式下的表格样式 */
 :deep(.table) {
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 :deep(.table tr) {
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 :deep(.table tr:hover) {
-  background-color: #4d4d4d;
+  background-color: $dark-bg-hover;
 }
 
 :deep(.table th) {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #3a3a3a;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 :deep(.table td) {
-  color: #ffffff;
-  border-color: #3a3a3a;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 /* 暗黑模式下的分页控件 */
 :deep(.pagination) {
-  background-color: #2d2d2d;
-  color: #ffffff;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
 }
 
 :deep(.pagination .button) {
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border-color: $dark-button-border;
 }
 
 :deep(.pagination .button:hover) {
-  background-color: #4d4d4d;
-  border-color: #666;
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
 }
 
 :deep(.pagination .button[disabled]) {
-  background-color: #252525;
-  color: #aaa;
-  border-color: #3a3a3a;
+  background-color: $dark-bg-tertiary;
+  color: $dark-text-disabled;
+  border-color: $dark-border-color;
 }
 
 /* 暗黑模式下的输入框 */
 :deep(.input) {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
 }
 
 :deep(.input::placeholder) {
-  color: #aaa;
+  color: $dark-text-disabled;
 }
 
 :deep(.input:focus) {
-  border-color: #6899d0;
-  box-shadow: 0 0 0 0.2rem rgba(104, 153, 208, 0.25);
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
 }
 
 /* 暗黑模式下的按钮 */
 :deep(.button) {
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border-color: $dark-button-border;
 }
 
 :deep(.button:hover) {
-  background-color: #4d4d4d;
-  border-color: #666;
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
 }
 
 :deep(.button.is-link) {
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border-color: $dark-button-border;
 }
 
 :deep(.button.is-link:hover) {
-  background-color: #4d4d4d;
-  border-color: #666;
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
 }
 
 :deep(.button.is-small) {
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border-color: $dark-button-border;
 }
 
 :deep(.button.is-small:hover) {
-  background-color: #4d4d4d;
-  border-color: #666;
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
 }
 
 /* 暗黑模式下的多选框 */
 :deep(.multiselect) {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
 }
 
 :deep(.multiselect:focus) {
-  border-color: #6899d0;
-  box-shadow: 0 0 0 0.2rem rgba(104, 153, 208, 0.25);
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
 }
 
 :deep(.multiselect__tags) {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
 }
 
 :deep(.multiselect__input) {
-  background-color: #2d2d2d;
-  color: #ffffff;
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
 }
 
 :deep(.multiselect__input::placeholder) {
-  color: #aaa;
+  color: $dark-text-disabled;
 }
 
 :deep(.multiselect__content) {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #3a3a3a;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 :deep(.multiselect__element) {
-  background-color: #2d2d2d;
-  color: #ffffff;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
 }
 
 :deep(.multiselect__element:hover) {
-  background-color: #4d4d4d;
+  background-color: $dark-bg-hover;
 }
 
 :deep(.multiselect__option) {
-  background-color: #2d2d2d;
-  color: #ffffff;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
 }
 
 :deep(.multiselect__option:hover) {
-  background-color: #4d4d4d;
+  background-color: $dark-bg-hover;
 }
 
 :deep(.multiselect__option--selected) {
-  background-color: #3a3a3a;
-  color: #ffffff;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
 }
 
 :deep(.multiselect__option--selected:hover) {
-  background-color: #4d4d4d;
+  background-color: $dark-button-hover-bg;
 }
 
 /* 暗黑模式下的滑块 */
 :deep(.slider) {
-  background-color: #252525;
+  background-color: $dark-bg-tertiary;
 }
 
 :deep(.slider .slider-track) {
-  background-color: #3a3a3a;
+  background-color: $dark-bg-panel;
 }
 
 :deep(.slider .slider-fill) {
-  background-color: #3a3a3a;
+  background-color: $dark-button-bg;
 }
 
 :deep(.slider .slider-thumb) {
-  background-color: #ffffff;
-  border-color: #555;
+  background-color: $dark-text-primary;
+  border-color: $dark-button-border;
 }
 
 :deep(.slider .slider-thumb:hover) {
-  background-color: #ffffff;
-  border-color: #666;
+  background-color: $dark-text-primary;
+  border-color: $dark-button-hover-border;
 }
 
 /* 暗黑模式下的折叠面板 */
 :deep(.collapse) {
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 :deep(.collapse .collapse-trigger) {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #3a3a3a;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 :deep(.collapse .collapse-content) {
-  background-color: #1e1e1e;
-  color: #ffffff;
-  border-color: #3a3a3a;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 /* 暗黑模式下的加载动画 */
 :deep(.loading) {
   background-color: rgba(30, 30, 30, 0.7);
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 /* 暗黑模式下的错误提示框 */
 .box.error {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #3a3a3a;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 /* 暗黑模式下的链接 */
 :deep(a) {
-  color: #ffffff;
+  color: $dark-text-primary;
 }
 
 :deep(a:hover) {
@@ -699,25 +701,27 @@ export default {
 }
 
 :deep(a.button) {
-  background-color: #3a3a3a;
-  color: #ffffff;
-  border-color: #555;
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border-color: $dark-button-border;
 }
 
 :deep(a.button:hover) {
-  background-color: #4d4d4d;
-  border-color: #666;
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
 }
 </style>
 
-<style>
+<style lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .search-projects {
   max-width: 25em;
   margin-right: 1em;
 }
 
 .table-projects {
-  margin-top: 1rem;
+  margin-top: 1rem;  
 }
 
 .list-projects-wrapper td, .list-projects-wrapper th {
@@ -726,28 +730,28 @@ export default {
 
 /* 暗黑模式下的表格全局样式 */
 .table-projects :deep(.table) {
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 .table-projects :deep(.table tr) {
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 .table-projects :deep(.table tr:hover) {
-  background-color: #4d4d4d;
+  background-color: $dark-bg-hover;
 }
 
 .table-projects :deep(.table th) {
-  background-color: #2d2d2d;
-  color: #ffffff;
-  border-color: #3a3a3a;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 .table-projects :deep(.table td) {
-  color: #ffffff;
-  border-color: #3a3a3a;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 
 /* 暗黑模式下滚动条样式 */
@@ -761,19 +765,19 @@ export default {
 .list-projects-wrapper::-webkit-scrollbar-track,
 .panel-block::-webkit-scrollbar-track,
 .filters::-webkit-scrollbar-track {
-  background: #2d2d2d;
+  background: $dark-scrollbar-track;
 }
 
 .list-projects-wrapper::-webkit-scrollbar-thumb,
 .panel-block::-webkit-scrollbar-thumb,
 .filters::-webkit-scrollbar-thumb {
-  background: #555;
+  background: $dark-scrollbar-thumb;
   border-radius: 4px;
 }
 
 .list-projects-wrapper::-webkit-scrollbar-thumb:hover,
 .panel-block::-webkit-scrollbar-thumb:hover,
 .filters::-webkit-scrollbar-thumb:hover {
-  background: #777;
+  background: $dark-scrollbar-thumb-hover;
 }
 </style>
