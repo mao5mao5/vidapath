@@ -14,10 +14,10 @@
 
 <template>
 <div>
-  <h1>
+  <h1 style="color: white;">
     {{$t('information')}}
   </h1>
-  <table class="table">
+  <table class="table" s>
     <tbody>
       <tr v-if="currentAccount.isDeveloper">
         <td><strong>{{$t('id')}}</strong></td>
@@ -298,14 +298,22 @@ export default {
   margin-bottom: 0 !important;
   width: 100%;
   table-layout: fixed;
+  color: white;
+  background-color: transparent;
+  border-collapse: collapse
 }
 
 td {
   word-wrap: break-word;
+  color: white;
 }
 
 td:first-child {
   width: 10em;
+  color: white;
+}
+td:first-child strong {
+  color: white;
 }
 
 .buttons-wrapper {

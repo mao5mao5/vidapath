@@ -1,7 +1,17 @@
 <template>
   <div class="annotations-container">
     <a-collapse :bordered="false" class="dark-collapse">
-      <a-collapse-panel key="1" header="Annotation Details" class="dark-panel">
+      <a-collapse-panel key="container-0" header="Slide Metadata" class="dark-panel">
+        <template #extra>
+          <a-icon type="down" />
+        </template>
+         <information-panel
+              class="dark-content"
+              :index="index"
+              @openMetadata="togglePanel('metadata')"
+          />
+      </a-collapse-panel>
+      <a-collapse-panel key="container-1" header="Annotation Details" class="dark-panel">
         <template #extra>
           <a-icon type="down" />
         </template>
@@ -16,7 +26,7 @@
           @updateProperties="updateProperties"
           @delete="handleDeletion" />
       </a-collapse-panel>
-      <a-collapse-panel key="2" header="Annotations List" class="dark-panel">
+      <a-collapse-panel key="container-2" header="Annotations List" class="dark-panel">
         <template #extra>
           <a-icon type="down" />
         </template>
@@ -38,6 +48,7 @@ import { Action, updateTermProperties, updateTrackProperties } from '@/utils/ann
 
 import WKT from 'ol/format/WKT';
 
+import InformationPanel from './panels/InformationPanel';
 import AnnotationsList from './AnnotationsList';
 import AnnotationDetailsContainer from './AnnotationDetailsContainer';
 import SimilarAnnotation from '@/components/annotations/SimilarAnnotation';
@@ -59,6 +70,7 @@ export default {
     AnnotationsList,
     AnnotationDetailsContainer,
     SimilarAnnotation,
+    InformationPanel,
   },
   computed: {
     configUI: get('currentProject/configUI'),
@@ -161,6 +173,9 @@ export default {
       }
     },
 
+    togglePanel(panel) {
+      // this.$store.commit(this.imageModule + 'togglePanel', panel);
+    },
     centerView({ annot, sameView = false }) {
       if (sameView) {
         this.$emit('centerView', annot);
@@ -181,10 +196,13 @@ export default {
 .annotations-container {
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
+  opacity: 0.95;
+  border-radius: 5px
 }
 
 .dark-collapse {
   background-color: $dark-bg-primary;
+   border-radius: 5px
 }
 
 .dark-collapse :deep(.ant-collapse-header) {
@@ -206,8 +224,8 @@ export default {
 }
 
 .dark-content {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
+  background-color: $dark-bg-primary !important;
+  color: $dark-text-primary !important;
 }
 
 .annotations-container :deep(.ant-collapse-content-box) {
