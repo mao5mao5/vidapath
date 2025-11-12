@@ -1341,6 +1341,8 @@ export default {
 </style>
 
 <style lang="scss">
+@import '../../assets/styles/dark-variables.scss';
+
 $colorActiveIcon: #fff;
 
 .draw-tools-wrapper {
@@ -1395,7 +1397,63 @@ $colorActiveIcon: #fff;
   }
 
   .icon svg {
-    height: 1.15em !important;
+    height: 2.0em !important;
+    width: 2.0em !important;
+    font-size: 2.0em !important;
+  }
+  
+  .icon.is-medium {
+    height: 4.6em !important;
+    width: 4.6em !important;
+    font-size: 4.6em !important;
+  }
+
+  /* 添加黑底白字效果 */
+  .button {
+    background-color: $dark-bg-primary !important;
+    color: $dark-text-primary !important;
+    border: 1px solid $dark-border-color !important;
+    height: 2.0em; /* 增加按钮高度以适应更大的图标 */
+    width: 2.0em; /* 设置按钮宽度，使其成为正方形 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.0em !important; /* 放大按钮中的字号 */
+  }
+
+  .button:hover {
+    background-color: $dark-bg-hover !important;
+    color: $dark-text-primary !important;
+  }
+
+  .button:disabled {
+    background-color: $dark-bg-tertiary !important;
+    color: $dark-text-disabled !important;
+  }
+
+  .button.is-selected {
+    background-color: #6899d0 !important;
+    color: $dark-text-primary !important;
+  }
+
+  /* 确保所有图标文字都为白色 */
+  .button .icon,
+  .button .icon * {
+    color: $dark-text-primary !important;
+    fill: $dark-text-primary !important;
+    font-size: 1.2em !important; /* 放大图标中的字号 */
+  }
+
+  .button:hover .icon,
+  .button:hover .icon * {
+    color: $dark-text-primary !important;
+    fill: $dark-text-primary !important;
+  }
+
+  .button:disabled .icon,
+  .button:disabled .icon * {
+    color: $dark-text-disabled !important;
+    fill: $dark-text-disabled !important;
   }
 
   .icon .special-paste-icon {

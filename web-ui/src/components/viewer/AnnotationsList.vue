@@ -1,7 +1,7 @@
 <template>
-  <div class="annotations-list-wrapper">
-    <div v-show="opened" class="annotations-list-opened">
-      <button class="delete" @click="opened = false"></button>
+  <div>
+    <div class="annotations-list-opened">
+      <!-- <button class="delete" @click="opened = false"></button> -->
 
       <div class="annotations-list-sidebar">
         <!--<b-field position="is-centered" v-if="hasTracks">
@@ -70,7 +70,7 @@
       </div>
     </div>
 
-    <div v-show="!opened" class="opener" @click="opened = true">{{$t("annotations-list")}} <i class="fas fa-caret-up"></i></div>
+    <!-- <div v-show="!opened" class="opener" @click="opened = true">{{$t("annotations-list")}} <i class="fas fa-caret-up"></i></div> -->
   </div>
 </template>
 
@@ -303,6 +303,7 @@ export default {
     this.$eventBus.$on('editAnnotation', this.editAnnotationHandler);
     this.$eventBus.$on('deleteAnnotation', this.deleteAnnotationHandler);
     this.$eventBus.$on('shortkeyEvent', this.shortkeyHandler);
+    this.$store.commit(this.imageModule + 'setShowAnnotationsList', true);
   },
   beforeDestroy() {
     // unsubscribe from all events
@@ -315,13 +316,16 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .annotations-list-opened {
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-  background: #f5f5f5;
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.5), 0 0 0 1px rgba(10, 10, 10, 0.5);
+  background: $dark-bg-secondary;
   height: 25vh;
   pointer-events: auto;
   display: flex;
+  color: $dark-text-primary;
 }
 
 .delete {
@@ -329,22 +333,25 @@ export default {
   right: 25px;
   top: 7px;
   z-index: 10;
+  color: $dark-text-primary;
 }
 
 .annotations-list-container {
   overflow: auto;
   position: relative;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid $dark-border-color;
   height: 100%;
   width: 100%;
   padding-right: 25px;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 .opener {
-  background: #f5f5f5;
+  background: $dark-bg-secondary;
   width: 150px;
   border-radius: 5px 5px 0px 0px;
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.5), 0 0 0 1px rgba(10, 10, 10, 0.5);
   margin: auto;
   text-align: center;
   text-transform: uppercase;
@@ -352,6 +359,7 @@ export default {
   letter-spacing: 0.3px;
   cursor: pointer;
   pointer-events: auto;
+  color: $dark-text-primary;
 }
 
 .opener .fas {
@@ -368,17 +376,100 @@ export default {
   height: 100%;
 }
 
->>> h2 {
+h2 {
+  color: $dark-text-primary;
   margin-bottom: 0;
 }
 
 .annotations-list-sidebar {
   padding: 10px;
   overflow-y: auto;
-  min-width: 18em;
+  min-width: 6em;
+  background-color: $dark-bg-tertiary;
+  color: $dark-text-primary;
 }
 
->>> ul.pagination-list {
+:deep(ul.pagination-list) {
   justify-content: flex-end;
+}
+
+/* 深色模式滚动条样式 */
+.annotations-list-opened::-webkit-scrollbar,
+.annotations-list-container::-webkit-scrollbar,
+.annotations-list-sidebar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.annotations-list-opened::-webkit-scrollbar-track,
+.annotations-list-container::-webkit-scrollbar-track,
+.annotations-list-sidebar::-webkit-scrollbar-track {
+  background: $dark-scrollbar-track;
+}
+
+.annotations-list-opened::-webkit-scrollbar-thumb,
+.annotations-list-container::-webkit-scrollbar-thumb,
+.annotations-list-sidebar::-webkit-scrollbar-thumb {
+  background: $dark-scrollbar-thumb;
+  border-radius: 4px;
+}
+
+.annotations-list-opened::-webkit-scrollbar-thumb:hover,
+.annotations-list-container::-webkit-scrollbar-thumb:hover,
+.annotations-list-sidebar::-webkit-scrollbar-thumb:hover {
+  background: $dark-scrollbar-thumb-hover;
+}
+
+/* 深色模式下的组件样式 */
+.annotations-list-opened :deep(.table) {
+  background-color: $dark-table-bg;
+  color: $dark-text-primary;
+}
+
+.annotations-list-opened :deep(.table td),
+.annotations-list-opened :deep(.table th) {
+  border-color: $dark-table-border;
+}
+
+.annotations-list-opened :deep(.table tr:hover) {
+  background-color: $dark-table-hover-bg;
+}
+
+.annotations-list-opened :deep(.button) {
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-button-border;
+}
+
+.annotations-list-opened :deep(.button:hover) {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.annotations-list-opened :deep(.input),
+.annotations-list-opened :deep(.textarea),
+.annotations-list-opened :deep(.select select) {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.annotations-list-opened :deep(.input::placeholder),
+.annotations-list-opened :deep(.textarea::placeholder),
+.annotations-list-opened :deep(.select select::placeholder) {
+  color: $dark-text-disabled;
+}
+
+.annotations-list-opened :deep(.input:focus),
+.annotations-list-opened :deep(.textarea:focus),
+.annotations-list-opened :deep(.select select:focus) {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.annotations-list-opened :deep(.tag) {
+  background-color: $dark-tag-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-tag-border;
 }
 </style>

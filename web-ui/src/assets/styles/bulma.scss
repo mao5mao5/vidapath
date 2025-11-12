@@ -2,6 +2,7 @@
 @import '~bulma';
 @import '~buefy/src/scss/buefy';
 @import '~bulma-slider/dist/css/bulma-slider.min.css';
+@import './dark-variables.scss';
 
 $loadingColor: #bbb;
 
@@ -35,7 +36,7 @@ html {
   font-family: "Font Awesome 5 Free";
   content: "\f0dc";
   position: relative;
-  color: rgba(0, 0, 0, 0.2);
+  color: $dark-text-primary;
   left: 8px;
   top: 1px;
 }
@@ -46,6 +47,10 @@ html {
 
 .b-table .table th .button {
   font-weight: 400;
+}
+
+.b-table .table tr.detail {
+    background-color: $dark-bg-primary !important;
 }
 
 .detail-container {

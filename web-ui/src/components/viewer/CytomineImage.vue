@@ -20,6 +20,30 @@
         <li><a title="Zoom in" @click="zoomIn()"><i class="fas fa-search-plus"></i></a></li>
         <li><a title="Zoom out" @click="zoomOut()"><i class="fas fa-search-minus"></i></a></li>
         <li><a title="Pan" @click="activatePan()"><i class="fas fa-arrows-alt"></i></a></li>
+        <a-divider />
+        <li>
+            <a @click="togglePanel('info')" :class="{active: ['info', 'metadata'].includes(activePanel)}">
+              <i class="fas fa-info"></i>
+            </a>
+            <information-panel
+              class="panel-options"
+              v-show="activePanel === 'info'"
+              :index="index"
+              @openMetadata="togglePanel('metadata')"
+            />
+            <div v-show="activePanel === 'metadata'">
+              <metadata-panel class="panel-metadata" :index="index" />
+            </div>
+          </li>
+
+          <li>
+            <a @click="togglePanel('layers')" :class="{active: activePanel === 'layers'}">
+              <i class="fas fa-copy"></i>
+            </a>
+            <layers-panel class="panel-options" v-show="activePanel === 'layers'"
+              :index="index" :layers-to-preload="layersToPreload"
+            />
+          </li>
       </ul>
     </div>
 
@@ -178,14 +202,16 @@
     <div class="broadcast" v-if="imageWrapper.tracking.broadcast">
       <i class="fas fa-circle"></i> {{$t('live')}}
     </div>
-
+ 
     <rotation-selector class="rotation-selector-wrapper" :index="index" />
 
     <scale-line v-show="scaleLineCollapsed" :image="image" :zoom="zoom" :mousePosition="projectedMousePosition" />
 
     <toggle-scale-line :index="index" />
 
-    <annotations-container :index="index" @centerView="centerViewOnAnnot" />
+    <div style="position: absolute; width: 500px; height: 800px; top: 10px; right: 10px; z-index: 1000;">
+      <annotations-container :index="index" @centerView="centerViewOnAnnot" />
+    </div> 
 
     <div class="custom-overview" ref="overview">
       <p class="image-name" :class="{hidden: overviewCollapsed}">
@@ -207,6 +233,7 @@ import ScaleLine from './ScaleLine';
 import DrawTools from './DrawTools';
 import ImageControls from './ImageControls';
 import AnnotationsContainer from './AnnotationsContainer';
+import AnnotationDetailsContainer from './AnnotationDetailsContainer';
 
 import InformationPanel from './panels/InformationPanel';
 import MetadataPanel from './panels/MetadataPanel.vue';
@@ -253,6 +280,7 @@ export default {
     DrawTools,
     ImageControls,
     AnnotationsContainer,
+    AnnotationDetailsContainer,
 
     InformationPanel,
     MetadataPanel,

@@ -186,70 +186,168 @@ export default {
 };
 </script>
 
-<style scoped>
-.actions {
-  align-items: center;
-  background-color: #e5e5e5;
-  border-bottom: 1px solid #b5b5b5;
-  border-radius: 5px 5px 0 0;
-  display: flex;
-  padding: 0.35em;
-  text-align: right;
-}
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
 
-.actions .button {
-  margin-left: 0.25rem;
-  width: 1.75rem;
-}
-
-.annotation-content {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.annotation-data {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 0.5rem;
+.similar-annotations-playground {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1000;
 }
 
 .draggable {
-  background: #f2f2f2;
-  border-radius: 5px;
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  background: $dark-bg-secondary;
   display: flex;
   flex-direction: column;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.5), 0 0 0 1px rgba(10, 10, 10, 0.5);
   pointer-events: auto;
+  color: $dark-text-primary;
+  max-height: 90vh;
+}
+
+.actions {
+  padding: 0.35em;
+  text-align: right;
+  background-color: $dark-bg-panel;
+  border-bottom: 1px solid $dark-border-color;
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  align-items: center;
 }
 
 h1 {
-  flex: 1;
-  font-size: 1rem;
-  margin-left: 0.4em;
+  font-size: 0.9rem;
   padding: 0;
+  flex: 1;
   text-align: left;
+  margin-left: 0.4em;
+  color: $dark-text-primary;
+}
+
+.button {
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-button-border;
+}
+
+.button:hover {
+  background-color: $dark-button-hover-bg;
+}
+
+.annotation-content {
+  padding: 0.6em;
+  overflow: auto;
+  height: 100%;
+  background-color: $dark-bg-primary;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 400px;
+  color: $dark-text-primary;
+}
+
+.annotation-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $dark-bg-tertiary;
+  padding: 5px;
+  border-radius: 4px;
+  color: $dark-text-primary;
 }
 
 .no-annotation-content {
-  padding: 0.5rem;
-}
-
-.similar-annotations-playground {
-  top: 3.5rem;
-  bottom: 2em;
-  left: 3.5rem;
-  right: 4.5rem;
-  pointer-events: none;
-  position: absolute;
-}
-
-.similar-annotations-playground .draggable {
-  z-index: 20 !important;
+  padding: 1em;
+  text-align: center;
+  width: 100%;
+  color: $dark-text-disabled;
 }
 
 .term-suggestion {
-  flex-direction: column;
-  margin: 0.5rem;
+  margin: 5px;
+  background-color: $dark-bg-tertiary;
+  color: $dark-text-primary;
+  border: 1px solid $dark-border-color;
+}
+
+/* 深色模式滚动条样式 */
+.annotation-content::-webkit-scrollbar,
+.draggable::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.annotation-content::-webkit-scrollbar-track,
+.draggable::-webkit-scrollbar-track {
+  background: $dark-scrollbar-track;
+}
+
+.annotation-content::-webkit-scrollbar-thumb,
+.draggable::-webkit-scrollbar-thumb {
+  background: $dark-scrollbar-thumb;
+  border-radius: 4px;
+}
+
+.annotation-content::-webkit-scrollbar-thumb:hover,
+.draggable::-webkit-scrollbar-thumb:hover {
+  background: $dark-scrollbar-thumb-hover;
+}
+
+/* 深色模式下的组件样式 */
+.draggable :deep(.table) {
+  background-color: $dark-table-bg;
+  color: $dark-text-primary;
+}
+
+.draggable :deep(.table td),
+.draggable :deep(.table th) {
+  border-color: $dark-table-border;
+}
+
+.draggable :deep(.table tr:hover) {
+  background-color: $dark-table-hover-bg;
+}
+
+.draggable :deep(.button) {
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-button-border;
+}
+
+.draggable :deep(.button:hover) {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.draggable :deep(.input),
+.draggable :deep(.textarea),
+.draggable :deep(.select select) {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.draggable :deep(.input::placeholder),
+.draggable :deep(.textarea::placeholder),
+.draggable :deep(.select select::placeholder) {
+  color: $dark-text-disabled;
+}
+
+.draggable :deep(.input:focus),
+.draggable :deep(.textarea:focus),
+.draggable :deep(.select select:focus) {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.draggable :deep(.tag) {
+  background-color: $dark-tag-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-tag-border;
 }
 </style>

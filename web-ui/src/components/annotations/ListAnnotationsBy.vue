@@ -16,10 +16,10 @@
 <div class="box">
   <b-loading :is-full-page="false" class="small" :active="loading"  />
   <div v-if="!isInViewer || (isInViewer && !loading)">
-    <h2>
+    <!-- <h2>
       <template v-if="titlePrefix">{{titlePrefix}} </template>
       <span :class="{'has-text-weight-bold': titlePrefix || titleSuffix}">{{title}}</span>
-      <template v-if="titleSuffix"> {{titleSuffix}}</template> ({{nbAnnotations}}) </h2>
+      <template v-if="titleSuffix"> {{titleSuffix}}</template> ({{nbAnnotations}}) </h2> -->
     <template v-if="error">
       <b-message type="is-danger" has-icon icon-size="is-small">
         {{$t('failed-fetch-annots')}}
