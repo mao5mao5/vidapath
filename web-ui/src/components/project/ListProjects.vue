@@ -145,9 +145,9 @@
           </b-table-column>
 
           <b-table-column field="name" :label="$t('name')" sortable width="250">
-            <router-link :to="`/project/${project.id}`">
+            <a @click="openProject(project)">
               {{ project.name }}
-            </router-link>
+            </a>
           </b-table-column>
 
           <b-table-column field="membersCount" :label="$t('members')" centered sortable width="150">
@@ -175,9 +175,9 @@
           </b-table-column>
 
           <b-table-column label=" " centered width="150">
-            <router-link :to="`/project/${project.id}`" class="button is-small is-link">
+            <a class="button is-small is-link" @click="openProject(project)">
               {{$t('button-open')}}
-            </router-link>
+            </a>
           </b-table-column>
         </template>
 
@@ -220,7 +220,7 @@ import AddProjectModal from './AddProjectModal';
 
 import {get, sync, syncBoundsFilter, syncMultiselectFilter} from '@/utils/store-helpers';
 
-import {ProjectCollection, OntologyCollection, TagCollection} from '@/api';
+import {ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection} from '@/api';
 import IconProjectMemberRole from '@/components/icons/IconProjectMemberRole';
 export default {
   name: 'list-projects',
@@ -406,6 +406,33 @@ export default {
           text: this.$t('notif-error-project-deletion', {projectName: projectToDelete.name})
         });
         return;
+      }
+    },
+    
+    async openProject(project) {
+      try {
+        // 获取项目的第一张图片
+        const imageCollection = new ImageInstanceCollection({
+          filterKey: 'project',
+          filterValue: project.id,
+          sort: 'created',
+          order: 'asc',
+          max: 1
+        });
+        
+        const images = await imageCollection.fetchPage(0);
+        if (images.array.length > 0) {
+          const firstImage = images.array[0];
+          // 跳转到Viewer并显示第一张图片
+          this.$router.push(`/project/${project.id}/image/${firstImage.id}`);
+        } else {
+          // 如果项目中没有图片，则只跳转到项目页面
+          this.$router.push(`/project/${project.id}`);
+        }
+      } catch (error) {
+        console.error('Error fetching first image:', error);
+        // 出错时仍然跳转到项目页面
+        this.$router.push(`/project/${project.id}`);
       }
     }
   },
