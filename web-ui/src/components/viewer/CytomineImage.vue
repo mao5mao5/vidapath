@@ -57,7 +57,7 @@
             </a>
             <properties-panel class="panel-options" v-show="activePanel === 'properties'" :index="index" />
           </li>
-          
+
           <a-divider />
 
           <li v-if="configUI['project-tools-screenshot']">
@@ -66,6 +66,11 @@
             </a>
           </li>
 
+          <li>
+            <a @click="toggleFullscreen">
+              <i :class="isFullscreen ? 'fas fa-compress' : 'fas fa-expand'"></i>
+            </a>
+          </li>
         </ul>
       </div>
 
@@ -303,6 +308,8 @@ export default {
       overview: null,
 
       format: new WKT(),
+
+      isFullscreen: false
     };
   },
   computed: {
@@ -769,6 +776,80 @@ export default {
       // Reset container css values as previous
       document.querySelector('.map-container').style.height = '';
     },
+
+    toggleFullscreen() {
+      const element = this.$el;
+
+      if (!document.fullscreenElement &&
+        !document.webkitFullscreenElement &&
+        !document.mozFullScreenElement &&
+        !document.msFullscreenElement) {
+        // 进入全屏
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+      } else {
+        // 退出全屏
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    },
+
+    handleFullscreenChange() {
+      this.isFullscreen = !!(document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement);
+    },
+    toggleFullscreen() {
+      const element = this.$el;
+
+      if (!document.fullscreenElement &&
+        !document.webkitFullscreenElement &&
+        !document.mozFullScreenElement &&
+        !document.msFullscreenElement) {
+        // 进入全屏
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+      } else {
+        // 退出全屏
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    },
+    handleFullscreenChange() {
+      this.isFullscreen = !!(document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement);
+    },
   },
   async created() {
     if (!getProj(this.projectionName)) { // if image opened for the first time
@@ -854,6 +935,12 @@ export default {
     this.$eventBus.$on('selectAnnotation', this.selectAnnotationHandler);
     this.$eventBus.$on('close-metadata', () => this.$store.commit(this.imageModule + 'togglePanel', 'info'));
     this.setInitialZoom();
+
+    // 添加全屏事件监听器
+    document.addEventListener('fullscreenchange', this.handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', this.handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', this.handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', this.handleFullscreenChange);
   },
   beforeDestroy() {
     this.$eventBus.$off('updateMapSize', this.updateMapSize);
@@ -861,6 +948,12 @@ export default {
     this.$eventBus.$off('selectAnnotation', this.selectAnnotationHandler);
     this.$eventBus.$off('close-metadata');
     clearTimeout(this.timeoutSavePosition);
+
+    // 移除全屏事件监听器
+    document.removeEventListener('fullscreenchange', this.handleFullscreenChange);
+    document.removeEventListener('webkitfullscreenchange', this.handleFullscreenChange);
+    document.removeEventListener('mozfullscreenchange', this.handleFullscreenChange);
+    document.removeEventListener('MSFullscreenChange', this.handleFullscreenChange);
   }
 };
 </script>
