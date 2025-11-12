@@ -57,6 +57,15 @@
             </a>
             <properties-panel class="panel-options" v-show="activePanel === 'properties'" :index="index" />
           </li>
+          
+          <a-divider />
+
+          <li v-if="configUI['project-tools-screenshot']">
+            <a @click="takeScreenshot()" :class="{ active: activePanel === 'screenshot' }">
+              <i class="fas fa-camera"></i>
+            </a>
+          </li>
+
         </ul>
       </div>
 

@@ -225,7 +225,7 @@
     </div>
   </template> -->
 
-  <div class="buttons has-addons are-small">
+  <!-- <div class="buttons has-addons are-small">
       <button
       v-if="isToolDisplayed('screenshot')"
       :disabled="disabledDraw"
@@ -235,7 +235,7 @@
     >
       <span class="icon is-small"><i class="fas fa-camera"></i></span>
     </button>
-  </div>
+  </div> -->
 
   <div v-if="configUI['project-explore-annotation-main']" class="buttons has-addons are-small">
     <button

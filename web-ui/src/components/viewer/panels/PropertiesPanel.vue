@@ -15,7 +15,7 @@
 <template>
 <div class="properties-panel">
   <h1>{{$t('properties')}}</h1>
-  <b-field horizontal :label="$t('key')">
+  <b-field horizontal :label="$t('key')" style="color: white !important;">
     <b-select size="is-small" v-model="selectedPropertyKey">
       <option :value="null">
         {{$t('no-key-selected')}}
@@ -26,7 +26,7 @@
     </b-select>
   </b-field>
 
-  <b-field horizontal :label="$t('color')">
+  <b-field horizontal :label="$t('color')" style="color: white !important;">
     <b-select size="is-small" v-model="selectedPropertyColor">
       <option v-for="color in colors" :value="color" :key="color.name">
         {{ $t(color.name) }}
@@ -80,5 +80,9 @@ export default {
 <style>
 .properties-panel select {
   width: 15em;
+}
+
+.label {
+  color: white !important;
 }
 </style>

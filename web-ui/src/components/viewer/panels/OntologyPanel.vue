@@ -157,7 +157,7 @@ input[type="range"].slider {
   top: 0;
   z-index: 5;
   padding-bottom: 0.3em;
-  background: #f2f2f2;
+  background: transparent;
   border: 2px solid #DBDBDB;
   border-width: 0 0 2px !important;
 }
