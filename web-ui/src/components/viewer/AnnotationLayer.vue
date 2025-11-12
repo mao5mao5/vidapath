@@ -17,6 +17,7 @@
   :visible="layer.visible"
   :extent="imageExtent"
   :update-while-interacting="false"
+  style="color: white;"
 >
 
   <vl-source-vector
@@ -24,6 +25,7 @@
     :loader-factory="loaderFactory"
     :strategy-factory="strategyFactory"
     url="-"
+    style="color: white;"
   > <!-- HACK because loader factory not used if URL not specified -->
     <vl-style-func :factory="styleFunctionFactory" />
   </vl-source-vector>

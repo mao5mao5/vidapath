@@ -23,7 +23,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="checkbox-column"><span class="far fa-eye"></span></th>
+          <th class="checkbox-column"><span class="far fa-eye" style="color: white;"></span></th>
           <th class="name-column">
             <b-input v-model="searchString" :placeholder="$t('search-placeholder')" size="is-small" expanded />
           </th>
