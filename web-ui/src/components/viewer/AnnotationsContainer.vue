@@ -3,7 +3,7 @@
     <a-collapse :bordered="false" class="dark-collapse">
       <a-collapse-panel key="1" header="Annotation Details" class="dark-panel">
         <template #extra>
-          <a-icon type="close" @click="handleClick" />
+          <a-icon type="close" />
         </template>
         <annotation-details-container v-if="isPanelDisplayed('annotation-main')" 
           class="dark-content"
@@ -18,7 +18,7 @@
       </a-collapse-panel>
       <a-collapse-panel key="2" header="Annotations List" class="dark-panel">
         <template #extra>
-          <a-icon type="close" @click="handleClick" />
+          <a-icon type="close" />
         </template>
         <annotations-list
           class="dark-content"
