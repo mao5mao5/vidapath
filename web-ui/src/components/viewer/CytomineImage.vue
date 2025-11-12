@@ -13,217 +13,196 @@
  limitations under the License.-->
 
 <template>
-<div class="map-container" @click="isActiveImage = true" ref="container">
-  <template v-if="!loading && zoom !== null">
-    <div class="map-tools"> 
-      <ul class="map-tools-list">
-        <li><a title="Zoom in" @click="zoomIn()"><i class="fas fa-search-plus"></i></a></li>
-        <li><a title="Zoom out" @click="zoomOut()"><i class="fas fa-search-minus"></i></a></li>
-        <li><a title="Pan" @click="activatePan()"><i class="fas fa-arrows-alt"></i></a></li>
-        <a-divider />
-        <li>
-            <a @click="togglePanel('info')" :class="{active: ['info', 'metadata'].includes(activePanel)}">
-              <i class="fas fa-info"></i>
-            </a>
-            <information-panel
-              class="panel-options"
-              v-show="activePanel === 'info'"
-              :index="index"
-              @openMetadata="togglePanel('metadata')"
-            />
-            <div v-show="activePanel === 'metadata'">
-              <metadata-panel class="panel-metadata" :index="index" />
-            </div>
-          </li>
+  <div class="map-container" @click="isActiveImage = true" ref="container">
+    <template v-if="!loading && zoom !== null">
+      <div class="map-tools">
+        <ul class="map-tools-list">
+          <li><a title="Zoom in" @click="zoomIn()"><i class="fas fa-search-plus"></i></a></li>
+          <li><a title="Zoom out" @click="zoomOut()"><i class="fas fa-search-minus"></i></a></li>
+          <li><a title="Pan" @click="activatePan()"><i class="fas fa-arrows-alt"></i></a></li>
 
-          <li>
-            <a @click="togglePanel('layers')" :class="{active: activePanel === 'layers'}">
-              <i class="fas fa-copy"></i>
-            </a>
-            <layers-panel class="panel-options" v-show="activePanel === 'layers'"
-              :index="index" :layers-to-preload="layersToPreload"
-            />
-          </li>
-      </ul>
-    </div>
-
-    <vl-map
-      :data-projection="projectionName"
-      :load-tiles-while-animating="true"
-      :load-tiles-while-interacting="true"
-      :keyboard-event-target="document"
-      @pointermove="projectedMousePosition = $event.coordinate"
-      @mounted="updateKeyboardInteractions"
-      ref="map"
-    >
-
-      <vl-view
-        :center.sync="center"
-        :zoom.sync="zoom"
-        :rotation.sync="rotation"
-        :max-zoom="maxZoom"
-        :max-resolution="Math.pow(2, image.zoom)"
-        :extent="extent"
-        :projection="projectionName"
-        @mounted="viewMounted()"
-        ref="view"
-      />
-
-      <vl-layer-tile :extent="extent" @mounted="addOverviewMap" ref="baseLayer">
-        <vl-source-cytomine
-          :projection="projectionName"
-          :url="baseLayerURL"
-          :tile-load-function="tileLoadFunction"
-          :size="imageSize"
-          :extent="extent"
-          :nb-resolutions="image.zoom"
-          ref="baseSource"
-          @mounted="setBaseSource()"
-          :transition="0"
-          :tile-size="[tileSize, tileSize]"
-        />
-      </vl-layer-tile>
-
-<!--      <vl-layer-image>-->
-<!--        <vl-source-raster-->
-<!--          v-if="baseSource && colorManipulationOn"-->
-<!--          :sources="[baseSource]"-->
-<!--          :operation="operation"-->
-<!--          :lib="lib"-->
-<!--        />-->
-<!--      </vl-layer-image>-->
-
-      <annotation-layer
-        v-for="layer in selectedLayers"
-        :key="'layer-'+layer.id"
-        :index="index"
-        :layer="layer"
-      />
-
-      <select-interaction v-if="activeSelectInteraction" :index="index" />
-      <draw-interaction v-if="activeDrawInteraction" :index="index" />
-      <modify-interaction v-if="activeModifyInteraction" :index="index" />
-
-    </vl-map>
-
-    <div v-if="configUI['project-tools-main']" class="draw-tools">
-      <draw-tools :index="index" @screenshot="takeScreenshot()"/>
-    </div>
-
-    <div class="panels">
-      <ul>
-        <li>
-          <a @click="$emit('close')" class="close">
-            <i class="fas fa-times-circle"></i>
-          </a>
-        </li>
-
-        <template v-if="isPanelDisplayed('hide-tools')">
-          <li v-if="isPanelDisplayed('info')">
-            <a @click="togglePanel('info')" :class="{active: ['info', 'metadata'].includes(activePanel)}">
-              <i class="fas fa-info"></i>
-            </a>
-            <information-panel
-              class="panel-options"
-              v-show="activePanel === 'info'"
-              :index="index"
-              @openMetadata="togglePanel('metadata')"
-            />
-            <div v-show="activePanel === 'metadata'">
-              <metadata-panel class="panel-metadata" :index="index" />
-            </div>
-          </li>
-
-          <!-- <li v-if="isPanelDisplayed('digital-zoom')">
-            <a @click="togglePanel('digital-zoom')" :class="{active: activePanel === 'digital-zoom'}">
+          <li v-if="isPanelDisplayed('digital-zoom')">
+            <a @click="togglePanel('digital-zoom')" :class="{ active: activePanel === 'digital-zoom' }">
               <i class="fas fa-search"></i>
             </a>
             <digital-zoom class="panel-options" v-show="activePanel === 'digital-zoom'" :index="index"
-                          @resetZoom="$refs.view.animate({zoom: image.zoom})"
-                          @fitZoom="fitZoom" />
-          </li> -->
-
-          <!-- <li v-if="isPanelDisplayed('link') && nbImages > 1">
-            <a @click="togglePanel('link')" :class="{active: activePanel === 'link'}">
-              <i class="fas fa-link"></i>
+              @resetZoom="$refs.view.animate({ zoom: image.zoom })" @fitZoom="fitZoom" />
+          </li>
+          <a-divider />
+          <li>
+            <a @click="togglePanel('layers')" :class="{ active: activePanel === 'layers' }">
+              <i class="fas fa-copy"></i>
             </a>
-            <link-panel class="panel-options" v-show="activePanel === 'link'" :index="index" />
-          </li> -->
+            <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
+              :layers-to-preload="layersToPreload" />
+          </li>
 
-          <!-- <li v-if="isPanelDisplayed('color-manipulation')">
-            <a @click="togglePanel('colors')" :class="{active: activePanel === 'colors'}">
+          <li v-if="isPanelDisplayed('color-manipulation')">
+            <a @click="togglePanel('colors')" :class="{ active: activePanel === 'colors' }">
               <i class="fas fa-adjust"></i>
             </a>
             <color-manipulation class="panel-options" v-show="activePanel === 'colors'" :index="index" />
-          </li> -->
-
-          <li v-if="isPanelDisplayed('image-layers')">
-            <a @click="togglePanel('layers')" :class="{active: activePanel === 'layers'}">
-              <i class="fas fa-copy"></i>
-            </a>
-            <layers-panel class="panel-options" v-show="activePanel === 'layers'"
-              :index="index" :layers-to-preload="layersToPreload"
-            />
           </li>
 
-          <!-- <li v-if="isPanelDisplayed('ontology') && terms && terms.length > 0">
-            <a @click="togglePanel('ontology')" :class="{active: activePanel === 'ontology'}">
+          <li v-if="isPanelDisplayed('ontology') && terms && terms.length > 0">
+            <a @click="togglePanel('ontology')" :class="{ active: activePanel === 'ontology' }">
               <i class="fas fa-hashtag"></i>
             </a>
             <ontology-panel class="panel-options" v-show="activePanel === 'ontology'" :index="index" />
           </li>
 
-          <li  v-if="isPanelDisplayed('property')">
-            <a @click="togglePanel('properties')" :class="{active: activePanel === 'properties'}">
+          <li v-if="isPanelDisplayed('property')">
+            <a @click="togglePanel('properties')" :class="{ active: activePanel === 'properties' }">
               <i class="fas fa-tag"></i>
             </a>
             <properties-panel class="panel-options" v-show="activePanel === 'properties'" :index="index" />
           </li>
+        </ul>
+      </div>
 
-          <li v-if="isPanelDisplayed('follow')">
-            <a @click="togglePanel('follow')" :class="{active: activePanel === 'follow'}">
-              <i class="fas fa-street-view"></i>
+      <vl-map :data-projection="projectionName" :load-tiles-while-animating="true" :load-tiles-while-interacting="true"
+        :keyboard-event-target="document" @pointermove="projectedMousePosition = $event.coordinate"
+        @mounted="updateKeyboardInteractions" ref="map">
+
+        <vl-view :center.sync="center" :zoom.sync="zoom" :rotation.sync="rotation" :max-zoom="maxZoom"
+          :max-resolution="Math.pow(2, image.zoom)" :extent="extent" :projection="projectionName"
+          @mounted="viewMounted()" ref="view" />
+
+        <vl-layer-tile :extent="extent" @mounted="addOverviewMap" ref="baseLayer">
+          <vl-source-cytomine :projection="projectionName" :url="baseLayerURL" :tile-load-function="tileLoadFunction"
+            :size="imageSize" :extent="extent" :nb-resolutions="image.zoom" ref="baseSource" @mounted="setBaseSource()"
+            :transition="0" :tile-size="[tileSize, tileSize]" />
+        </vl-layer-tile>
+
+        <!--      <vl-layer-image>-->
+        <!--        <vl-source-raster-->
+        <!--          v-if="baseSource && colorManipulationOn"-->
+        <!--          :sources="[baseSource]"-->
+        <!--          :operation="operation"-->
+        <!--          :lib="lib"-->
+        <!--        />-->
+        <!--      </vl-layer-image>-->
+
+        <annotation-layer v-for="layer in selectedLayers" :key="'layer-' + layer.id" :index="index" :layer="layer" />
+
+        <select-interaction v-if="activeSelectInteraction" :index="index" />
+        <draw-interaction v-if="activeDrawInteraction" :index="index" />
+        <modify-interaction v-if="activeModifyInteraction" :index="index" />
+
+      </vl-map>
+
+      <div v-if="configUI['project-tools-main']" class="draw-tools">
+        <draw-tools :index="index" @screenshot="takeScreenshot()" />
+      </div>
+
+      <!-- <div class="panels">
+        <ul>
+          <li>
+            <a @click="$emit('close')" class="close">
+              <i class="fas fa-times-circle"></i>
             </a>
-            <follow-panel class="panel-options" v-show="activePanel === 'follow'" :index="index" :view="$refs.view"/>
           </li>
 
-          <li v-if="isPanelDisplayed('review') && canEdit">
-            <a @click="togglePanel('review')" :class="{active: activePanel === 'review'}">
-              <i class="fas fa-check-circle"></i>
-            </a>
-            <review-panel class="panel-options" v-show="activePanel === 'review'" :index="index" />
-          </li> -->
-        </template>
-      </ul>
-    </div>
+          <template v-if="isPanelDisplayed('hide-tools')">
+            <li v-if="isPanelDisplayed('info')">
+              <a @click="togglePanel('info')" :class="{ active: ['info', 'metadata'].includes(activePanel) }">
+                <i class="fas fa-info"></i>
+              </a>
+              <information-panel class="panel-options" v-show="activePanel === 'info'" :index="index"
+                @openMetadata="togglePanel('metadata')" />
+              <div v-show="activePanel === 'metadata'">
+                <metadata-panel class="panel-metadata" :index="index" />
+              </div>
+            </li>
 
-    <image-controls :index="index" class="image-controls-wrapper" />
+            <li v-if="isPanelDisplayed('digital-zoom')">
+              <a @click="togglePanel('digital-zoom')" :class="{ active: activePanel === 'digital-zoom' }">
+                <i class="fas fa-search"></i>
+              </a>
+              <digital-zoom class="panel-options" v-show="activePanel === 'digital-zoom'" :index="index"
+                @resetZoom="$refs.view.animate({ zoom: image.zoom })" @fitZoom="fitZoom" />
+            </li>
 
-    <div class="broadcast" v-if="imageWrapper.tracking.broadcast">
-      <i class="fas fa-circle"></i> {{$t('live')}}
-    </div>
- 
-    <rotation-selector class="rotation-selector-wrapper" :index="index" />
+            <li v-if="isPanelDisplayed('link') && nbImages > 1">
+              <a @click="togglePanel('link')" :class="{ active: activePanel === 'link' }">
+                <i class="fas fa-link"></i>
+              </a>
+              <link-panel class="panel-options" v-show="activePanel === 'link'" :index="index" />
+            </li>
 
-    <scale-line v-show="scaleLineCollapsed" :image="image" :zoom="zoom" :mousePosition="projectedMousePosition" />
+            <li v-if="isPanelDisplayed('color-manipulation')">
+              <a @click="togglePanel('colors')" :class="{ active: activePanel === 'colors' }">
+                <i class="fas fa-adjust"></i>
+              </a>
+              <color-manipulation class="panel-options" v-show="activePanel === 'colors'" :index="index" />
+            </li>
 
-    <toggle-scale-line :index="index" />
+            <li v-if="isPanelDisplayed('image-layers')">
+              <a @click="togglePanel('layers')" :class="{ active: activePanel === 'layers' }">
+                <i class="fas fa-copy"></i>
+              </a>
+              <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
+                :layers-to-preload="layersToPreload" />
+            </li>
 
-    <div style="position: absolute; width: 500px; height: 800px; top: 10px; right: 10px; z-index: 1000;">
-      <annotations-container :index="index" @centerView="centerViewOnAnnot" />
-    </div> 
+            <li v-if="isPanelDisplayed('ontology') && terms && terms.length > 0">
+              <a @click="togglePanel('ontology')" :class="{ active: activePanel === 'ontology' }">
+                <i class="fas fa-hashtag"></i>
+              </a>
+              <ontology-panel class="panel-options" v-show="activePanel === 'ontology'" :index="index" />
+            </li>
 
-    <div class="custom-overview" ref="overview">
-      <p class="image-name" :class="{hidden: overviewCollapsed}">
-        <image-name :image="image" />
-      </p>
-    </div>
-  </template>
-</div>
+            <li v-if="isPanelDisplayed('property')">
+              <a @click="togglePanel('properties')" :class="{ active: activePanel === 'properties' }">
+                <i class="fas fa-tag"></i>
+              </a>
+              <properties-panel class="panel-options" v-show="activePanel === 'properties'" :index="index" />
+            </li>
+
+            <li v-if="isPanelDisplayed('follow')">
+              <a @click="togglePanel('follow')" :class="{ active: activePanel === 'follow' }">
+                <i class="fas fa-street-view"></i>
+              </a>
+              <follow-panel class="panel-options" v-show="activePanel === 'follow'" :index="index" :view="$refs.view" />
+            </li>
+
+            <li v-if="isPanelDisplayed('review') && canEdit">
+              <a @click="togglePanel('review')" :class="{ active: activePanel === 'review' }">
+                <i class="fas fa-check-circle"></i>
+              </a>
+              <review-panel class="panel-options" v-show="activePanel === 'review'" :index="index" />
+            </li>
+          </template>
+</ul>
+</div> -->
+
+      <image-controls :index="index" class="image-controls-wrapper" />
+
+      <div class="broadcast" v-if="imageWrapper.tracking.broadcast">
+        <i class="fas fa-circle"></i> {{ $t('live') }}
+      </div>
+
+      <rotation-selector class="rotation-selector-wrapper" :index="index" />
+
+      <scale-line v-show="scaleLineCollapsed" :image="image" :zoom="zoom" :mousePosition="projectedMousePosition" />
+
+      <toggle-scale-line :index="index" />
+
+      <div style="position: absolute; width: 500px; height: 800px; top: 10px; right: 10px; z-index: 1000;">
+        <annotations-container :index="index" @centerView="centerViewOnAnnot" />
+      </div>
+
+      <div class="custom-overview" ref="overview">
+        <p class="image-name" :class="{ hidden: overviewCollapsed }">
+          <image-name :image="image" />
+        </p>
+      </div>
+    </template>
+  </div>
 </template>
 
 <script>
-import {get} from '@/utils/store-helpers';
+import { get } from '@/utils/store-helpers';
 import _ from 'lodash';
 
 import ImageName from '@/components/image/ImageName';
@@ -251,15 +230,15 @@ import DrawInteraction from './interactions/DrawInteraction';
 import ModifyInteraction from './interactions/ModifyInteraction';
 import ToggleScaleLine from './interactions/ToggleScaleLine';
 
-import {addProj, createProj, getProj} from 'vuelayers/lib/ol-ext';
+import { addProj, createProj, getProj } from 'vuelayers/lib/ol-ext';
 
 import View from 'ol/View';
 import OverviewMap from 'ol/control/OverviewMap';
-import {KeyboardPan, KeyboardZoom} from 'ol/interaction';
-import {noModifierKeys, targetNotEditable} from 'ol/events/condition';
+import { KeyboardPan, KeyboardZoom } from 'ol/interaction';
+import { noModifierKeys, targetNotEditable } from 'ol/events/condition';
 import WKT from 'ol/format/WKT';
 
-import {Cytomine, ImageConsultation, Annotation, AnnotationType, UserPosition, SliceInstance} from '@/api';
+import { Cytomine, ImageConsultation, Annotation, AnnotationType, UserPosition, SliceInstance } from '@/api';
 
 // import {constLib, operation} from '@/utils/color-manipulation.js';
 
@@ -395,7 +374,7 @@ export default {
         return this.imageWrapper.view.center;
       },
       set(value) {
-        this.$store.dispatch(this.viewerModule + 'setCenter', {index: this.index, center: value});
+        this.$store.dispatch(this.viewerModule + 'setCenter', { index: this.index, center: value });
       }
     },
     zoom: {
@@ -403,7 +382,7 @@ export default {
         return this.imageWrapper.view.zoom;
       },
       set(value) {
-        this.$store.dispatch(this.viewerModule + 'setZoom', {index: this.index, zoom: Number(value)});
+        this.$store.dispatch(this.viewerModule + 'setZoom', { index: this.index, zoom: Number(value) });
       }
     },
     rotation: {
@@ -411,12 +390,12 @@ export default {
         return this.imageWrapper.view.rotation;
       },
       set(value) {
-        this.$store.dispatch(this.viewerModule + 'setRotation', {index: this.index, rotation: Number(value)});
+        this.$store.dispatch(this.viewerModule + 'setRotation', { index: this.index, rotation: Number(value) });
       }
     },
 
     viewState() {
-      return {center: this.center, zoom: this.zoom, rotation: this.rotation};
+      return { center: this.center, zoom: this.zoom, rotation: this.rotation };
     },
 
     extent() {
@@ -438,7 +417,7 @@ export default {
       };
     },
     baseLayerURLQuery() {
-      let query = new URLSearchParams({...this.baseLayerSliceParams, ...this.baseLayerProcessingParams}).toString();
+      let query = new URLSearchParams({ ...this.baseLayerSliceParams, ...this.baseLayerProcessingParams }).toString();
       if (query.length > 0) {
         return `?${query}`;
       }
@@ -504,7 +483,7 @@ export default {
       while (mapWidth > container.clientWidth || mapHeight > container.clientHeight) {
         mapWidth /= 2;
         mapHeight /= 2;
-        idealZoom --;
+        idealZoom--;
       }
       return idealZoom;
     }
@@ -519,10 +498,10 @@ export default {
   },
   methods: {
     zoomIn() {
-      this.$refs.view.animate({zoom: this.zoom + 1, duration: 250});
+      this.$refs.view.animate({ zoom: this.zoom + 1, duration: 250 });
     },
     zoomOut() {
-      this.$refs.view.animate({zoom: this.zoom - 1, duration: 250});
+      this.$refs.view.animate({ zoom: this.zoom - 1, duration: 250 });
     },
     activatePan() {
       this.$store.dispatch(this.imageModule + 'draw/activateTool', 'pan');
@@ -580,7 +559,7 @@ export default {
       let map = this.$refs.map.$map;
 
       this.overview = new OverviewMap({
-        view: new View({projection: this.projectionName}),
+        view: new View({ projection: this.projectionName }),
         layers: [this.$refs.baseLayer.$layer],
         tipLabel: this.$t('overview'),
         target: this.$refs.overview,
@@ -625,7 +604,7 @@ export default {
           });
         } catch (error) {
           console.log(error);
-          this.$notify({type: 'error', text: this.$t('notif-error-save-user-position')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-save-user-position') });
         }
 
         clearTimeout(this.timeoutSavePosition);
@@ -655,7 +634,7 @@ export default {
         }
 
         let geometry = this.format.readGeometry(annot.location);
-        await this.$refs.view.fit(geometry, {duration, padding: [10, 10, 10, 10], maxZoom: this.image.zoom});
+        await this.$refs.view.fit(geometry, { duration, padding: [10, 10, 10, 10], maxZoom: this.image.zoom });
 
         if (!Object.prototype.hasOwnProperty.call(annot, 'centroid')) {
           return;
@@ -668,7 +647,7 @@ export default {
       }
     },
 
-    async selectAnnotationHandler({index, annot, center = false, showComments = false}) {
+    async selectAnnotationHandler({ index, annot, center = false, showComments = false }) {
       if (this.index === index && annot.image === this.image.id) {
         try {
           let sliceChange = false;
@@ -680,7 +659,7 @@ export default {
           if (!this.sliceIds.includes(annot.slice)) {
             let slice = await SliceInstance.fetch(annot.slice);
             await this.$store.dispatch(this.imageModule + 'setActiveSlice', slice);
-            this.$eventBus.$emit('reloadAnnotations', {idImage: this.image.id, hard: true});
+            this.$eventBus.$emit('reloadAnnotations', { idImage: this.image.id, hard: true });
             sliceChange = true;
           }
 
@@ -690,7 +669,7 @@ export default {
 
           this.selectedAnnotation = annot; // used to pre-load annot layer
           this.$store.commit(this.imageModule + 'setAnnotToSelect', annot);
-          this.$eventBus.$emit('selectAnnotationInLayer', {index, annot});
+          this.$eventBus.$emit('selectAnnotationInLayer', { index, annot });
 
           if (center) {
             await this.viewMounted();
@@ -699,7 +678,7 @@ export default {
           }
         } catch (error) {
           console.log(error);
-          this.$notify({type: 'error', text: this.$t('notif-error-target-annotation')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-target-annotation') });
         }
       }
     },
@@ -773,7 +752,7 @@ export default {
       document.querySelector('.map-container').style.height = containerHeight + 'px';
 
       let a = document.createElement('a');
-      a.href = await this.$html2canvas(document.querySelector('.ol-unselectable'), {type: 'dataURL'});
+      a.href = await this.$html2canvas(document.querySelector('.ol-unselectable'), { type: 'dataURL' });
       let imageName = 'image_' + this.image.id.toString() + '_project_' + this.image.project.toString() + '.png';
       a.download = imageName;
       a.click();
@@ -784,7 +763,7 @@ export default {
   },
   async created() {
     if (!getProj(this.projectionName)) { // if image opened for the first time
-      let projection = createProj({code: this.projectionName, units: 'pixels', extent: this.extent});
+      let projection = createProj({ code: this.projectionName, units: 'pixels', extent: this.extent });
       addProj(projection);
     }
 
@@ -796,7 +775,7 @@ export default {
           this.$store.commit(this.imageModule + 'setImageInstance', clone);
         } catch (error) {
           console.log(error);
-          this.$notify({type: 'error', text: this.$t('notif-error-start-review')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-start-review') });
         }
       }
       this.$store.commit(this.imageModule + 'setReviewMode', true);
@@ -805,7 +784,7 @@ export default {
     // remove all selected features in order to reselect them when they will be added to the map (otherwise,
     // issue with the select interaction)
     this.selectedLayers.forEach(layer => {
-      this.$store.commit(this.imageModule + 'removeLayerFromSelectedFeatures', {layer, cache: true});
+      this.$store.commit(this.imageModule + 'removeLayerFromSelectedFeatures', { layer, cache: true });
     });
 
     let annot = this.imageWrapper.routedAnnotation;
@@ -819,7 +798,7 @@ export default {
           }
         } catch (error) {
           console.log(error);
-          this.$notify({type: 'error', text: this.$t('notif-error-target-annotation')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-target-annotation') });
         }
       }
     }
@@ -847,15 +826,15 @@ export default {
         this.$store.commit(this.imageModule + 'clearRoutedAnnotation');
       } catch (error) {
         console.log(error);
-        this.$notify({type: 'error', text: this.$t('notif-error-target-annotation')});
+        this.$notify({ type: 'error', text: this.$t('notif-error-target-annotation') });
       }
     }
 
     try {
-      await new ImageConsultation({image: this.image.id}).save();
+      await new ImageConsultation({ image: this.image.id }).save();
     } catch (error) {
       console.log(error);
-      this.$notify({type: 'error', text: this.$t('notif-error-save-image-consultation')});
+      this.$notify({ type: 'error', text: this.$t('notif-error-save-image-consultation') });
     }
 
     this.loading = false;
@@ -879,8 +858,9 @@ export default {
 
 <style lang="scss">
 @import '~vuelayers/lib/style.css';
+@import '../../assets/styles/dark-variables';
 
-$backgroundPanelBar:#101828;
+$backgroundPanelBar: #101828;
 $widthPanelBar: 2.8rem;
 $backgroundPanel: #101828;
 $colorPanelLink: #eee;
@@ -889,7 +869,7 @@ $colorBorderPanelLink: #3e3e3e;
 $colorOpenedPanelLink: #6c95c8;
 
 .map-container {
-  display:flex;
+  display: flex;
   background-color: #101828;
   width: 100%;
   height: 100%;
@@ -925,14 +905,14 @@ $colorOpenedPanelLink: #6c95c8;
   display: flex;
   font-size: 0.9em;
 
-  > ul {
+  >ul {
     padding: 0;
     margin: 0;
 
-    > li {
+    >li {
       position: relative;
 
-      > a {
+      >a {
         position: relative;
         display: block;
         width: $widthPanelBar;
@@ -941,7 +921,7 @@ $colorOpenedPanelLink: #6c95c8;
         color: $colorPanelLink;
         border-bottom: 1px solid $colorBorderPanelLink;
         text-decoration: none;
-        text-align:center;
+        text-align: center;
 
         &:hover {
           color: $colorHoverPanelLink;
@@ -954,6 +934,7 @@ $colorOpenedPanelLink: #6c95c8;
 
         &.close {
           color: #ffc4c4;
+
           :hover {
             color: #ff7070;
           }
@@ -966,23 +947,29 @@ $colorOpenedPanelLink: #6c95c8;
 .panel-options {
   position: absolute;
   bottom: -1.75em;
-  right: $widthPanelBar;
+  left: $widthPanelBar;
   width: 24em;
   min-height: 10em;
-  background: $backgroundPanel;
+  background: $dark-bg-primary;
+  color: $dark-text-primary;
+  opacity: 0.9;
   padding: 0.75em;
-  border-radius: 5px 0 0 5px;
+  border-radius: 5px;
   z-index: 100;
 
   h1 {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     padding-top: 0.3rem !important;
     padding-bottom: 1rem !important;
+    background: $dark-bg-primary;
+    color: $dark-text-primary;
   }
 
   table {
     background: none;
     width: 100%;
+    background: $dark-bg-primary;
+    color: $dark-text-primary;
   }
 }
 
@@ -1017,7 +1004,8 @@ $colorOpenedPanelLink: #6c95c8;
 
 /* ----- CUSTOM STYLE FOR OL CONTROLS ----- */
 
-.ol-zoom, .ol-rotate {
+.ol-zoom,
+.ol-rotate {
   background: none !important;
   z-index: 20;
   display: none;
@@ -1108,6 +1096,33 @@ $colorOpenedPanelLink: #6c95c8;
 
   font-size: 0.9em;
   border-left: 1px solid $colorBorderPanelLink;
+
+  >ul {
+    padding: 0;
+    margin: 0;
+
+    >li {
+      position: relative;
+
+      >a {
+        position: relative;
+        display: block;
+        font-size: 1.5rem;
+        color: $colorPanelLink;
+        text-decoration: none;
+        text-align: center;
+
+        &:hover {
+          color: $colorHoverPanelLink;
+        }
+
+        &.active {
+          background: $backgroundPanel;
+          color: $colorOpenedPanelLink;
+        }
+      }
+    }
+  }
 }
 
 
@@ -1124,7 +1139,7 @@ $colorOpenedPanelLink: #6c95c8;
 
 
 
-.map-tools-list > li {
+.map-tools-list>li {
 
   position: relative;
 
@@ -1132,7 +1147,7 @@ $colorOpenedPanelLink: #6c95c8;
 
 
 
-.map-tools-list > li > a {
+.map-tools-list>li>a {
 
   position: relative;
 
@@ -1156,7 +1171,7 @@ $colorOpenedPanelLink: #6c95c8;
 
 
 
-.map-tools-list > li > a:hover {
+.map-tools-list>li>a:hover {
 
   color: $colorHoverPanelLink;
 
