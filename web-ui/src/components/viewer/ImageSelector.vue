@@ -248,17 +248,19 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .image-selector-wrapper {
-  background-color: #1e2938;
+  background-color: #101828; /* dark-bg-primary */
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 14em;
   height: 100%;
   z-index: 150;
   overflow: auto;
-  border: 1px solid #3e3e3e;
+  border-right: 1px solid $dark-text-disabled;
 }
 
 
