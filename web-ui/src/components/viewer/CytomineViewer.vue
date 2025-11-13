@@ -19,7 +19,10 @@
     <p v-if="errorBadImageProject">{{ $t('error-loading-image-bad-project') }}</p>
   </div>
   <div v-else class="cytomine-viewer">
+
     <image-selector />
+
+
     <div class="maps-wrapper">
       <div class="map-cell" v-for="(cell, i) in cells" :key="i"
         :style="`height:${elementHeight}%; width:${elementWidth}%;`" :class="{ highlighted: cell && cell.highlighted }">
@@ -29,6 +32,7 @@
       <!-- Emit event when a hotkey is pressed (to rework once https://github.com/iFgR/vue-shortkey/issues/78 is implemented) -->
       <div class="hidden" v-shortkey.once="shortkeysMapping" @shortkey="shortkeyEvent"></div>
     </div>
+
   </div>
 </template>
 
@@ -133,7 +137,7 @@ export default {
         object[key.replace('viewer-', '')] = shortcuts[key];
         return object;
       }, {});
-    }
+    },
   },
   watch: {
     paramIdViewer() {
@@ -180,7 +184,7 @@ export default {
     closeMap(index) {
       if (this.nbImages === 1) {
         this.$store.unregisterModule(['projects', this.project.id, 'viewers', this.idViewer]);
-        this.$router.push(`/projects`);
+        this.$router.push(`/project/${this.$route.params.idProject}`);
       } else {
         this.$store.dispatch(this.viewerModule + 'removeImage', index);
       }
@@ -337,7 +341,6 @@ export default {
 }
 
 .map-cell {
-  border-top: 0.2em solid #222;
   overflow: hidden;
 }
 
@@ -347,5 +350,9 @@ export default {
 
 .highlighted {
   border: 6px solid #0099ff;
+}
+
+.no-result {
+  margin: 2em;
 }
 </style>
