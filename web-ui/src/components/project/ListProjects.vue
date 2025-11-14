@@ -198,12 +198,12 @@
         </template>
       </cytomine-table>
 
-      <div class="legend">
+      <!-- <div class="legend">
           <h2>{{$t('legend')}}</h2>
           <p><icon-project-member-role /> : {{$t('contributor-icon-label')}}</p>
           <p><icon-project-member-role :is-manager="true" /> : {{$t('manager-icon-label')}}</p>
           <p><icon-project-member-role :is-manager="true" :is-representative="true" /> : {{$t('representative-icon-label')}}</p>
-      </div>
+      </div> -->
     </div>
   </div>
 
