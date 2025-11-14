@@ -16,12 +16,39 @@
   <div class="annotation-details">
     <table class="table">
       <tbody>
-        <!-- <tr>
-          <td><strong>{{ $t('image') }}</strong></td>
+        <tr>
+          <!-- <td><strong>{{ $t('image') }}</strong></td> -->
           <td>
-            <image-name :image="image" />
+
+            <div>
+              <!-- <a @click="openCrop(annotation)" class="level-item button is-small">
+        {{ $t('button-view-crop') }}
+      </a> -->
+              <!-- <router-link v-if="showImageInfo" :to="annotationURL" class="button is-link is-small">
+          {{ $t('button-view-in-image') }}
+        </router-link> -->
+              <image-name :image="image" />
+              <div class="actions">
+                <button v-if="isPropDisplayed('comments') && comments" class="button" @click="openCommentsModal()"
+                  :title="$t('button-comments')">
+                  <i class="fas fa-comment"></i>
+                </button>
+
+                <button v-if="!showImageInfo" class=" button" @click="$emit('centerView')" :title="'Focus Center'">
+                  <i class="fas fa-map-marker-alt"></i>
+                </button>
+
+                <button class="button" @click="copyURL()" :title="$t('button-copy-url')">
+                  <i class="fas fa-copy"></i>
+                </button>
+
+                <button v-if="canEdit" class="button is-danger" @click="confirmDeletion()" :title="$t('button-delete')">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
           </td>
-        </tr> -->
+        </tr>
 
 
         <!-- <tr >
@@ -33,7 +60,7 @@
 
         <template v-if="isPropDisplayed('creation-info')">
           <tr>
-            <td>{{ $t('created-by') }}: {{ creator.fullName }} at {{ Number(annotation.created) | moment('ll') }}</td>
+            <td>Author: {{ creator.fullName }} at {{ Number(annotation.created) | moment('ll') }}</td>
             <!-- <td>
               {{ creator.fullName }}
             </td> -->
@@ -77,7 +104,7 @@
         <template v-if="isPropDisplayed('geometry-info')">
           <tr>
             <td v-if="annotation.area > 0">{{ $t('area') }}: {{ `${annotation.area.toFixed(3)} ${annotation.areaUnit}`
-              }}
+            }}
             </td>
           </tr>
           <tr>
@@ -238,38 +265,6 @@
         </template> -->
       </tbody>
     </table>
-
-    <div class="actions">
-
-
-
-
-      <div class="level">
-        <!-- <a @click="openCrop(annotation)" class="level-item button is-small">
-        {{ $t('button-view-crop') }}
-      </a> -->
-        <router-link v-if="showImageInfo" :to="annotationURL" class="button is-link is-small">
-          {{ $t('button-view-in-image') }}
-        </router-link>
-
-        <button v-else class="level-item button is-small" @click="$emit('centerView')" type="primary">
-          Focus Center
-        </button>
-
-        <button class="level-item button is-small" @click="copyURL()">
-          {{ $t('button-copy-url') }}
-        </button>
-
-        <button v-if="isPropDisplayed('comments') && comments" class="level-item button is-small"
-          @click="openCommentsModal()">
-          {{ $t('button-comments') }} ({{ comments.length }})
-        </button>
-
-        <button v-if="canEdit" class="level-item button is-small is-danger" @click="confirmDeletion()">
-          {{ $t('button-delete') }}
-        </button>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -636,12 +631,11 @@ h5 {
   color: $dark-text-primary;
 }
 
-.actions {
-  margin-bottom: 0.5em;
-}
-
 .actions .button {
-  margin: 3px;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 2%;
+  margin: 2px;
   background-color: $dark-button-bg;
   color: $dark-text-primary;
   border-color: $dark-button-border;
