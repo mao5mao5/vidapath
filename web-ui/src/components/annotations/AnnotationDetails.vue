@@ -13,7 +13,7 @@
  limitations under the License.-->
 
 <template>
-  <div class="annotation-details">
+  <div>
     <table class="table">
       <tbody>
         <tr>
@@ -27,8 +27,9 @@
               <!-- <router-link v-if="showImageInfo" :to="annotationURL" class="button is-link is-small">
           {{ $t('button-view-in-image') }}
         </router-link> -->
-              <image-name :image="image" />
+              <!-- <image-name :image="image" /> -->
               <div class="actions">
+                <!-- <input class="input" placeholder="add comments" v-model="inputedcomment" /> -->
                 <button v-if="isPropDisplayed('comments') && comments" class="button" @click="openCommentsModal()"
                   :title="$t('button-comments')">
                   <i class="fas fa-comment"></i>
@@ -104,7 +105,7 @@
         <template v-if="isPropDisplayed('geometry-info')">
           <tr>
             <td v-if="annotation.area > 0">{{ $t('area') }}: {{ `${annotation.area.toFixed(3)} ${annotation.areaUnit}`
-            }}
+              }}
             </td>
           </tr>
           <tr>
@@ -330,7 +331,8 @@ export default {
       linkColor: '696969',
       properties: [],
       loadPropertiesError: false,
-      description: null
+      description: null,
+      inputedcomment: '',
     };
   },
   computed: {
@@ -603,14 +605,11 @@ export default {
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
 
-.annotation-details {
-  font-size: 1rem;
-  color: $dark-text-primary;
-}
 
 .table {
   width: 100%;
-  background: $dark-table-bg;
+  font-size: $details-font-size;
+  background: $dark-bg-primary;
   color: $dark-text-primary;
 }
 

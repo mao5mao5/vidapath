@@ -13,76 +13,73 @@
  limitations under the License.-->
 
 <template>
-<div>
-  <h1 style="color: white;">
-    {{$t('information')}}
-  </h1>
-  <table class="table" s>
-    <tbody>
-      <tr v-if="currentAccount.isDeveloper">
-        <td><strong>{{$t('id')}}</strong></td>
-        <td>{{image.id}}</td>
-      </tr>
-      <tr>
-        <td><strong>{{$t('name')}}</strong></td>
-        <td><image-name :image="image" showBothNames /></td>
-      </tr>
-      <tr v-if="hasGroup">
-        <td><strong>{{$t('image-group')}}</strong></td>
-        <td>{{imageGroupLink.groupName}}</td>
-      </tr>
-      <tr>
-        <td><strong>{{$t('width')}}</strong></td>
-        <td>{{image.width}} {{$t("pixels")}}</td>
-      </tr>
-      <tr>
-        <td><strong>{{$t('height')}}</strong></td>
-        <td>{{image.height}} {{$t("pixels")}}</td>
-      </tr>
-      <tr v-if="image.depth > 1">
-        <td><strong>{{$t('image-depth')}}</strong></td>
-        <td>{{$tc("count-slices", image.depth, {count: image.depth})}}</td>
-      </tr>
-      <tr v-if="image.duration > 1">
-        <td><strong>{{$t('image-time')}}</strong></td>
-        <td>{{$tc("count-frames", image.duration, {count: image.duration})}}</td>
-      </tr>
-      <tr v-if="image.channels > 1">
-        <td><strong>{{$t('image-channels')}}</strong></td>
-        <td>
-          {{$tc("count-bands", image.apparentChannels, {count: image.apparentChannels})}}
-          ({{image.channels}} x {{image.samplePerPixel}})
-        </td>
-      </tr>
-      <tr>
-        <td><strong>{{$t('resolution')}}</strong></td>
-        <td v-if="image.physicalSizeX">{{image.physicalSizeX.toFixed(3)}} {{$t("um-per-pixel")}}</td>
-        <td v-else>{{$t("unknown")}}</td>
-      </tr>
-      <tr v-if="image.depth > 1">
-        <td><strong>{{$t('z-resolution')}}</strong></td>
-        <td v-if="image.physicalSizeZ">{{image.physicalSizeZ.toFixed(3)}} {{$t("um-per-slice")}}</td>
-        <td v-else>{{$t("unknown")}}</td>
-      </tr>
-      <tr v-if="image.duration > 1">
-        <td><strong>{{$t('frame-rate')}}</strong></td>
-        <td v-if="image.fps">{{image.fps.toFixed(3)}} {{$t("frame-per-second")}}</td>
-        <td v-else>{{$t("unknown")}}</td>
-      </tr>
-      <tr>
-        <td><strong>{{$t('magnification')}}</strong></td>
-        <td v-if="image.magnification">{{image.magnification}}</td>
-        <td v-else>{{$t('unknown')}}</td>
-      </tr>
-      <tr>
+  <div>
+    <table class="table" s>
+      <tbody>
+        <!-- <tr v-if="currentAccount.isDeveloper">
+          <td><strong>{{ $t('id') }}</strong></td>
+          <td>{{ image.id }}</td>
+        </tr> -->
+        <tr>
+          <td>{{ $t('name') }}</td>
+          <td><image-name :image="image" showBothNames /></td>
+        </tr>
+        <tr v-if="hasGroup">
+          <td>{{ $t('image-group') }}</td>
+          <td>{{ imageGroupLink.groupName }}</td>
+        </tr>
+        <tr>
+          <td>{{ $t('width') }}</td>
+          <td>{{ image.width }} {{ $t("pixels") }}</td>
+        </tr>
+        <tr>
+          <td>{{ $t('height') }}</td>
+          <td>{{ image.height }} {{ $t("pixels") }}</td>
+        </tr>
+        <tr v-if="image.depth > 1">
+          <td>{{ $t('image-depth') }}</td>
+          <td>{{ $tc("count-slices", image.depth, { count: image.depth }) }}</td>
+        </tr>
+        <tr v-if="image.duration > 1">
+          <td>{{ $t('image-time') }}</td>
+          <td>{{ $tc("count-frames", image.duration, { count: image.duration }) }}</td>
+        </tr>
+        <tr v-if="image.channels > 1">
+          <td>{{ $t('image-channels') }}</td>
+          <td>
+            {{ $tc("count-bands", image.apparentChannels, { count: image.apparentChannels }) }}
+            ({{ image.channels }} x {{ image.samplePerPixel }})
+          </td>
+        </tr>
+        <tr>
+          <td>{{ $t('resolution') }}</td>
+          <td v-if="image.physicalSizeX">{{ image.physicalSizeX.toFixed(3) }} {{ $t("um-per-pixel") }}</td>
+          <td v-else>{{ $t("unknown") }}</td>
+        </tr>
+        <tr v-if="image.depth > 1">
+          <td>{{ $t('z-resolution') }}</td>
+          <td v-if="image.physicalSizeZ">{{ image.physicalSizeZ.toFixed(3) }} {{ $t("um-per-slice") }}</td>
+          <td v-else>{{ $t("unknown") }}</td>
+        </tr>
+        <tr v-if="image.duration > 1">
+          <td>{{ $t('frame-rate') }}</td>
+          <td v-if="image.fps">{{ image.fps.toFixed(3) }} {{ $t("frame-per-second") }}</td>
+          <td v-else>{{ $t("unknown") }}</td>
+        </tr>
+        <tr>
+          <td>{{ $t('magnification') }}</td>
+          <td v-if="image.magnification">{{ image.magnification }}</td>
+          <td v-else>{{ $t('unknown') }}</td>
+        </tr>
+        <!-- <tr>
         <td><strong>{{ $t('image-metadata') }}</strong></td>
         <td>
           <button class="button is-small" @click="$emit('openMetadata')">
             {{ $t('button-metadata') }}
           </button>
         </td>
-      </tr>
-      <!-- <tr>
+      </tr> -->
+        <!-- <tr>
         <td colspan="2" class="buttons-wrapper">
           <div class="buttons">
             <button v-if="canEdit" class="button is-small" @click="calibrationModal = true">
@@ -97,7 +94,7 @@
           </div>
         </td>
       </tr> -->
-      <!-- <tr>
+        <!-- <tr>
         <td colspan="2" class="buttons-wrapper">
           <div class="buttons navigation has-addons">
             <button class="button is-small" @click="previousImage()" :disabled="isFirstImage">
@@ -109,7 +106,7 @@
           </div>
         </td>
       </tr> -->
-      <!-- <tr v-if="hasGroup">
+        <!-- <tr v-if="hasGroup">
         <td colspan="2" class="buttons-wrapper">
           <div class="buttons navigation has-addons">
             <button class="button is-small" @click="previousImageInGroup()">
@@ -121,22 +118,18 @@
           </div>
         </td>
       </tr> -->
-    </tbody>
-  </table>
+      </tbody>
+    </table>
 
-  <calibration-modal
-    :image="image"
-    :active.sync="calibrationModal"
-    @setResolution="setResolution"
-  />
-</div>
+    <!-- <calibration-modal :image="image" :active.sync="calibrationModal" @setResolution="setResolution" /> -->
+  </div>
 </template>
 
 <script>
-import {get} from '@/utils/store-helpers';
+import { get } from '@/utils/store-helpers';
 import ImageName from '@/components/image/ImageName';
 import CalibrationModal from '@/components/image/CalibrationModal';
-import {appendShortTermToken} from '@/utils/token-utils.js';
+import { appendShortTermToken } from '@/utils/token-utils.js';
 
 export default {
   name: 'information-panel',
@@ -195,8 +188,8 @@ export default {
   methods: {
     appendShortTermToken,
     setResolution(resolution) {
-      this.$store.dispatch(this.viewerModule + 'setImageResolution', {idImage: this.image.id, resolution});
-      this.$eventBus.$emit('reloadAnnotations', {idImage: this.image.id}); // refresh the sources to update perimeter/area
+      this.$store.dispatch(this.viewerModule + 'setImageResolution', { idImage: this.image.id, resolution });
+      this.$eventBus.$emit('reloadAnnotations', { idImage: this.image.id }); // refresh the sources to update perimeter/area
     },
     download(image) {
       window.location.assign(appendShortTermToken(image.downloadURL, this.shortTermToken));
@@ -205,30 +198,30 @@ export default {
       try {
         let prev = await this.image.fetchPrevious();
         if (!prev.id) {
-          this.$notify({type: 'error', text: this.$t('notif-error-first-image')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-first-image') });
           this.isFirstImage = true;
         } else {
           let slice = await prev.fetchReferenceSlice();
-          await this.$store.dispatch(this.imageModule + 'setImageInstance', {image: prev, slices: [slice]});
+          await this.$store.dispatch(this.imageModule + 'setImageInstance', { image: prev, slices: [slice] });
         }
       } catch (error) {
         console.log(error);
-        this.$notify({type: 'error', text: this.$t('notif-error-fetch-previous-image')});
+        this.$notify({ type: 'error', text: this.$t('notif-error-fetch-previous-image') });
       }
     },
     async nextImage() {
       try {
         let next = await this.image.fetchNext();
         if (!next.id) {
-          this.$notify({type: 'error', text: this.$t('notif-error-last-image')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-last-image') });
           this.isLastImage = true;
         } else {
           let slice = await next.fetchReferenceSlice();
-          await this.$store.dispatch(this.imageModule + 'setImageInstance', {image: next, slices: [slice]});
+          await this.$store.dispatch(this.imageModule + 'setImageInstance', { image: next, slices: [slice] });
         }
       } catch (error) {
         console.log(error);
-        this.$notify({type: 'error', text: this.$t('notif-error-fetch-next-image')});
+        this.$notify({ type: 'error', text: this.$t('notif-error-fetch-next-image') });
       }
     },
     async previousImageInGroup() {
@@ -239,14 +232,14 @@ export default {
       try {
         let prev = await this.imageGroupLink.fetchPrevious();
         if (!prev.id) {
-          this.$notify({type: 'error', text: this.$t('notif-error-first-image')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-first-image') });
         } else {
           let slice = await prev.fetchReferenceSlice();
-          await this.$store.dispatch(this.imageModule + 'setImageInstance', {image: prev, slices: [slice]});
+          await this.$store.dispatch(this.imageModule + 'setImageInstance', { image: prev, slices: [slice] });
         }
       } catch (error) {
         console.log(error);
-        this.$notify({type: 'error', text: this.$t('notif-error-fetch-previous-image')});
+        this.$notify({ type: 'error', text: this.$t('notif-error-fetch-previous-image') });
       }
     },
     async nextImageInGroup() {
@@ -257,14 +250,14 @@ export default {
       try {
         let next = await this.imageGroupLink.fetchNext();
         if (!next.id) {
-          this.$notify({type: 'error', text: this.$t('notif-error-last-image')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-last-image') });
         } else {
           let slice = await next.fetchReferenceSlice();
-          await this.$store.dispatch(this.imageModule + 'setImageInstance', {image: next, slices: [slice]});
+          await this.$store.dispatch(this.imageModule + 'setImageInstance', { image: next, slices: [slice] });
         }
       } catch (error) {
         console.log(error);
-        this.$notify({type: 'error', text: this.$t('notif-error-fetch-next-image')});
+        this.$notify({ type: 'error', text: this.$t('notif-error-fetch-next-image') });
       }
     },
 
@@ -293,27 +286,37 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../../assets/styles/dark-variables';
+
 .table {
+  font-size: $details-font-size;
   margin-bottom: 0 !important;
   width: 100%;
   table-layout: fixed;
-  color: white;
+  color: $dark-text-primary;
   background-color: transparent;
-  border-collapse: collapse
+  border-collapse: collapse;
+  border-color: $dark-table-border;
 }
 
-td {
+.table th,
+.table td {
   word-wrap: break-word;
-  color: white;
+  vertical-align: middle;
+  color: $dark-text-primary;
+  border-color: $dark-table-border;
+
 }
 
 td:first-child {
   width: 10em;
-  color: white;
+  color: $dark-text-primary;
 }
+
 td:first-child strong {
-  color: white;
+  color: $dark-text-primary;
+  border-color: $dark-table-border;
 }
 
 .buttons-wrapper {
