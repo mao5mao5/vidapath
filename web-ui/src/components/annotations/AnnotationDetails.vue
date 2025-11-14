@@ -13,35 +13,112 @@
  limitations under the License.-->
 
 <template>
-<div class="annotation-details">
-  <table class="table">
-    <tbody>
-      <tr >
-        <td><strong>{{$t('image')}}</strong></td>
-        <td>
-            <image-name :image="image" />
-        </td>
-      </tr>
+  <div>
+    <table class="table">
+      <tbody>
+        <tr>
+          <!-- <td><strong>{{ $t('image') }}</strong></td> -->
+          <td>
 
-      <!-- <tr >
+            <div>
+              <!-- <a @click="openCrop(annotation)" class="level-item button is-small">
+        {{ $t('button-view-crop') }}
+      </a> -->
+              <!-- <router-link v-if="showImageInfo" :to="annotationURL" class="button is-link is-small">
+          {{ $t('button-view-in-image') }}
+        </router-link> -->
+              <!-- <image-name :image="image" /> -->
+              <div class="actions">
+                <!-- <input class="input" placeholder="add comments" v-model="inputedcomment" /> -->
+                <button v-if="isPropDisplayed('comments') && comments" class="button" @click="openCommentsModal()"
+                  :title="$t('button-comments')">
+                  <i class="fas fa-comment"></i>
+                </button>
+
+                <button v-if="!showImageInfo" class=" button" @click="$emit('centerView')" :title="'Focus Center'">
+                  <i class="fas fa-map-marker-alt"></i>
+                </button>
+
+                <button class="button" @click="copyURL()" :title="$t('button-copy-url')">
+                  <i class="fas fa-copy"></i>
+                </button>
+
+                <button v-if="canEdit" class="button is-danger" @click="confirmDeletion()" :title="$t('button-delete')">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+
+        <!-- <tr >
         <td><strong>{{$t('channel')}}</strong></td>
         <td>
           <channel-name :channel="sliceChannel" />
         </td>
       </tr> -->
 
-      <template v-if="isPropDisplayed('geometry-info')">
-        <tr v-if="annotation.area > 0">
-          <td><strong>{{$t('area')}}</strong></td>
-          <td>{{ `${annotation.area.toFixed(3)} ${annotation.areaUnit}` }}</td>
-        </tr>
+        <template v-if="isPropDisplayed('creation-info')">
+          <tr>
+            <td>Author: {{ creator.fullName }} at {{ Number(annotation.created) | moment('ll') }}</td>
+            <!-- <td>
+              {{ creator.fullName }}
+            </td> -->
+          </tr>
+          <!-- <template v-if="!isReviewedAnnotation">
+            <tr>
+              <td><strong>{{ $t('created-on') }}</strong></td>
+              <td> {{ Number(annotation.created) | moment('ll') }} </td>
+            </tr>
+            <tr v-if="isImageInReviewMode">
+              <td><strong>{{ $t('reviewed-annotation-status') }}</strong></td>
+              <td>
+                <span class="tag is-danger">
+                  {{ $t('reviewed-annotation-status-not-validated') }}
+                </span>
+              </td>
+            </tr>
+          </template> -->
+          <!-- <template v-else>
+            <tr>
+              <td><strong>{{ $t('reviewed-by') }}</strong></td>
+              <td>
+                {{ reviewer.fullName }}
+              </td>
+            </tr>
+            <tr>
+              <td><strong>{{ $t('reviewed-on') }}</strong></td>
+              <td> {{ Number(annotation.created) | moment('ll') }} </td>
+            </tr>
+            <tr v-if="isImageInReviewMode">
+              <td><strong>{{ $t('reviewed-annotation-status') }}</strong></td>
+              <td>
+                <span class="tag is-success">
+                  {{ $t('reviewed-annotation-status-validated') }}
+                </span>
+              </td>
+            </tr>
+          </template> -->
+        </template>
 
-        <tr v-if="annotation.perimeter > 0">
-          <td><strong>{{$t(annotation.area > 0 ? 'perimeter' : 'length')}}</strong></td>
-          <td>{{ `${annotation.perimeter.toFixed(3)} ${annotation.perimeterUnit}` }}</td>
-        </tr>
+        <template v-if="isPropDisplayed('geometry-info')">
+          <tr>
+            <td v-if="annotation.area > 0">{{ $t('area') }}: {{ `${annotation.area.toFixed(3)} ${annotation.areaUnit}`
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td v-if="annotation.perimeter > 0">{{ $t('perimeter') }}: {{ `${annotation.perimeter.toFixed(3)}
+              ${annotation.perimeterUnit}` }}</td>
+          </tr>
 
-        <!-- <tr v-if="profile">
+          <!-- <tr v-if="annotation.perimeter > 0">
+            <td><strong>{{ $t(annotation.area > 0 ? 'perimeter' : 'length') }}</strong></td>
+            <td>{{ `${annotation.perimeter.toFixed(3)} ${annotation.perimeterUnit}` }}</td>
+          </tr> -->
+
+          <!-- <tr v-if="profile">
           <td>
             <strong v-if="isPoint">{{$t('profile')}}</strong>
             <strong v-else>{{$t('profile-projection')}}</strong>
@@ -55,56 +132,44 @@
           </td>
           <td><button class="button is-small" @click="openSpatialProfileModal">{{$t('inspect-button')}}</button></td>
         </tr> -->
-      </template>
+        </template>
 
-      <tr v-if="isPropDisplayed('description')">
-        <td colspan="2">
-          <h5>{{$t('description')}}</h5>
-          <cytomine-description :object="annotation" :canEdit="canEdit" :maxPreviewLength="300" />
-        </td>
-      </tr>
+        <!-- TERMS -->
+        <tr v-if="isPropDisplayed('terms') && ontology">
+          <td colspan="2">
+            <!-- <h5>{{ $t('terms') }}</h5> -->
+            <b-tag v-for="{ term, user } in associatedTerms" :key="term.id"
+              :title="$t('associated-by', { username: user.fullName })">
+              <cytomine-term :term="term" />
+              <button v-if="canEditTerms" class="delete is-small" :title="$t('button-delete')"
+                @click="removeTerm(term.id, user.id)">
+              </button>
+            </b-tag>
+            <div class="add-term-wrapper" v-if="canEditTerms" v-click-outside="() => showTermSelector = false">
+              <b-field>
+                <b-input size="is-small" expanded :placeholder="$t('add-term')" v-model="addTermString"
+                  @focus="showTermSelector = true" />
+              </b-field>
 
-      <!-- TERMS -->
-      <tr v-if="isPropDisplayed('terms') && ontology">
-        <td colspan="2">
-          <h5>{{$t('terms')}}</h5>
-          <b-tag v-for="{term, user} in associatedTerms" :key="term.id"
-          :title="$t('associated-by', {username: user.fullName})">
-            <cytomine-term :term="term" />
-            <button v-if="canEditTerms" class="delete is-small" :title="$t('button-delete')"
-              @click="removeTerm(term.id, user.id)">
-            </button>
-          </b-tag>
-          <div class="add-term-wrapper" v-if="canEditTerms" v-click-outside="() => showTermSelector = false">
-            <b-field>
-              <b-input
-                size="is-small"
-                expanded
-                :placeholder="$t('add-term')"
-                v-model="addTermString"
-                @focus="showTermSelector = true"
-              />
-            </b-field>
-
-            <div class="ontology-tree-container" v-show="showTermSelector">
-              <ontology-tree
-                class="ontology-tree"
-                :ontology="ontology"
-                :searchString="addTermString"
-                :selectedNodes="associatedTermsIds"
-                :allowNew="true"
-                @newTerm="newTerm"
-                @select="addTerm"
-                @unselect="removeTerm"
-              />
+              <div class="ontology-tree-container" v-show="showTermSelector">
+                <ontology-tree class="ontology-tree" :ontology="ontology" :searchString="addTermString"
+                  :selectedNodes="associatedTermsIds" :allowNew="true" @newTerm="newTerm" @select="addTerm"
+                  @unselect="removeTerm" />
+              </div>
             </div>
-          </div>
-          <em v-else-if="!associatedTerms.length">{{$t('no-term')}}</em>
-        </td>
-      </tr>
+            <em v-else-if="!associatedTerms.length">{{ $t('no-term') }}</em>
+          </td>
+        </tr>
 
-      <!-- TRACKS -->
-      <!-- <tr v-if="isPropDisplayed('tracks') && maxRank > 1">
+        <tr v-if="isPropDisplayed('description')">
+          <td>
+            <!-- <h5>{{ $t('description') }} :</h5> -->
+            <cytomine-description :object="annotation" :canEdit="canEdit" :maxPreviewLength="300" />
+          </td>
+        </tr>
+
+        <!-- TRACKS -->
+        <!-- <tr v-if="isPropDisplayed('tracks') && maxRank > 1">
         <td colspan="2">
           <h5>{{$t('tracks')}}</h5>
           <b-tag v-for="{track} in associatedTracks" :key="track.id">
@@ -142,29 +207,29 @@
         </td>
       </tr> -->
 
-      <!-- <tr v-if="isPropDisplayed('tags')">
+        <!-- <tr v-if="isPropDisplayed('tags')">
         <td colspan="2">
           <h5>{{$t('tags')}}</h5>
           <cytomine-tags :object="annotation" :canEdit="canEdit" />
         </td>
       </tr> -->
 
-      <!-- PROPERTIES -->
-      <!-- <tr v-if="isPropDisplayed('properties')">
+        <!-- PROPERTIES -->
+        <!-- <tr v-if="isPropDisplayed('properties')">
         <td colspan="2">
           <h5>{{$t('properties')}}</h5>
           <cytomine-properties :object="annotation" :canEdit="canEdit" @update="$emit('updateProperties')" />
         </td>
       </tr> -->
 
-      <!-- <tr v-if="isPropDisplayed('attached-files')">
+        <!-- <tr v-if="isPropDisplayed('attached-files')">
         <td colspan="2">
           <h5>{{$t('attached-files')}}</h5>
           <attached-files :object="annotation" :canEdit="canEdit" />
         </td>
       </tr> -->
 
-      <!-- <template>
+        <!-- <template>
         <tr>
           <td colspan="2">
             <h5>{{ $t('similar-annotations') }}</h5>
@@ -175,7 +240,7 @@
         </tr>
       </template> -->
 
-      <!-- <template v-if="isPropDisplayed('linked-annotations')">
+        <!-- <template v-if="isPropDisplayed('linked-annotations')">
         <tr>
           <td colspan="2">
             <h5>{{$t('linked-annotations')}}</h5>
@@ -193,98 +258,21 @@
         </tr>
       </template> -->
 
-      <template v-if="isPropDisplayed('creation-info')">
-        <tr>
-          <td><strong>{{$t('created-by')}}</strong></td>
-          <td>
-            {{ creator.fullName }}
-          </td>
-        </tr>
-        <template v-if="!isReviewedAnnotation">
+        <!-- <template v-if="currentAccount.isDeveloper">
           <tr>
-            <td><strong>{{ $t('created-on') }}</strong></td>
-              <td> {{ Number(annotation.created) | moment('ll') }} </td>
+            <td><strong>{{ $t('id') }}</strong></td>
+            <td>{{ annotation.id }}</td>
           </tr>
-          <tr v-if="isImageInReviewMode">
-            <td><strong>{{ $t('reviewed-annotation-status') }}</strong></td>
-            <td>
-              <span class="tag is-danger">
-                {{ $t('reviewed-annotation-status-not-validated') }}
-              </span>
-            </td>
-          </tr>
-        </template>
-        <template v-else>
-          <tr>
-            <td><strong>{{$t('reviewed-by')}}</strong></td>
-            <td>
-              {{ reviewer.fullName }}
-            </td>
-          </tr>
-          <tr>
-            <td><strong>{{$t('reviewed-on')}}</strong></td>
-            <td> {{ Number(annotation.created) | moment('ll') }} </td>
-          </tr>
-          <tr v-if="isImageInReviewMode">
-            <td><strong>{{ $t('reviewed-annotation-status') }}</strong></td>
-            <td>
-              <span class="tag is-success">
-                {{ $t('reviewed-annotation-status-validated') }}
-              </span>
-            </td>
-          </tr>
-        </template>
-      </template>
-
-      <template v-if="currentAccount.isDeveloper">
-        <tr>
-          <td><strong>{{$t('id')}}</strong></td>
-          <td>{{annotation.id}}</td>
-        </tr>
-      </template>
-    </tbody>
-  </table>
-
-  <div class="actions">
-    <router-link
-      v-if="showImageInfo"
-      :to="annotationURL"
-      class="button is-link is-small is-fullwidth"
-    >
-      {{ $t('button-view-in-image') }}
-    </router-link>
-
-    <a-button v-else class="button is-link is-small is-fullwidth"  @click="$emit('centerView')" type="primary">
-      {{ $t('button-center-view-on-annot') }}
-    </a-button>
-
-    <div class="level">
-      <!-- <a @click="openCrop(annotation)" class="level-item button is-small">
-        {{ $t('button-view-crop') }}
-      </a> -->
-
-      <button class="level-item button is-small" @click="copyURL()">
-        {{ $t('button-copy-url') }}
-      </button>
-
-      <button v-if="isPropDisplayed('comments') && comments" class="level-item button is-small"
-        @click="openCommentsModal()"
-      >
-        {{ $t('button-comments') }} ({{comments.length}})
-      </button>
-
-      <button v-if="canEdit" class="level-item button is-small is-danger" @click="confirmDeletion()">
-        {{ $t('button-delete') }}
-      </button>
-    </div>
+        </template> -->
+      </tbody>
+    </table>
   </div>
-</div>
 </template>
 
 <script>
-import {get} from '@/utils/store-helpers';
+import { get } from '@/utils/store-helpers';
 
-import {AnnotationTerm, AnnotationType, AnnotationCommentCollection, AnnotationTrack, PropertyCollection} from '@/api';
+import { AnnotationTerm, AnnotationType, AnnotationCommentCollection, AnnotationTrack, PropertyCollection } from '@/api';
 import copyToClipboard from 'copy-to-clipboard';
 import ImageName from '@/components/image/ImageName';
 import CytomineDescription from '@/components/description/CytomineDescription';
@@ -298,9 +286,10 @@ import CytomineTrack from '@/components/track/CytomineTrack';
 import AnnotationCommentsModal from './AnnotationCommentsModal';
 import ProfileModal from '@/components/viewer/ProfileModal';
 import AnnotationLinksPreview from '@/components/annotations/AnnotationLinksPreview';
-import {appendShortTermToken} from '@/utils/token-utils.js';
+import { appendShortTermToken } from '@/utils/token-utils.js';
 import ChannelName from '@/components/viewer/ChannelName';
 import constants from '@/utils/constants.js';
+import { Description } from '@/api';
 
 export default {
   name: 'annotations-details',
@@ -318,16 +307,16 @@ export default {
     AnnotationLinksPreview,
   },
   props: {
-    annotation: {type: Object},
-    terms: {type: Array},
-    tracks: {type: Array},
-    users: {type: Array},
-    images: {type: Array},
-    slices: {type: Array, default: () => []},
-    profiles: {type: Array, default: () => []},
-    showImageInfo: {type: Boolean, default: true},
-    showChannelInfo: {type: Boolean, default: false},
-    showComments: {type: Boolean, default: false}
+    annotation: { type: Object },
+    terms: { type: Array },
+    tracks: { type: Array },
+    users: { type: Array },
+    images: { type: Array },
+    slices: { type: Array, default: () => [] },
+    profiles: { type: Array, default: () => [] },
+    showImageInfo: { type: Boolean, default: true },
+    showChannelInfo: { type: Boolean, default: false },
+    showComments: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -341,7 +330,9 @@ export default {
       linkCropSize: 64,
       linkColor: '696969',
       properties: [],
-      loadPropertiesError: false
+      loadPropertiesError: false,
+      description: null,
+      inputedcomment: '',
     };
   },
   computed: {
@@ -371,7 +362,7 @@ export default {
     },
     image() {
       return this.images.find(image => image.id === this.annotation.image) ||
-        {'id': this.annotation.image, 'instanceFilename': this.annotation.instanceFilename};
+        { 'id': this.annotation.image, 'instanceFilename': this.annotation.instanceFilename };
     },
     isImageInReviewMode() {
       return this.image.inReview;
@@ -393,7 +384,7 @@ export default {
         return this.annotation.userByTerm.map(ubt => {
           let term = this.terms.find(term => ubt.term === term.id);
           let user = this.users.find(user => user.id === ubt.user[0]) || {}; // QUESTION: can we have several users?
-          return {term, user};
+          return { term, user };
         });
       } else {
         return [];
@@ -401,13 +392,13 @@ export default {
     },
     associatedTermsIds() {
       this.revTerms;
-      return this.associatedTerms.map(({term}) => term.id);
+      return this.associatedTerms.map(({ term }) => term.id);
     },
     associatedTracks() {
       if (this.annotation.annotationTrack) {
         return this.annotation.annotationTrack.map(at => {
           let track = this.tracks.find(track => at.track === track.id);
-          return {track};
+          return { track };
         });
       } else {
         return [];
@@ -415,7 +406,7 @@ export default {
     },
     associatedTracksIds() {
       this.revTracks;
-      return this.associatedTracks.map(({track}) => track.id);
+      return this.associatedTracks.map(({ track }) => track.id);
     },
     availableTracks() {
       return this.tracks.filter(track => track.image === this.annotation.image);
@@ -434,7 +425,7 @@ export default {
       } else if (this.image.duration > 1) {
         return this.$t('temporal-spectra');
       }
-      return  this.$t('spatial-projection');
+      return this.$t('spatial-projection');
     }
   },
   methods: {
@@ -447,7 +438,7 @@ export default {
     },
     copyURL() {
       copyToClipboard(window.location.origin + '/#' + this.annotationURL);
-      this.$notify({type: 'success', text: this.$t('notif-success-annot-URL-copied')});
+      this.$notify({ type: 'success', text: this.$t('notif-success-annot-URL-copied') });
     },
 
     async newTerm(term) { // a new term was added to the ontology
@@ -459,11 +450,11 @@ export default {
     async addTerm(idTerm) {
       if (idTerm) {
         try {
-          await new AnnotationTerm({annotation: this.annotation.id, term: idTerm}).save();
+          await new AnnotationTerm({ annotation: this.annotation.id, term: idTerm }).save();
           this.$emit('updateTerms');
           this.showTermSelector = false;
         } catch (error) {
-          this.$notify({type: 'error', text: this.$t('notif-error-add-term')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-add-term') });
           this.revTerms++;
         } finally {
           this.addTermString = '';
@@ -481,7 +472,7 @@ export default {
         this.$emit('updateTerms');
       } catch (error) {
         console.log(error);
-        this.$notify({type: 'error', text: this.$t('notif-error-remove-term')});
+        this.$notify({ type: 'error', text: this.$t('notif-error-remove-term') });
         this.revTerms++;
       }
     },
@@ -501,11 +492,11 @@ export default {
     async addTrack(idTrack) {
       if (idTrack) {
         try {
-          await new AnnotationTrack({annotation: this.annotation.id, track: idTrack}).save();
+          await new AnnotationTrack({ annotation: this.annotation.id, track: idTrack }).save();
           this.$emit('updateTracks');
           this.showTrackSelector = false;
         } catch (error) {
-          this.$notify({type: 'error', text: this.$t('notif-error-add-track')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-add-track') });
           this.revTracks++;
         } finally {
           this.addTrackString = '';
@@ -518,7 +509,7 @@ export default {
           await AnnotationTrack.delete(this.annotation.id, idTrack);
           this.$emit('updateTracks');
         } catch (error) {
-          this.$notify({type: 'error', text: this.$t('notif-error-remove-track')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-remove-track') });
           this.revTracks++;
         } finally {
           this.addTrackString = '';
@@ -530,9 +521,9 @@ export default {
       this.$buefy.modal.open({
         parent: this,
         component: AnnotationCommentsModal,
-        props: {annotation: this.annotation, comments: this.comments},
+        props: { annotation: this.annotation, comments: this.comments },
         hasModalCard: true,
-        events: {'addComment': this.addComment}
+        events: { 'addComment': this.addComment }
       });
     },
 
@@ -552,7 +543,7 @@ export default {
       this.$buefy.modal.open({
         parent: this,
         component: ProfileModal,
-        props: {annotation: this.annotation, image: this.image, spatialAxis},
+        props: { annotation: this.annotation, image: this.image, spatialAxis },
         hasModalCard: true
       });
     },
@@ -573,25 +564,31 @@ export default {
         await this.annotation.delete();
         this.$emit('deletion');
       } catch (err) {
-        this.$notify({type: 'error', text: this.$t('notif-error-annotation-deletion')});
+        this.$notify({ type: 'error', text: this.$t('notif-error-annotation-deletion') });
       }
     }
   },
   async created() {
     if (this.isPropDisplayed('comments') && this.annotation.type === AnnotationType.USER) {
       try {
-        this.comments = (await AnnotationCommentCollection.fetchAll({annotation: this.annotation})).array;
+        this.comments = (await AnnotationCommentCollection.fetchAll({ annotation: this.annotation })).array;
         if (this.showComments) {
           this.openCommentsModal();
         }
       } catch (error) {
         console.log(error);
-        this.$notify({type: 'error', text: this.$t('notif-error-fetch-annotation-comments')});
+        this.$notify({ type: 'error', text: this.$t('notif-error-fetch-annotation-comments') });
       }
     }
 
     try {
-      this.properties = (await PropertyCollection.fetchAll({object: this.annotation})).array;
+      this.description = await Description.fetch(this.object);
+    } catch (err) {
+      // the error may make sense if the object has no description
+    }
+
+    try {
+      this.properties = (await PropertyCollection.fetchAll({ object: this.annotation })).array;
     } catch (error) {
       this.loadPropertiesError = true;
       console.log(error);
@@ -608,18 +605,16 @@ export default {
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
 
-.annotation-details {
-  font-size: 1rem;
-  color: $dark-text-primary;
-}
 
 .table {
   width: 100%;
-  background: $dark-table-bg;
+  font-size: $details-font-size;
+  background: $dark-bg-primary;
   color: $dark-text-primary;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   vertical-align: middle;
   color: $dark-text-primary;
   border-color: $dark-table-border;
@@ -635,12 +630,11 @@ h5 {
   color: $dark-text-primary;
 }
 
-.actions {
-  margin-bottom: 0.5em;
-}
-
 .actions .button {
-  margin: 3px;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 2%;
+  margin: 2px;
   background-color: $dark-button-bg;
   color: $dark-text-primary;
   border-color: $dark-button-border;
@@ -681,11 +675,13 @@ a.is-fullwidth:hover {
   color: #cccccc;
 }
 
-.add-term-wrapper, .add-track-wrapper {
+.add-term-wrapper,
+.add-track-wrapper {
   position: relative;
 }
 
-.ontology-tree-container, .track-tree-container {
+.ontology-tree-container,
+.track-tree-container {
   position: absolute;
   top: 100%;
   left: 0;
@@ -713,15 +709,15 @@ a.is-fullwidth:hover {
 }
 
 ::v-deep .tag {
-    margin-right: 5px;
-    margin-bottom: 5px !important;
-    background-color: $dark-tag-bg;
-    color: $dark-text-primary;
-    border: 1px solid $dark-tag-border;
+  margin-right: 5px;
+  margin-bottom: 5px !important;
+  background-color: $dark-tag-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-tag-border;
 }
 
 ::v-deep .tag:hover {
-    background-color: $dark-tag-hover-bg;
+  background-color: $dark-tag-hover-bg;
 }
 
 ::v-deep .input,

@@ -14,7 +14,7 @@
 
 <template>
 <v-popover
-  placement="right"
+  placement="left"
   trigger="manual"
   :open="opened"
   :auto-hide="false"
@@ -122,8 +122,10 @@ export default {
       return {
         backgroundImage: `url(${url})`,
         backgroundRepeat: 'no-repeat',
-        width: this.size + 'px',
-        height: this.size + 'px'
+        width: 50 + 'px',
+        height: 50 + 'px',
+        'background-position': 'center',
+        'background-size': 'cover', /* 关键属性 */
       };
     },
     image() {
@@ -176,7 +178,7 @@ export default {
   background-repeat: no-repeat;
   margin: 10px;
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-  border: 3px solid white;
+  border: 1px solid white;
   text-align: right;
 }
 

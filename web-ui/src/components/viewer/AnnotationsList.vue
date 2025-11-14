@@ -13,60 +13,23 @@
           </b-radio-button>
         </b-field>-->
 
-        <ontology-tree
-          v-if="isDisplayedByTerm"
-          v-model="selectedTermsIds"
-          :ontology="ontology"
-          :multiple-selection="false"
-          :hidden-nodes="hiddenTermsIds"
-          :additional-nodes="[noTermOption]"
-        />
+        <ontology-tree v-if="isDisplayedByTerm" v-model="selectedTermsIds" :ontology="ontology"
+          :multiple-selection="false" :hidden-nodes="hiddenTermsIds" :additional-nodes="[noTermOption]" />
 
-        <track-tree
-          v-if="!isDisplayedByTerm"
-          v-model="selectedTracksIds"
-          :tracks="tracks"
-          :multiple-selection="false"
-        />
+        <track-tree v-if="!isDisplayedByTerm" v-model="selectedTracksIds" :tracks="tracks"
+          :multiple-selection="false" />
       </div>
 
       <div class="annotations-list-container">
-        <list-annotations-by v-if="currentItem" :key="currentItem.id"
-          :categorization="displayType"
-          :size="85"
-          color="000000"
-          :nb-per-page="nbPerPage"
-
-          :prop="currentItem"
-
-          :all-terms="terms"
-          :all-users="allUsers"
-          :all-images="images"
-          :all-tracks="tracks"
-
-          :multiple-terms="false"
-          :no-term="noTerm"
-          :multiple-track="false"
-          :no-track="noTrack"
-
-          :images-ids="[image.id]"
-          :slices-ids="sliceIds"
-          :users-ids="layersIds"
-          :terms-ids="termsOptionsIds"
-          :tracks-ids="tracksIds"
-          :reviewed="false"
-
-          :visible="opened"
-          :index="index"
-          :revision="revision"
-          :show-details="showDetails"
-
-          @updateTermsOrTracks="$emit('updateTermsOrTracks', $event)"
+        <list-annotations-by v-if="currentItem" :key="currentItem.id" :categorization="displayType" :size="85"
+          color="000000" :nb-per-page="nbPerPage" :prop="currentItem" :all-terms="terms" :all-users="allUsers"
+          :all-images="images" :all-tracks="tracks" :multiple-terms="false" :no-term="noTerm" :multiple-track="false"
+          :no-track="noTrack" :images-ids="[image.id]" :slices-ids="sliceIds" :users-ids="layersIds"
+          :terms-ids="termsOptionsIds" :tracks-ids="tracksIds" :reviewed="false" :visible="opened" :index="index"
+          :revision="revision" :show-details="showDetails" @updateTermsOrTracks="$emit('updateTermsOrTracks', $event)"
           @updateProperties="$emit('updateProperties')"
-          @centerView="$emit('centerView', {annot: $event, sameView: isSameView($event)})"
-          @delete="$emit('delete', $event)"
-          @select="select"
-        />
+          @centerView="$emit('centerView', { annot: $event, sameView: isSameView($event) })"
+          @delete="$emit('delete', $event)" @select="select" />
       </div>
     </div>
 
@@ -75,9 +38,9 @@
 </template>
 
 <script>
-import {UserCollection} from '@/api';
+import { UserCollection } from '@/api';
 
-import {get} from '@/utils/store-helpers';
+import { get } from '@/utils/store-helpers';
 
 import ListAnnotationsBy from '@/components/annotations/ListAnnotationsBy';
 import OntologyTree from '@/components/ontology/OntologyTree';
@@ -95,8 +58,8 @@ export default {
   ],
   data() {
     return {
-      nbPerPage: 10,
-      noTermOption: {id: 0, name: this.$t('no-term')},
+      nbPerPage: 30,
+      noTermOption: { id: 0, name: this.$t('no-term') },
 
       users: [],
 
@@ -273,8 +236,8 @@ export default {
     isSameView(annot) {
       return this.displayType === 'TERM' && this.sliceIds.includes(annot.slice);
     },
-    select({annot, options}) {
-      this.$emit('select', {annot, options: {trySameView: options.trySameView || this.isSameView(annot)}});
+    select({ annot, options }) {
+      this.$emit('select', { annot, options: { trySameView: options.trySameView || this.isSameView(annot) } });
     },
 
     shortkeyHandler(key) {
@@ -322,10 +285,12 @@ export default {
 .annotations-list-opened {
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.5), 0 0 0 1px rgba(10, 10, 10, 0.5);
   background: $dark-bg-secondary;
-  height: 25vh;
+  height: 80%;
+  overflow-y: auto;
   pointer-events: auto;
   display: flex;
   color: $dark-text-primary;
+  font-size: $details-font-size;
 }
 
 .delete {
@@ -342,7 +307,6 @@ export default {
   border-bottom: 1px solid $dark-border-color;
   height: 100%;
   width: 100%;
-  padding-right: 25px;
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
 }
@@ -382,11 +346,12 @@ h2 {
 }
 
 .annotations-list-sidebar {
-  padding: 10px;
+  // padding: 10px;
   overflow-y: auto;
   min-width: 6em;
   background-color: $dark-bg-tertiary;
   color: $dark-text-primary;
+  font-size: $details-font-size;
 }
 
 :deep(ul.pagination-list) {

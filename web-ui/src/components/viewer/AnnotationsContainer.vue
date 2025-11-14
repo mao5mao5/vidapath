@@ -5,34 +5,22 @@
         <template #extra>
           <a-icon type="down" />
         </template>
-         <information-panel
-              class="dark-content"
-              :index="index"
-              @openMetadata="togglePanel('metadata')"
-          />
+        <information-panel class="dark-content" :index="index" @openMetadata="togglePanel('metadata')" />
       </a-collapse-panel>
       <a-collapse-panel key="container-1" header="Annotation Details" class="dark-panel">
         <template #extra>
           <a-icon type="down" />
         </template>
-        <annotation-details-container v-if="isPanelDisplayed('annotation-main')" 
-          class="dark-content"
-          :index="index"
-          @select="selectAnnotation" 
-          @centerView="centerView({ annot: $event, sameView: true })" 
-          @addTerm="addTerm"
-          @addTrack="addTrack" 
-          @updateTermsOrTracks="updateTermsOrTracks" 
-          @updateProperties="updateProperties"
+        <annotation-details-container v-if="isPanelDisplayed('annotation-main')" class="dark-content" :index="index"
+          @select="selectAnnotation" @centerView="centerView({ annot: $event, sameView: true })" @addTerm="addTerm"
+          @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks" @updateProperties="updateProperties"
           @delete="handleDeletion" />
       </a-collapse-panel>
       <a-collapse-panel key="container-2" header="Annotations List" class="dark-panel">
         <template #extra>
           <a-icon type="down" />
         </template>
-        <annotations-list
-          class="dark-content"
-          :index="index" @select="selectAnnotation" @centerView="centerView"
+        <annotations-list class="dark-content" :index="index" @select="selectAnnotation" @centerView="centerView"
           @addTerm="addTerm" @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks"
           @updateProperties="updateProperties" @delete="handleDeletion" />
       </a-collapse-panel>
@@ -194,15 +182,24 @@ export default {
 @import '../../assets/styles/dark-variables';
 
 .annotations-container {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 30rem;
+  height: auto;
+  overflow: auto;
+  overflow-y: auto;
+
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
   opacity: 0.95;
-  border-radius: 5px
+  border-radius: 1%;
 }
 
 .dark-collapse {
   background-color: $dark-bg-primary;
-   border-radius: 5px
+  border-radius: 1%;
+  overflow-y: auto;
 }
 
 .dark-collapse :deep(.ant-collapse-header) {
