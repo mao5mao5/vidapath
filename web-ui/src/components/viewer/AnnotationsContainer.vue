@@ -188,6 +188,7 @@ export default {
   width: 30rem;
   height: auto;
   overflow: auto;
+  overflow-y: auto;
 
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
@@ -197,7 +198,8 @@ export default {
 
 .dark-collapse {
   background-color: $dark-bg-primary;
-  border-radius: 5px
+  border-radius: 1%;
+  overflow-y: auto;
 }
 
 .dark-collapse :deep(.ant-collapse-header) {

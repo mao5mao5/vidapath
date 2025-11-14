@@ -28,7 +28,7 @@
     <template v-else-if="!annotations.length">
       <em class="no-result">{{ $t('no-annotation') }}</em>
     </template>
-    <template v-else>
+    <template v-else style="display:'flex'; flex-direction: column; gap: 0.5rem;">
       <template v-for="(annot, index) in annotations">
         <div class="break"
              v-if="regroupPerLine && annotationInGroupDetails[index].first"
@@ -403,6 +403,8 @@ export default {
 <style scoped>
 .box {
   position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .no-result {
@@ -423,7 +425,9 @@ export default {
 
 .annot-preview-block {
   margin: 4px;
-  padding: 6px;
+  /* padding: 6px; */
+  width: 50px;
+  width: 50px;
 }
 
 >>> .annot-preview {
