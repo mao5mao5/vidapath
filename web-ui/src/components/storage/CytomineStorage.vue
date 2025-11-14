@@ -25,7 +25,7 @@
     </div>
     <div class="panel-block" v-else>
       <b-message type="is-info" has-icon icon-size="is-small">
-        <h2>{{$t('important-notes')}}</h2>
+        <h2 style="color: white;">{{$t('important-notes')}}</h2>
         <ul class="small-text">
 <!--          <li>{{$t('max-size-upload-info')}}</li>-->
           <li>
@@ -49,7 +49,7 @@
 
       <div class="columns">
         <div class="column is-one-quarter has-text-right">
-          <strong>{{$t('storage')}}</strong>
+          <strong style="color: white;">{{$t('storage')}}</strong>
         </div>
         <div class="column is-half">
           <cytomine-multiselect v-model="selectedStorage" :options="storages" label="extendedName" track-by="id" :allow-empty="false">
@@ -65,7 +65,7 @@
 
       <div class="columns">
         <div class="column is-one-quarter has-text-right">
-          <strong>{{$t('link-with-project')}}</strong>
+          <strong style="color: white;">{{$t('link-with-project')}}</strong>
         </div>
         <div class="column is-half">
           <cytomine-multiselect
@@ -81,7 +81,7 @@
 
       <div class="columns">
         <div class="column is-one-quarter has-text-right">
-          <strong>{{$t('files')}}</strong>
+          <strong style="color: white;">{{$t('files')}}</strong>
         </div>
         <div class="column is-half">
           <table v-if="dropFiles.length > 0" class="table is-fullwidth upload-table">
@@ -456,7 +456,7 @@ export default {
     this.refreshStatusSessionUploads();
     this.fetchPrimaryKey();
     this.tableRefreshInterval = constants.STORAGE_REFRESH_INTERVAL;
-  },
+      },
   deactivated() {
     clearTimeout(this.timeoutRefreshSessionUploads);
     this.tableRefreshInterval = 0;
@@ -464,7 +464,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "../../assets/styles/dark-variables.scss";
+
 .small-text {
   font-size: 0.9em;
 }
@@ -500,6 +502,7 @@ export default {
 
 .column.flex-column {
   flex-direction: column;
+  color: $dark-text-primary;
 }
 
 .progress:not(:last-child) {
@@ -513,15 +516,356 @@ export default {
 .first-child-like {
   display: block;
   padding-top: 0.5em;
+  color: $dark-text-secondary;
 }
 
 .storage-wrapper .upload-draggable .button {
   margin-bottom: 0;
+  background-color: $dark-button-bg;
+  border-color: $dark-button-border;
+  color: $dark-text-primary;
+}
+
+.storage-wrapper .upload-draggable .button:hover {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.storage-wrapper .upload-draggable .button.is-success {
+  background-color: #48c774; /* 保持成功按钮的绿色 */
+  border-color: transparent;
+  color: #fff;
+}
+
+.storage-wrapper .upload-draggable .button.is-success:hover {
+  background-color: #34a853; /* 保持成功按钮悬停时的颜色 */
+  border-color: transparent;
+  color: #fff;
+}
+
+.storage-wrapper .upload-draggable .button.is-link {
+  background-color: $dark-button-link-bg;
+  border-color: $dark-button-link-border;
+  color: $dark-text-primary;
+}
+
+.storage-wrapper .upload-draggable .button.is-link:hover {
+  background-color: $dark-button-link-hover-bg;
+  border-color: $dark-button-link-hover-border;
 }
 
 .storage-wrapper .upload-draggable {
   margin-right: 0.75em;
   position: relative;
   bottom: 4px;
+}
+
+/* 暗色主题表格样式 */
+.table {
+  background-color: $dark-table-bg;
+  color: $dark-text-primary;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.table th {
+  color: $dark-text-primary;
+  background-color: $dark-bg-secondary;
+  padding: 0.5em 0.75em;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid $dark-border-color;
+}
+
+.table td {
+  border-color: $dark-table-border;
+  border-bottom: 1px solid $dark-table-border;
+  padding: 0.5em 0.75em;
+}
+
+.table tr:hover {
+  background-color: $dark-table-hover-bg;
+  transition: background-color 0.15s ease;
+}
+
+.table tr:nth-child(even) {
+  background-color: $dark-bg-tertiary;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+/* 暗色主题面板样式 */
+.panel {
+  background-color: $dark-bg-panel;
+  color: $dark-text-primary;
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.panel-heading {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-bottom: 1px solid $dark-border-color;
+  padding: 0.75em 1em;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.panel-block {
+  color: $dark-text-primary;
+  border-bottom: 1px solid $dark-border-color;
+  background-color: $dark-bg-primary;
+  padding: 1em;
+}
+
+.panel-block:last-child {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-bottom: none;
+}
+
+/* 暗色主题消息框样式 */
+.message.is-info {
+  background-color: $dark-bg-secondary;
+  border: 1px solid #209cee;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.message.is-info .message-body {
+  color: $dark-text-primary;
+  border-color: #209cee;
+  background-color: $dark-bg-secondary;
+  padding: 1em;
+  border-radius: 6px;
+}
+
+.message.is-danger {
+  background-color: $dark-bg-secondary;
+  border: 1px solid #ff3860;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.message.is-danger .message-body {
+  color: $dark-text-primary;
+  border-color: #ff3860;
+  background-color: $dark-bg-secondary;
+  padding: 1em;
+  border-radius: 6px;
+}
+
+/* 暗色主题上传表格样式 */
+.upload-table td {
+  vertical-align: middle !important;
+  color: $dark-text-primary;
+}
+
+/* 暗色主题进度条样式 */
+.progress {
+  background-color: $dark-bg-secondary;
+  border-radius: 4px;
+  height: 1.25em;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.progress::-webkit-progress-bar {
+  background-color: $dark-bg-secondary;
+}
+
+.progress::-webkit-progress-value {
+  background-color: #48c774; /* 保持进度条的绿色 */
+  transition: width 0.3s ease;
+}
+
+.progress::-moz-progress-bar {
+  background-color: #48c774; /* 保持进度条的绿色 */
+}
+
+.progress.is-info {
+  background-color: $dark-bg-secondary;
+}
+
+.progress.is-info::-webkit-progress-value {
+  background-color: #209cee; /* 保持信息进度条的蓝色 */
+}
+
+.progress.is-info::-moz-progress-bar {
+  background-color: #209cee; /* 保持信息进度条的蓝色 */
+}
+
+.progress.is-success::-webkit-progress-value {
+  background-color: #48c774; /* 成功进度条的绿色 */
+}
+
+.progress.is-success::-moz-progress-bar {
+  background-color: #48c774; /* 成功进度条的绿色 */
+}
+
+/* 暗色主题标签样式 */
+.tag {
+  background-color: $dark-tag-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-tag-border;
+  border-radius: 4px;
+  padding: 0.25em 0.5em;
+  font-size: 0.85em;
+}
+
+.tag.is-danger {
+  background-color: $dark-button-danger-bg;
+  color: $dark-text-primary;
+  border-color: #ff3860;
+}
+
+/* 暗色主题多选框样式 */
+.multiselect__tags {
+  background-color: $dark-input-bg;
+  border-color: $dark-input-border;
+  color: $dark-text-primary;
+  border-radius: 4px;
+  min-height: 2.5em;
+  padding: 0.4em 0.75em;
+}
+
+.multiselect__input,
+.multiselect__single {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+}
+
+.multiselect__placeholder {
+  color: $dark-text-disabled;
+}
+
+.multiselect__content {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border: 1px solid $dark-border-color;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.multiselect__element {
+  background-color: $dark-bg-secondary;
+  border-bottom: 1px solid $dark-border-color;
+}
+
+.multiselect__element:last-child {
+  border-bottom: none;
+}
+
+.multiselect__option--highlight {
+  background-color: #209cee;
+  color: white;
+}
+
+.multiselect__option--selected {
+  background-color: $dark-button-link-bg;
+  color: $dark-text-primary;
+  font-weight: 600;
+}
+
+.multiselect__option--selected.multiselect__option--highlight {
+  background-color: #3273dc;
+  color: white;
+}
+
+.multiselect__option--disabled {
+  background-color: $dark-bg-tertiary;
+  color: $dark-text-disabled;
+  cursor: not-allowed;
+}
+
+/* 暗色主题通用样式 */
+.columns {
+  color: $dark-text-primary;
+  margin: 0.75rem 0;
+}
+
+.column {
+  color: $dark-text-primary;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.button {
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  padding: 0.5em 1em;
+  font-size: 0.95em;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.button.is-success {
+  background-color: #48c774;
+  border-color: transparent;
+  color: #fff;
+}
+
+.button.is-success:hover {
+  background-color: #34a853;
+  border-color: transparent;
+  color: #fff;
+}
+
+.button.is-link {
+  background-color: $dark-button-link-bg;
+  border-color: $dark-button-link-border;
+  color: $dark-text-primary;
+}
+
+.button.is-link:hover {
+  background-color: $dark-button-link-hover-bg;
+  border-color: $dark-button-link-hover-border;
+}
+
+.button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.has-text-grey {
+  color: $dark-text-disabled !important;
+}
+
+.has-text-right {
+  color: $dark-text-primary;
+  text-align: right;
+}
+
+.small-text {
+  color: $dark-text-secondary;
+  line-height: 1.5;
+}
+
+.fa-info-circle {
+  color: #209cee;
+  margin-left: 0.3em;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.fa-info-circle:hover {
+  color: #4dabf7;
 }
 </style>

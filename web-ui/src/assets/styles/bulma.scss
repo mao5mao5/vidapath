@@ -43,6 +43,11 @@ html {
 
 .b-table .table th.is-current-sort {
   font-weight: 600 !important;
+  color: $dark-text-primary;
+}
+
+.b-table .table .th-wrap { 
+  color: $dark-text-primary;
 }
 
 .b-table .table th .button {

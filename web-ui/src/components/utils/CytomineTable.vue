@@ -24,6 +24,7 @@
   <b-loading :is-full-page="false" :active="!data" />
   <b-table
     v-if="data"
+    class="table"
     :data="data"
     :loading="loading"
     paginated
@@ -215,9 +216,20 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+@import "../../assets/styles/dark-variables.scss";
 .cytomine-table-wrapper {
-  min-height: 10em;
+  background-color: $dark-bg-primary;
+  min-height: 10em;  
   position: relative;
+}
+
+.table{
+  background-color: $dark-table-bg !important;
+  color: $dark-text-primary !important;
+}
+
+.table .thead{
+  color: $dark-text-primary !important;
 }
 </style>
