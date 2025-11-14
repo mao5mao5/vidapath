@@ -58,7 +58,7 @@ export default {
   ],
   data() {
     return {
-      nbPerPage: 10,
+      nbPerPage: 30,
       noTermOption: { id: 0, name: this.$t('no-term') },
 
       users: [],
@@ -307,7 +307,6 @@ export default {
   border-bottom: 1px solid $dark-border-color;
   height: 100%;
   width: 100%;
-  padding-right: 25px;
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
 }
