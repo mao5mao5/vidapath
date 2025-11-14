@@ -134,13 +134,6 @@
         </tr> -->
         </template>
 
-        <tr v-if="isPropDisplayed('description')">
-          <td>
-            <!-- <h5>{{ $t('description') }} :</h5> -->
-            <cytomine-description :object="annotation" :canEdit="canEdit" :maxPreviewLength="300" />
-          </td>
-        </tr>
-
         <!-- TERMS -->
         <tr v-if="isPropDisplayed('terms') && ontology">
           <td colspan="2">
@@ -165,6 +158,13 @@
               </div>
             </div>
             <em v-else-if="!associatedTerms.length">{{ $t('no-term') }}</em>
+          </td>
+        </tr>
+
+        <tr v-if="isPropDisplayed('description')">
+          <td>
+            <!-- <h5>{{ $t('description') }} :</h5> -->
+            <cytomine-description :object="annotation" :canEdit="canEdit" :maxPreviewLength="300" />
           </td>
         </tr>
 

@@ -202,9 +202,7 @@
 
       <toggle-scale-line :index="index" />
 
-      <div style="position: absolute; width: 500px; height: 800px; top: 10px; right: 10px; z-index: 1000;">
-        <annotations-container :index="index" @centerView="centerViewOnAnnot" />
-      </div>
+      <annotations-container :index="index" @centerView="centerViewOnAnnot" />
 
       <div class="custom-overview" ref="overview">
         <p class="image-name" :class="{ hidden: overviewCollapsed }">
