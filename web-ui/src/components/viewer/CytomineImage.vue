@@ -51,12 +51,12 @@
             <ontology-panel class="panel-options" v-show="activePanel === 'ontology'" :index="index" />
           </li>
 
-          <li v-if="isPanelDisplayed('property')">
+          <!-- <li v-if="isPanelDisplayed('property')">
             <a @click="togglePanel('properties')" :class="{ active: activePanel === 'properties' }">
               <i class="fas fa-tag"></i>
             </a>
             <properties-panel class="panel-options" v-show="activePanel === 'properties'" :index="index" />
-          </li>
+          </li> -->
 
           <a-divider />
 

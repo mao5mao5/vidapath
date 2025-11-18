@@ -23,6 +23,7 @@
     ref="olDrawInteraction"
     :source="drawSourceName"
     :type="drawType"
+    :max-points="drawMaxPoints"
     :freehand="drawFreehand"
     :freehand-condition="undefined"
     :geometry-function="drawGeometryFunction"
@@ -87,6 +88,13 @@ export default {
     selectedFeature() {
       return this.$store.getters[this.imageModule + 'selectedFeature'];
     },
+    drawMaxPoints() {
+      if (this.activeTool === 'line') {
+        return 2;
+      }
+      return undefined;
+    },
+
     drawType() {
       switch (this.activeTool) {
         case 'point':

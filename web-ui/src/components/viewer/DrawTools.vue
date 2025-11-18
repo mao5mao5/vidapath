@@ -56,7 +56,7 @@
         />
       </div>
     </div>
-    <div
+    <!-- <div
       v-if="tracks && maxRank > 1"
       class="buttons has-addons are-small track-selection"
       :class="{'has-preview': tracksToAssociate.length > 0}"
@@ -91,7 +91,7 @@
           @deletedTrack="refreshTracks"
         />
       </div>
-    </div>
+    </div> -->
 
     <div class="buttons has-addons are-small">
       <button
@@ -115,7 +115,7 @@
         :class="{'is-selected': activeTool === 'line'}"
         @click="activateTool('line')"
       >
-        <span class="icon is-small"><i class="fas fa-minus"></i></span>
+        <span class="icon is-small"><i class="fas fa-ruler"></i></span>
       </button>
 
       <button
@@ -128,7 +128,7 @@
         @click="activateTool('freehand-line')"
       >
         <span class="icon is-small">
-          <icon-line-free-hand />
+          <i class="fas fa-paint-brush"></i>
         </span>
       </button>
 
