@@ -98,7 +98,7 @@ export default {
       }
     },
     viewerImagesIds() {
-      return Object.values(this.$store.getters['currentProject/currentViewer'].images).map(image => image.imageInstance.id);
+      return Object.values(this.$store.getters['currentProject/currentViewer'].images).map(image => image?.imageInstance?.id);
     },
     availableImageGroups() {
       return [{id: 'null', name: this.$t('no-image-group')}, ...this.imageGroups];

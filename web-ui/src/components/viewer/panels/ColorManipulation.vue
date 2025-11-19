@@ -16,10 +16,10 @@
 <template>
 <div>
   <h1>{{$t('colors')}}</h1>
-  <b-message v-if="error" type="is-danger" has-icon icon-size="is-small" size="is-small">
+  <!-- <b-message v-if="error" type="is-danger" has-icon icon-size="is-small" size="is-small">
     <p> {{ $t('unexpected-error-info-message') }} </p>
-  </b-message>
-  <template v-else>
+  </b-message> -->
+  <template>
     <table class="table">
       <thead>
         <tr>
@@ -279,7 +279,7 @@ export default {
         return {
           ...ac,
           histogram: this.histograms.find(h => h.apparentChannel === ac.index),
-          name: this.sliceChannels[ac.channel].name
+          name: this.sliceChannels?.[ac.channel]?.name || `Channel ${ac.channel}`
         };
       });
     },
@@ -476,6 +476,13 @@ export default {
       if (this.manipulableChannels.length === 1) {
         this.toggleLookUpTableDetails(this.manipulableChannels[0].index);
       }
+      console.log('created');
+      console.log('histograms',this.histograms)
+      console.log(this.apparentChannels);
+      console.log(this.sliceChannels);
+      console.log('manipulableChannels',this.manipulableChannels);
+      console.log(this.imageModule);
+      console.log(this.imageWrapper);
 
       this.loading = false;
     } catch (error) {

@@ -190,7 +190,7 @@
 </ul>
 </div> -->
 
-      <image-controls :index="index" class="image-controls-wrapper" />
+      <!-- <image-controls :index="index" class="image-controls-wrapper" /> -->
 
       <div class="broadcast" v-if="imageWrapper.tracking.broadcast">
         <i class="fas fa-circle"></i> {{ $t('live') }}
