@@ -16,8 +16,8 @@
   <div ref="playground">
       <div class="annotation-details-container">
         <annotation-details
-          v-if="selectedFeature.properties.annot.hasOwnProperty('user')"
-          :annotation="selectedFeature.properties.annot"
+          v-if="selectedFeature?.properties?.annot?.hasOwnProperty('user')"
+          :annotation="selectedFeature?.properties?.annot"
           :terms="terms"
           :images="images"
           :slices="slices"
@@ -39,14 +39,14 @@
           @searchSimilarAnnotations="searchSimilarAnnotations"
         />
 
-        <annotation-simple-details
+        <!-- <annotation-simple-details
           v-else
-          :annotation="selectedFeature.properties.annot"
+          :annotation="selectedFeature?.properties?.annot"
           @centerView="$emit('centerView', ($event) ? $event : annot)"
-        />
+        /> -->
       </div>
       <!-- HACK for prev/next linked annotation shortkeys -->
-      <annotation-links-preview
+      <!-- <annotation-links-preview
         v-show="false"
         :index="index"
         :show-main-annotation="false"
@@ -55,7 +55,7 @@
         :annotation="selectedFeature.properties.annot"
         :images="images"
         @select="$emit('select', $event)"
-      />
+      /> -->
   </div>
 </template>
 
@@ -136,7 +136,7 @@ export default {
       return this.projectUsers;
     },
     annot() {
-      return this.selectedFeature ? this.selectedFeature.properties.annot : {};
+      return this.selectedFeature ? this.selectedFeature?.properties?.annot : {};
     },
     terms() {
       return this.$store.getters['currentProject/terms'] || [];
@@ -196,7 +196,7 @@ export default {
         'retrieval/search',
         {
           params: {
-            annotation: this.selectedFeature.properties.annot.id,
+            annotation: this.selectedFeature?.properties?.annot?.id,
             nrt_neigh: 10 // eslint-disable-line camelcase
           }
         }
