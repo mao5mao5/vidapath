@@ -183,9 +183,9 @@ export default {
 
 .annotations-container {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 30rem;
+  top: 0.1rem;
+  right: 0.1rem;
+  width: 20rem;
   height: auto;
   overflow: auto;
   overflow-y: auto;
