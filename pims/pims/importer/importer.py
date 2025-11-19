@@ -419,6 +419,24 @@ class FileImporter:
             if AUTO_DELETE_FAILED_UPLOAD and self.upload_path.exists():
                 self.upload_path.delete_upload_root()
             raise FileErrorProblem(self.histogram_path)
+        except (MemoryError, SystemError) as e:
+            # 捕获可能导致进程崩溃的严重异常
+            self.notify(
+                ImportEventType.ERROR_HISTOGRAM, self.histogram_path, image,
+                exception=e
+            )
+            if AUTO_DELETE_FAILED_UPLOAD and self.upload_path.exists():
+                self.upload_path.delete_upload_root()
+            raise FileErrorProblem(self.histogram_path)
+        except Exception as e:
+            # 捕获其他未预期的异常
+            self.notify(
+                ImportEventType.ERROR_HISTOGRAM, self.histogram_path, image,
+                exception=e
+            )
+            if AUTO_DELETE_FAILED_UPLOAD and self.upload_path.exists():
+                self.upload_path.delete_upload_root()
+            raise FileErrorProblem(self.histogram_path)
 
         assert self.histogram.has_histogram_role()
         self.notify(

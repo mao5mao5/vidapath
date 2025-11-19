@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  pims-cache:
+    image: redis:7.2
+    restart: unless-stopped
+    networks:
+      host_network:
+        ipv4_address: 172.16.238.6
+
+  pims:
+    image: cytomine/pims:latest
+    restart: unless-stopped
+    depends_on:
+      - pims-cache
+    volumes:
+      - ${IMPORT_PATH:-./data/dataset}:/dataset
+      - ${DATA_PATH:-./data}/images:/data/images
+    environment:
+      API_BASE_PATH: ${IMS_API_BASE_PATH:-/ims}
+      CACHE_ENABLED: true
+      CACHE_URL: redis://pims-cache:6379
+      CYTOMINE_PRIVATE_KEY: d70607f5-c478-403c-be11-3dbc1716d1cf
+      CYTOMINE_PUBLIC_KEY: 9a8b8369-2446-44cb-b0af-604a74e1dcdb
+      DATASET_PATH: /dataset
+      DEFAULT_ANNOTATION_ORIGIN: LEFT_TOP
+      DEFAULT_IMAGE_SIZE_SAFETY_MODE: SAFE_REJECT
+      INTERNAL_URL_CORE: http://nginx
+      LOG_CONFIG_FILE: /app/logging.yml
+      MAX_REQUESTS: 100000
+      OUTPUT_SIZE_LIMIT: 10000
+      PENDING_PATH: /tmp/uploaded
+      ROOT: /data/images
+      TASK_QUEUE_ENABLED: false
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-8}
+    ports:
+      - "5001:5000"
+    networks:
+      host_network:
+        ipv4_address: 172.16.238.8
+
+networks:
+  host_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24

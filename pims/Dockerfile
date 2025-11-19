@@ -4,14 +4,13 @@ ARG OPENJPEG_VERSION=2.5.2
 ARG PIMS_REVISION
 ARG PIMS_VERSION
 ARG PLUGIN_CSV=scripts/plugin-list.csv
-ARG PROXY_CACHE=registry.cytomine.org/docker
 ARG PY_VERSION=3.10
 ARG VIPS_URL=https://github.com/libvips/libvips/releases/download
 ARG VIPS_VERSION=8.15.2
 
 #######################################################################################
 ## Stage: Pims
-FROM ${PROXY_CACHE}/python:${PY_VERSION}-bookworm AS base-pims
+FROM python:3.10-slim AS base-pims
 
 ARG OPENJPEG_URL
 ARG OPENJPEG_VERSION
@@ -26,13 +25,15 @@ ENV DEBIAN_FRONTEND=noninteractive \
     MODULE_NAME="pims.application" \
     PLUGIN_INSTALL_PATH=/app/plugins \
     PORT=5000 \
-    PYTHONPATH="/app:$PYTHONPATH" \
+    PYTHONPATH="/app" \
     UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
-    UV_PROJECT_ENVIRONMENT=/usr/local
+    UV_PROJECT_ENVIRONMENT=/usr/local \
+    UV_HTTP_TIMEOUT=120
 
 RUN apt-get update && \
     apt-get -y install --no-install-recommends --no-install-suggests \
+        build-essential \
         libexif-dev \
         libgsf-1-dev \
         libimage-exiftool-perl \
@@ -46,7 +47,7 @@ RUN apt-get update && \
         libvips42 \
         libwebp-dev
 
-COPY --from=registry.cytomine.org/github/ghcr.io/astral-sh/uv:0.8.13 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.8.13 /uv /uvx /bin/
 
 # Download plugins
 WORKDIR /app

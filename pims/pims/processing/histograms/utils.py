@@ -135,25 +135,13 @@ def build_histogram_file(
     overwrite: bool = False
 ):
     """
-    Build an histogram for an image and save it as zarr file.
-    Parameters
-    ----------
-    in_image : Image
-        The image from which histogram has to be extracted.
-    dest : Path
-        The path where the histogram file will be saved.
-    hist_type : HistogramType
-        The type of histogram to build (FAST or COMPLETE)
-    overwrite : bool (default: False)
-        Whether overwrite existing histogram file at `dest` if any
+    Build a histogram for an image and save it as a Zarr file.
 
-    Returns
-    -------
-    histogram : Histogram
-        The zarr histogram file in read-only mode
+    Compatible with Zarr 3.x.
     """
     n_values = 2 ** min(in_image.significant_bits, 16)
 
+    # Select extraction method
     if in_image.n_pixels <= MAX_PIXELS_COMPLETE_HISTOGRAM:
         extract_fn = _extract_np_thumb
         hist_type = HistogramType.COMPLETE
@@ -162,66 +150,80 @@ def build_histogram_file(
             extract_fn = _extract_np_thumb
         else:
             extract_fn = in_image.tile
-            raise NotImplementedError()  # TODO
+            raise NotImplementedError()
 
+    # Check overwrite
     if not overwrite and dest.exists():
         raise FileExistsError(dest)
 
-    # While the file is not fully built, we save it at a temporary location
+    # Temporary output dir
     tmp_dest = dest.parent / Path(f"tmp_{dest.name}")
-    zroot = zarr.open_group(str(tmp_dest), mode='w')
+    zroot = zarr.open_group(str(tmp_dest), mode="w")
     zroot.attrs[ZHF_ATTR_TYPE] = hist_type
     zroot.attrs[ZHF_ATTR_FORMAT] = "PIMS-1.0"
 
-    # Create the group for plane histogram
-    # TODO: usa Dask to manipulate Zarr arrays (for bounds)
-    #  so that we can fill the zarr array incrementally
-    # https://github.com/zarr-developers/zarr-python/issues/446
+    # ---------------------------------------------
+    # 1. Plane histogram (t, z, channel, value)
+    # ---------------------------------------------
     shape = (in_image.duration, in_image.depth, in_image.n_channels)
+
     zplane = zroot.create_group(ZHF_PER_PLANE)
-    npplane_hist = np.zeros(shape=shape + (n_values,), dtype=np.uint64)
+    npplane_hist = np.zeros(shape + (n_values,), dtype=np.uint64)
+
     for data, c_range, z, t, ratio in extract_fn(in_image):
         for read, c in enumerate(c_range):
-            h, _ = histogram(data[:, :, read], source_range='dtype')
+            h, _ = histogram(data[:, :, read], source_range="dtype")
             npplane_hist[t, z, c, :] += np.rint(h * ratio).astype(np.uint64)
-    zplane.array(ZHF_HIST, npplane_hist)
-    zplane.array(
-        ZHF_BOUNDS,
-        np.stack(
-            (argmin_nonzero(npplane_hist),
-             argmax_nonzero(npplane_hist)), axis=-1
-        )
+
+    # ---- Zarr 3.x: assign arrays directly ----
+    zplane[ZHF_HIST] = npplane_hist
+    zplane[ZHF_BOUNDS] = np.stack(
+        (argmin_nonzero(npplane_hist),
+         argmax_nonzero(npplane_hist)),
+        axis=-1
     )
 
-    # Create the group for channel histogram
+    # ---------------------------------------------
+    # 2. Channel histogram (channel, value)
+    # ---------------------------------------------
     zchannel = zroot.create_group(ZHF_PER_CHANNEL)
     npchannel_hist = np.sum(npplane_hist, axis=(0, 1))
-    zchannel.array(ZHF_HIST, npchannel_hist)
-    zchannel.array(
-        ZHF_BOUNDS,
-        np.stack(
-            (argmin_nonzero(npchannel_hist),
-             argmax_nonzero(npchannel_hist)), axis=-1
-        )
+
+    zchannel[ZHF_HIST] = npchannel_hist
+    zchannel[ZHF_BOUNDS] = np.stack(
+        (argmin_nonzero(npchannel_hist),
+         argmax_nonzero(npchannel_hist)),
+        axis=-1
     )
 
-    # Create the group for image histogram
+    # ---------------------------------------------
+    # 3. Image histogram (value,)
+    # ---------------------------------------------
     zimage = zroot.create_group(ZHF_PER_IMAGE)
     npimage_hist = np.sum(npchannel_hist, axis=0)
-    zimage.array(ZHF_HIST, npimage_hist)
-    zimage.array(
-        ZHF_BOUNDS,
-        [argmin_nonzero(npimage_hist), argmax_nonzero(npimage_hist)]
-    )
 
-    # Remove redundant data
+    zimage[ZHF_HIST] = npimage_hist
+    zimage[ZHF_BOUNDS] = [
+        argmin_nonzero(npimage_hist),
+        argmax_nonzero(npimage_hist)
+    ]
+
+    # ---------------------------------------------
+    # 4. Remove redundant groups
+    # ---------------------------------------------
     if in_image.duration == 1 and in_image.depth == 1:
         del zroot[ZHF_PER_PLANE]
         if in_image.n_channels == 1:
             del zroot[ZHF_PER_CHANNEL]
 
-    # Move the zarr file (directory) to final location
+    # ---------------------------------------------
+    # 5. Move tmp directory to final destination
+    # ---------------------------------------------
     if overwrite and dest.exists():
         shutil.rmtree(dest)
+
     tmp_dest.replace(dest)
+
     return Histogram(dest, format=ZarrHistogramFormat)
+
+
