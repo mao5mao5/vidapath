@@ -150,26 +150,31 @@ export default {
   },
 
   actions: {
-    async initialize({commit}, {image}) {
+    async initialize({commit, dispatch}, {image, slices}) {
       commit('setIdImage', image.id);
       commit('setNbBitsPerSample', image.bitPerSample);
       commit('setNbSamplesPerChannel', image.samplePerPixel);
-      // await dispatch('refreshApparentChannels', {image});
-      // let channels = slices.map(slice => slice.channel);
-      // commit('setChannelsVisibility', channels);
+      await dispatch('refreshApparentChannels', {image});
+      let channels = slices.map(slice => slice.channel);
+      commit('setChannelsVisibility', channels);
     },
-    setImageInstance({commit}, {image}) {
+    async setImageInstance({commit, dispatch}, {image}) {
       commit('setIdImage', image.id);
       commit('setNbBitsPerSample', image.bitPerSample);
       commit('setNbSamplesPerChannel', image.samplePerPixel);
-      // await dispatch('refreshApparentChannels', {image});
+      await dispatch('refreshApparentChannels', {image});
     },
     async refreshApparentChannels({commit}, {image}) {
-      let apparentChannels = formatApparentChannels(
-        await fetchApparentChannels(image),
-        image.bitPerSample
-      );
-      commit('setApparentChannels', apparentChannels);
+      try {
+          let apparentChannels = formatApparentChannels(
+          await fetchApparentChannels(image),
+          image.bitPerSample
+        );
+        commit('setApparentChannels', apparentChannels);
+      } catch (e) {
+        // Ignore
+        console.error(e);
+      }
     },
 
     resetColorManipulation({commit}) {
