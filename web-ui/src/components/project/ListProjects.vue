@@ -175,9 +175,14 @@
           </b-table-column>
 
           <b-table-column label=" " centered width="150">
-            <a class="button is-small is-link" @click="openProject(project)">
-              {{$t('button-open')}}
-            </a>
+            <div class="buttons">
+              <a class="button is-small is-link" @click="openProject(project)">
+                {{$t('button-open')}}
+              </a>
+              <button class="button is-small is-link" @click="openAddImageModal(project)">
+                {{$t('button-add-image')}}
+              </button>
+            </div>
           </b-table-column>
         </template>
 
@@ -208,6 +213,11 @@
   </div>
 
   <add-project-modal :active.sync="creationModal" :ontologies="ontologies" />
+  <add-image-modal
+    :active.sync="addImageModal" 
+    :project="selectedProject"
+    @addImage="updateProject()" 
+  />
 </div>
 </template>
 
@@ -222,6 +232,7 @@ import {get, sync, syncBoundsFilter, syncMultiselectFilter} from '@/utils/store-
 
 import {ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection} from '@/api';
 import IconProjectMemberRole from '@/components/icons/IconProjectMemberRole';
+import AddImageModal from '@/components/image/AddImageModal.vue';
 export default {
   name: 'list-projects',
   components: {
@@ -229,6 +240,7 @@ export default {
     CytomineTable,
     ProjectDetails,
     AddProjectModal,
+    AddImageModal,
     CytomineMultiselect,
     CytomineSlider
   },
@@ -245,6 +257,8 @@ export default {
       managerLabel: this.$t('manager'),
 
       creationModal: false,
+      addImageModal: false,
+      selectedProject: null,
 
       excludedProperties: [
         'name',
@@ -409,6 +423,10 @@ export default {
       }
     },
     
+    updateProject() {
+      this.revision++;
+    },
+
     async openProject(project) {
       try {
         // 获取项目的第一张图片
@@ -434,6 +452,11 @@ export default {
         // 出错时仍然跳转到项目页面
         this.$router.push(`/project/${project.id}`);
       }
+    },
+
+    openAddImageModal(project) {
+      this.selectedProject = project;
+      this.addImageModal = true;
     }
   },
   async created() {
@@ -736,6 +759,11 @@ export default {
 :deep(a.button:hover) {
   background-color: $dark-button-hover-bg;
   border-color: $dark-button-hover-border;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
 }
 </style>
 

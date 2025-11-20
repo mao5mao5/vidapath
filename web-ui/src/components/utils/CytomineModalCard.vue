@@ -40,3 +40,64 @@ export default {
   }
 };
 </script>
+
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables.scss';
+
+.modal-card {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-card-head {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-bottom: 1px solid $dark-border-color;
+  padding: 1rem;
+}
+
+.modal-card-title {
+  color: $dark-text-primary;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.modal-card-body {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+  padding: 0.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.modal-card-foot {
+  background-color: $dark-bg-secondary;
+  border-top: 1px solid $dark-border-color;
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.button {
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border: 1px solid $dark-button-border;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+</style>
