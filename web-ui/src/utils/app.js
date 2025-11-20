@@ -1,13 +1,26 @@
 import {Cytomine} from '@/api';
 
 export const UploadStatus = {
+  CANCELLED: 'cancelled',
+  COMPLETED: 'completed',
+  ERROR: 'error',
   PENDING: 'pending',
   UPLOADING: 'uploading',
-  COMPLETED: 'completed',
-  CANCELLED: 'cancelled',
 };
 
 export const BINARY_TYPES = ['file', 'image'];
+
+export async function deleteApp(app, notify, t) {
+  try {
+    const uri = `${app.namespace}/${app.version}`;
+    await Cytomine.instance.api.delete(`/app-engine/tasks/${uri}`);
+
+    notify({type: 'success', text: t('notify-success-app-deletion')});
+  } catch (error) {
+    console.error('Failed to delete app:', error);
+    notify({type: 'error', text: t('notify-error-app-deletion')});
+  }
+}
 
 export async function installApp(app, notify, t) {
   try {
