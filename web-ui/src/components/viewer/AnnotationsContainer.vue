@@ -25,8 +25,8 @@
           @updateProperties="updateProperties" @delete="handleDeletion" />
       </a-collapse-panel>
     </a-collapse>
-    <similar-annotation v-if="showSimilarAnnotations" :image="image" :index="index" @select="selectAnnotation"
-      @updateTermsOrTracks="updateTermsOrTracks" />
+    <!-- <similar-annotation v-if="showSimilarAnnotations" :image="image" :index="index" @select="selectAnnotation"
+      @updateTermsOrTracks="updateTermsOrTracks" /> -->
   </div>
 </template>
 
@@ -180,7 +180,7 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$store.commit(this.imageModule + 'setShowSimilarAnnotations', false);
+    // this.$store.commit(this.imageModule + 'setShowSimilarAnnotations', false);
   },
 };
 </script>
