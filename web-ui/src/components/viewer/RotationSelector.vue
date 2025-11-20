@@ -13,14 +13,8 @@
  limitations under the License.-->
 
 <template>
-<div class="rotation-selector-wrapper" :class="{expanded}">
-  <div class="ol-rotate ol-unselectable ol-control custom">
-    <button type="button" @click="expanded = true">
-      <span class="ol-compass" :style="{transform: `rotate(${rotation}rad)`}">⇧</span>
-    </button>
-  </div>
-  <div v-show="expanded">
-    <div class="top">
+<div class="rotation-selector-wrapper">
+
       <div class="rotation-controls">
         <b-field>
           <p class="control">
@@ -34,10 +28,7 @@
           </p>
         </b-field>
       </div>
-      <button class="delete is-small" @click="expanded=false"></button>
-    </div>
     <cytomine-slider v-model="degreesRotation" :max="360" :integerOnly="false" :lazy="false" />
-  </div>
 </div>
 </template>
 
@@ -85,30 +76,20 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "../../assets/styles/dark-variables.scss";
+
 .rotation-selector-wrapper {
   border-radius: 2px;
   box-shadow: 0 0 1px #777;
-  background: white;
-  margin-left: 2px;
+  background: $dark-bg-primary;
+  // margin-left: 2px;
 }
 
-.rotation-selector-wrapper.expanded {
-  min-width: 16.5em;
-  padding-top: 0.4em;
-  min-height: 6em;
-}
 
-.rotation-selector-wrapper.expanded .ol-control button {
-  cursor: initial;
-}
-
-.rotation-selector-wrapper .ol-control {
-  padding: 0;
-}
-
-.rotation-selector-wrapper.expanded .ol-control button {
-  box-shadow: none;
+.rotation-selector-wrapper .vue-slider {
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 .ol-rotate.ol-control {
@@ -116,28 +97,13 @@ export default {
   top: 0 !important;
 }
 
-.top {
-  margin: 0em 0.4em 0.75em 1.8em;
-  display: flex;
-}
 
-.top .rotation-controls {
+.rotation-controls {
   flex: 1;
   display: flex;
   justify-content: center;
   margin-left: 1em;
   margin-right: 1em;
   margin-top: 0.5em;
-}
-
-.top .delete {
-  z-index: 20 !important;
-}
-</style>
-
-<style>
-.rotation-selector-wrapper .vue-slider {
-  margin-left: 1em;
-  margin-right: 1em;
 }
 </style>
