@@ -14,6 +14,11 @@
 
 <template>
   <div class="map-container" @click="isActiveImage = true" ref="container">
+    <div class="map-container-header">
+      <a @click="$emit('close')" class="close">
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </a>
+    </div>
     <template v-if="!loading && zoom !== null">
       <div class="map-tools">
         <ul class="map-tools-list">
@@ -973,6 +978,22 @@ $colorOpenedPanelLink: #6c95c8;
   background-color: #101828;
   width: 100%;
   height: 100%;
+}
+
+.map-container-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 30;
+
+  .close {
+    color: #d0c4c4;
+    font-size: 1.5rem;
+
+    :hover {
+      color: #ffffff;
+    }
+  }
 }
 
 .draw-tools {

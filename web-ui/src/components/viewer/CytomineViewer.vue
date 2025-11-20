@@ -184,7 +184,7 @@ export default {
     closeMap(index) {
       if (this.nbImages === 1) {
         this.$store.unregisterModule(['projects', this.project.id, 'viewers', this.idViewer]);
-        this.$router.push(`/project/${this.$route.params.idProject}`);
+        this.$router.push(`/projects`);
       } else {
         this.$store.dispatch(this.viewerModule + 'removeImage', index);
       }

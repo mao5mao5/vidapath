@@ -1,25 +1,25 @@
 <template>
   <div class="annotations-container">
-    <a-collapse :bordered="false" class="dark-collapse">
-      <a-collapse-panel key="container-0" header="Slide Metadata" class="dark-panel">
-        <template #extra>
+    <a-collapse :bordered="false" v-model="activeKey" class="dark-collapse" :expand-icon-position="right">
+      <a-collapse-panel key="container-0" header="Information" class="dark-panel">
+        <!-- <template #extra>
           <a-icon type="down" />
-        </template>
+        </template> -->
         <information-panel class="dark-content" :index="index" @openMetadata="togglePanel('metadata')" />
       </a-collapse-panel>
       <a-collapse-panel key="container-1" header="Annotation Details" class="dark-panel">
-        <template #extra>
+        <!-- <template #extra>
           <a-icon type="down" />
-        </template>
+        </template> -->
         <annotation-details-container v-if="isPanelDisplayed('annotation-main')" class="dark-content" :index="index"
           @select="selectAnnotation" @centerView="centerView({ annot: $event, sameView: true })" @addTerm="addTerm"
           @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks" @updateProperties="updateProperties"
           @delete="handleDeletion" />
       </a-collapse-panel>
       <a-collapse-panel key="container-2" header="Annotations List" class="dark-panel">
-        <template #extra>
+        <!-- <template #extra>
           <a-icon type="down" />
-        </template>
+        </template> -->
         <annotations-list class="dark-content" :index="index" @select="selectAnnotation" @centerView="centerView"
           @addTerm="addTerm" @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks"
           @updateProperties="updateProperties" @delete="handleDeletion" />
@@ -52,7 +52,14 @@ export default {
   data() {
     return {
       format: new WKT(),
+      activeKey: null,
+      right: 'right',
     };
+  },
+  watch: {
+    activeKey(key) {
+      console.log(key);
+    },
   },
   components: {
     AnnotationsList,
@@ -183,7 +190,7 @@ export default {
 
 .annotations-container {
   position: absolute;
-  top: 0.1rem;
+  top: 1.8rem;
   right: 0.1rem;
   width: 20rem;
   height: auto;
@@ -200,6 +207,7 @@ export default {
   background-color: $dark-bg-primary;
   border-radius: 1%;
   overflow-y: auto;
+  max-height: fit-content;
 }
 
 .dark-collapse :deep(.ant-collapse-header) {
