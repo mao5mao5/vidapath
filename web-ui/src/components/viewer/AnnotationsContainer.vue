@@ -234,7 +234,7 @@ export default {
 }
 
 .annotations-container :deep(.ant-collapse-content-box) {
-  padding: 0;
+  padding: 0 !important;
 }
 
 /* 深色模式滚动条样式 */

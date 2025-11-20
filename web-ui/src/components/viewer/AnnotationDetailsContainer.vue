@@ -276,7 +276,7 @@ h1 {
 }
 
 .annotation-details-container {
-  padding: 0.6em;
+  padding: 0em;
   overflow: auto;
   height: 100%;
   background-color: $dark-bg-primary;
