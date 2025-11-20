@@ -206,6 +206,8 @@ export default {
       // 立即在画布上显示注释，提升用户体验
       this.$eventBus.$emit('addAnnotation', tempAnnot);
       this.$eventBus.$emit('selectAnnotation', {index: this.index, annot: tempAnnot});
+      // 切换回选择工具
+      this.$store.dispatch(this.imageModule + 'activateTool', 'select');
       
       // 清除绘制的临时图形
       this.clearDrawnFeatures();

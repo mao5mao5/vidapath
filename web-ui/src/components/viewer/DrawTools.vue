@@ -710,6 +710,14 @@ export default {
 
     activateTool(tool) {
       this.activeTool = tool;
+      
+      // // 如果不是选择工具，则监听注释创建事件
+      // if (tool !== 'select') {
+      //   this.$eventBus.$once('addAnnotation', () => {
+      //     // 创建注释后自动切换回选择工具
+      //     this.activeTool = 'select';
+      //   });
+      // }
     },
 
     activateEditTool(tool) {
