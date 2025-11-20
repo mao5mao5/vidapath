@@ -26,9 +26,9 @@
            <image-name :image="image" />
           </div>
         </div>
-        <button class="button" v-if="nbImagesDisplayed < nbFilteredImages" @click="more()">
+        <!-- <button class="button" v-if="nbImagesDisplayed < nbFilteredImages" @click="more()">
           {{$t('button-more')}}
-        </button>
+        </button> -->
         <div class="space">&nbsp;</div>
       </div>
   </div>
@@ -65,7 +65,7 @@ export default {
       imageGroups: [],
       searchString: '',
       selectedImageGroups: [],
-      nbImagesDisplayed: 20,
+      nbImagesDisplayed: 0,
       nbFilteredImages: 0,
       loading: true,
       error: false
@@ -161,7 +161,9 @@ export default {
         let collection = new ImageInstanceCollection({
           filterKey: 'project',
           filterValue: this.project.id,
-          max: this.nbImagesDisplayed
+          max: this.nbImagesDisplayed,
+          sort: 'id',
+          order: 'asc',
         });
 
         if (this.searchString) {

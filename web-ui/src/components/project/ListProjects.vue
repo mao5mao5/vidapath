@@ -436,7 +436,7 @@ export default {
         const imageCollection = new ImageInstanceCollection({
           filterKey: 'project',
           filterValue: project.id,
-          sort: 'created',
+          sort: 'id',
           order: 'asc',
           max: 1
         });
