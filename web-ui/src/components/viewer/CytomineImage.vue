@@ -14,6 +14,11 @@
 
 <template>
   <div class="map-container" @click="isActiveImage = true" ref="container">
+    <div class="map-container-header">
+      <a @click="$emit('close')" class="close">
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </a>
+    </div>
     <template v-if="!loading && zoom !== null">
       <div class="map-tools">
         <ul class="map-tools-list">
@@ -27,6 +32,12 @@
             </a>
             <digital-zoom class="panel-options" v-show="activePanel === 'digital-zoom'" :index="index"
               @resetZoom="$refs.view.animate({ zoom: image.zoom })" @fitZoom="fitZoom" />
+          </li>
+          <li>
+            <a title="Rotate" @click="togglePanel('rotation')" :class="{ active: activePanel === 'rotation' }">
+              <i class="fa fa-undo" aria-hidden="true"></i>
+            </a>
+            <rotation-selector class="panel-options" v-show="activePanel === 'rotation'" :index="index" />
           </li>
           <a-divider />
           <li>
@@ -69,6 +80,11 @@
           <li>
             <a @click="toggleFullscreen">
               <i :class="isFullscreen ? 'fas fa-compress' : 'fas fa-expand'"></i>
+            </a>
+          </li>
+          <li>
+            <a @click="ShareByLink()">
+              <i class="fa fa-share-square" aria-hidden="true"></i>
             </a>
           </li>
         </ul>
@@ -192,11 +208,9 @@
 
       <!-- <image-controls :index="index" class="image-controls-wrapper" /> -->
 
-      <div class="broadcast" v-if="imageWrapper.tracking.broadcast">
+      <!-- <div class="broadcast" v-if="imageWrapper.tracking.broadcast">
         <i class="fas fa-circle"></i> {{ $t('live') }}
-      </div>
-
-      <rotation-selector class="rotation-selector-wrapper" :index="index" />
+      </div> -->
 
       <scale-line v-show="scaleLineCollapsed" :image="image" :zoom="zoom" :mousePosition="projectedMousePosition" />
 
@@ -511,6 +525,9 @@ export default {
     }
   },
   methods: {
+    rotate(){
+      //TODO
+    },
     zoomIn() {
       this.$refs.view.animate({ zoom: this.zoom + 1, duration: 250 });
     },
@@ -525,6 +542,10 @@ export default {
         return; // not the first time the viewer is opened => zoom was already initialized
       }
       this.zoom = this.idealZoom;
+    },
+
+    ShareByLink(){
+      // TODO
     },
 
     async updateMapSize() {
@@ -975,6 +996,22 @@ $colorOpenedPanelLink: #6c95c8;
   height: 100%;
 }
 
+.map-container-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 30;
+
+  .close {
+    color: #d0c4c4;
+    font-size: 1.5rem;
+
+    :hover {
+      color: #ffffff;
+    }
+  }
+}
+
 .draw-tools {
   position: absolute;
   top: 0.7em;
@@ -1049,7 +1086,7 @@ $colorOpenedPanelLink: #6c95c8;
   bottom: -1.75em;
   left: $widthPanelBar;
   width: 24em;
-  min-height: 10em;
+  // min-height: 5em;
   background: $dark-bg-primary;
   color: $dark-text-primary;
   opacity: 0.9;
@@ -1104,15 +1141,18 @@ $colorOpenedPanelLink: #6c95c8;
 
 /* ----- CUSTOM STYLE FOR OL CONTROLS ----- */
 
-.ol-zoom,
-.ol-rotate {
-  background: none !important;
-  z-index: 20;
+.ol-zoom{
   display: none;
 }
 
+.ol-rotate {
+  background: none !important;
+  z-index: 20;
+  // display: none;
+}
+
 .ol-rotate:not(.custom) {
-  display: none;
+  // display: none;
 }
 
 .ol-control button {
@@ -1129,14 +1169,6 @@ $colorOpenedPanelLink: #6c95c8;
 
 .ol-zoom-in {
   margin-bottom: 5px !important;
-}
-
-/* ----- Rotation selector ----- */
-.rotation-selector-wrapper {
-  position: absolute;
-  left: .5em;
-  top: 5rem;
-  z-index: 20;
 }
 
 .custom-overview {
