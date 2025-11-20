@@ -71,26 +71,28 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "../../assets/styles/dark-variables.scss";
 .image {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
   position: relative;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid $dark-border-color;
 }
 
 .card.full-height-card {
   height: 100%;
+  background-color: $dark-bg-primary !important;
 }
 
 .card-content {
-  padding: 1.5rem;
+  padding: 0.5rem;
   overflow-wrap: break-word;
 }
 
 .card-content a {
-  font-weight: 600;
+  font-weight: 0.8em;
 }
 
 .blind-indication {

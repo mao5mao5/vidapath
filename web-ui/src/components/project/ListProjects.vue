@@ -155,32 +155,35 @@
           </b-table-column>
 
           <b-table-column field="numberOfImages" :label="$t('images')" centered sortable width="150">
-            <router-link :to="`/project/${project.id}/images`">{{ project.numberOfImages }}</router-link>
+            <!-- <router-link :to="`/project/${project.id}/images`">{{ project.numberOfImages }}</router-link> -->
+             {{ project.numberOfImages }}
           </b-table-column>
 
           <b-table-column field="numberOfAnnotations" :label="$t('user-annotations')" centered sortable width="150">
-            <router-link :to="`/project/${project.id}/annotations?type=user`">
+            <!-- <router-link :to="`/project/${project.id}/annotations?type=user`">
               {{ project.numberOfAnnotations }}
-            </router-link>
+            </router-link> -->
+             {{ project.numberOfAnnotations }}
           </b-table-column>
 
           <b-table-column field="numberOfReviewedAnnotations" :label="$t('reviewed-annotations')" centered sortable width="150">
-            <router-link :to="`/project/${project.id}/annotations?type=reviewed`">
+            <!-- <router-link :to="`/project/${project.id}/annotations?type=reviewed`">
               {{ project.numberOfReviewedAnnotations }}
-            </router-link>
+            </router-link> -->
+            {{ project.numberOfReviewedAnnotations }}
           </b-table-column>
 
           <b-table-column field="lastActivity" :label="$t('last-activity')" centered sortable width="180">
             {{ Number(project.lastActivity) | moment('ll') }}
           </b-table-column>
 
-          <b-table-column label=" " centered width="150">
+          <b-table-column label="Actions" centered width="150">
             <div class="buttons">
-              <a class="button is-small is-link" @click="openProject(project)">
-                {{$t('button-open')}}
-              </a>
               <button class="button is-small is-link" @click="openAddImageModal(project)">
                 {{$t('button-add-image')}}
+              </button>
+              <button class="button is-small is-link" @click="openProject(project)">
+                View
               </button>
             </div>
           </b-table-column>

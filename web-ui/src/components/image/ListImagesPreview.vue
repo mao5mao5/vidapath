@@ -40,7 +40,7 @@ export default {
     project: Object,
     nbRecent: {
       type: Number,
-      default: 3
+      default: 0
     }
   },
   data() {
