@@ -39,7 +39,7 @@
         @click="showTermSelector = !showTermSelector"
         :title="disabledDrawMessage"
       >
-        <span class="icon is-small"><i class="fas fa-hashtag"></i></span>
+        <span class="icon is-small"><i class="fa fa-tag" aria-hidden="true"></i></span>
       </button>
 
       <div class="color-preview" :style="{background: backgroundTermsNewAnnot}">

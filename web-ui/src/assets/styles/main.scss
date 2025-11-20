@@ -3,6 +3,25 @@
 @import './vue-sl-tree.scss';
 @import './dark-variables.scss';
 
+/* 定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $dark-scrollbar-track;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $dark-scrollbar-thumb;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $dark-scrollbar-thumb-hover;
+}
+
 @import '~quill/dist/quill.core.css';
 @import '~quill/dist/quill.snow.css';
 

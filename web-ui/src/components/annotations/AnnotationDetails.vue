@@ -109,7 +109,7 @@
             </td>
           </tr>
           <tr>
-            <td v-if="annotation.perimeter > 0">{{ $t('perimeter') }}: {{ `${annotation.perimeter.toFixed(3)}
+            <td v-if="annotation.perimeter > 0">{{ $t(annotation.area > 0 ? 'perimeter' : 'length') }}: {{ `${annotation.perimeter.toFixed(3)}
               ${annotation.perimeterUnit}` }}</td>
           </tr>
 

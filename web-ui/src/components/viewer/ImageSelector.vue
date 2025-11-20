@@ -251,6 +251,26 @@ export default {
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
 
+
+  /* 定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #101828 !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2f4e !important;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2d436f !important;
+}
+
 .image-selector-wrapper {
   background-color: #101828; /* dark-bg-primary */
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
@@ -259,7 +279,8 @@ export default {
   width: 14em;
   height: 100%;
   z-index: 150;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   border-right: 1px solid $dark-text-disabled;
 }
 
