@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="you" id="14">
+        <addColumn tableName="project">
+            <column name="patient_id" type="VARCHAR(255)"/>
+            <column name="patient_name" type="VARCHAR(255)"/>
+            <column name="patient_age" type="INTEGER"/>
+            <column name="accession_id" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="access_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="medical_record_number" type="VARCHAR(255)"/>
+            <column name="tissue" type="VARCHAR(255)"/>
+            <column name="specimen" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>
