@@ -19,6 +19,8 @@ services:
     restart: unless-stopped
     volumes:
       - ${DATA_PATH:-./data}/postgis/data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"  # 将这里从"5432:5432"改为"5433:5432"
     environment:
       APPENGINE_DB: appengine
       APPENGINE_PASSWORD: password

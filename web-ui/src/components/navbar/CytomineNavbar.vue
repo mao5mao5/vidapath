@@ -33,7 +33,7 @@
       </navbar-dropdown> -->
       <router-link to="/projects" class="navbar-item">
         <i class="fas fa-list-alt"></i>
-        {{ $t('projects') }}
+        {{ $t('cases') }}
       </router-link>
       <router-link v-if="!currentUser.guestByNow" to="/storage" class="navbar-item">
         <i class="fas fa-download"></i>

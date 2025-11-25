@@ -1032,9 +1032,23 @@ source-code,Source code,Code source,Código fuente,Source code
 spatial-projection,Spatial projection,Projection spatiale,Proyección espacial,Ruimtelijke projectie
 sponsors,Sponsors,Sponsors,Patrocinadores,Sponsoren
 start-upload,Start upload,Lancer l'upload,Iniciar la carga,uploaden beginnen
+cases,Cases,Cas,Casos,Casen
+case-management,Case management,Gestion des cas,Gestión de casos,Case management
+new-case,New case,Nouveau cas,Nuevo caso,Nieuw geval
 statistics,Statistics,Statistiques,Estadísticas,Statistieken
-status-comment,Status comment,Commentaire,Comentario,Opmerking
+accession-id,Accession ID,ID d'accès,ID de acceso,Accessie-ID
+patient-id,Patient ID,Patient ID,ID del paciente,Patiënt-ID
+patient-name,Patient Name,Nom du patient,Nombre del paciente,Patiënt Naam
+patient-age,Patient Age,Âge du patient,Edad del paciente,Patiënt Leeftijd
 status,Status,Statut,Estado,Status
+status-not-ready,NOT READY,NOT READY,NO LISTO,NIET KLAAR
+status-ready,READY,PRÊT,LISTO,KLAAR
+status-reviewed,REVIEWED,REVU,VISTO,GECONTROLEERD
+access-date,Access Date,Date d'accès,Fecha de acceso,Toegangsdatum
+medical-record-number,Medical Record Number,Numéro de dossier médical,Número de registro médico,Medisch Dossier Nummer
+tissue,Tissue,Tissu,Tejido,Weefsel
+specimen,Specimen,Spécimen,Espécimen,Monster
+status-comment,Status comment,Commentaire,Comentario,Opmerking
 step,Step,Saut,,Stap
 storage,Storage,Stockage,Almacenamiento,storage
 string,String,Chaîne de caractères,Cadena de caracteres,Reeks tekens

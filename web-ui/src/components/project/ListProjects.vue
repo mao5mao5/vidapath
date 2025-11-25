@@ -21,9 +21,9 @@
   </div>
   <div v-else-if="!loading" class="panel">
     <p class="panel-heading">
-      {{$t('projects')}}
+      {{$t('case-management')}}
       <button v-if="!currentUser.guestByNow" class="button is-link" @click="creationModal = true">
-        {{$t('new-project')}}
+        {{$t('new-case')}}
       </button>
     </p>
     <div class="panel-block">
@@ -144,7 +144,7 @@
             />
           </b-table-column>
 
-          <b-table-column field="name" :label="$t('name')" sortable width="250">
+          <!-- <b-table-column field="name" :label="$t('name')" sortable width="250">
             <a @click="openProject(project)">
               {{ project.name }}
             </a>
@@ -155,27 +155,58 @@
           </b-table-column>
 
           <b-table-column field="numberOfImages" :label="$t('images')" centered sortable width="150">
-            <!-- <router-link :to="`/project/${project.id}/images`">{{ project.numberOfImages }}</router-link> -->
              {{ project.numberOfImages }}
           </b-table-column>
 
           <b-table-column field="numberOfAnnotations" :label="$t('user-annotations')" centered sortable width="150">
-            <!-- <router-link :to="`/project/${project.id}/annotations?type=user`">
-              {{ project.numberOfAnnotations }}
-            </router-link> -->
              {{ project.numberOfAnnotations }}
           </b-table-column>
 
           <b-table-column field="numberOfReviewedAnnotations" :label="$t('reviewed-annotations')" centered sortable width="150">
-            <!-- <router-link :to="`/project/${project.id}/annotations?type=reviewed`">
-              {{ project.numberOfReviewedAnnotations }}
-            </router-link> -->
             {{ project.numberOfReviewedAnnotations }}
+          </b-table-column> -->
+
+          <b-table-column field="patientId" :label="$t('patient-id')" centered sortable width="150">
+            {{ project.patientId }}
           </b-table-column>
 
-          <b-table-column field="lastActivity" :label="$t('last-activity')" centered sortable width="180">
-            {{ Number(project.lastActivity) | moment('ll') }}
+          <b-table-column field="patientName" :label="$t('patient-name')" centered sortable width="150">
+            {{ project.patientName }}
           </b-table-column>
+
+          <b-table-column field="patientAge" :label="$t('patient-age')" centered sortable width="150">
+            {{ project.patientAge }}
+          </b-table-column>
+
+          <b-table-column field="accessionId" :label="$t('accession-id')" centered sortable width="150">
+            {{ project.accessionId }}
+          </b-table-column>
+
+          <b-table-column field="status" :label="$t('status')" centered sortable width="150">
+            <span :class="`status-${project.status.toLowerCase().replace('_', '-')}`">
+              {{ formatStatus(project.status) }}
+            </span>
+          </b-table-column>
+
+          <b-table-column field="accessDate" :label="$t('access-date')" centered sortable width="180">
+            {{ project.accessDate | moment('ll') }}
+          </b-table-column>
+
+          <b-table-column field="medicalRecordNumber" :label="$t('medical-record-number')" centered sortable width="150">
+            {{ project.medicalRecordNumber }}
+          </b-table-column>
+
+          <b-table-column field="tissue" :label="$t('tissue')" centered sortable width="150">
+            {{ project.tissue }}
+          </b-table-column>
+
+          <b-table-column field="specimen" :label="$t('specimen')" centered sortable width="150">
+            {{ project.specimen }}
+          </b-table-column>
+
+          <!-- <b-table-column field="lastActivity" :label="$t('last-activity')" centered sortable width="180">
+            {{ Number(project.lastActivity) | moment('ll') }}
+          </b-table-column> -->
 
           <b-table-column label="Actions" centered width="150">
             <div class="buttons">
@@ -269,7 +300,16 @@ export default {
         'numberOfImages',
         'numberOfAnnotations',
         'numberOfReviewedAnnotations',
-        'lastActivity'
+        'lastActivity',
+        'patientId',
+        'patientName',
+        'patientAge',
+        'accessionId',
+        'status',
+        'accessDate',
+        'medicalRecordNumber',
+        'tissue',
+        'specimen'
       ],
       maxNbMembers: 10,
       maxNbImages: 10,
@@ -327,7 +367,16 @@ export default {
       let collection = new ProjectCollection({
         withMembersCount: true,
         withLastActivity: true,
-        withCurrentUserRoles: true
+        withCurrentUserRoles: true,
+        withPatientId: true,
+        withPatientName: true,
+        withPatientAge: true,
+        withAccessionId: true,
+        withStatus: true,
+        withAccessDate: true,
+        withMedicalRecordNumber: true,
+        withTissue: true,
+        withSpecimen: true
       });
       if (this.selectedOntologiesIds.length > 0 && this.selectedOntologiesIds.length < this.availableOntologies.length) {
         collection['ontology'] = {
@@ -456,6 +505,18 @@ export default {
         this.$router.push(`/project/${project.id}`);
       }
     },
+    formatStatus(status) {
+      switch (status) {
+        case 'NOT_READY':
+          return this.$t('status-not-ready');
+        case 'READY':
+          return this.$t('status-ready');
+        case 'REVIEWED':
+          return this.$t('status-reviewed');
+        default:
+          return status;
+      }
+    },
 
     openAddImageModal(project) {
       this.selectedProject = project;
@@ -529,6 +590,30 @@ export default {
 
 .filter-label {
   color: $dark-text-primary;
+}
+
+.status-not-ready {
+  background-color: pink;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.status-ready {
+  background-color: orange;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.status-reviewed {
+  background-color: darkgreen;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
 }
 
 /* 暗黑模式下的表格样式 */

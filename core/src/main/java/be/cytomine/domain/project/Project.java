@@ -71,7 +71,7 @@ public class Project extends CytomineDomain {
     private String accessionId;
     
     @Enumerated(EnumType.STRING)
-    private ProjectStatus status;
+    private ProjectStatus status = ProjectStatus.NOT_READY;
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date accessDate;
@@ -83,7 +83,7 @@ public class Project extends CytomineDomain {
     private String specimen;
 
     @Enumerated(EnumType.STRING)
-    private ProjectType type;
+    private ProjectType type = ProjectType.CLINICAL;
 
     public CytomineDomain buildDomainFromJson(JsonObject json, EntityManager entityManager) {
         Project project = (Project)this;
