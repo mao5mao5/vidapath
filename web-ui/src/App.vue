@@ -229,7 +229,7 @@ h2 {
 }
 
 .input[readonly] {
-  background-color: whitesmoke;
+  background-color: #2d2d2d;
 }
 
 strong, .label {

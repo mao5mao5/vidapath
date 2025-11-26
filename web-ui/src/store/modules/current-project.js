@@ -96,7 +96,7 @@ export default {
     },
 
     async updateProject({state, dispatch, commit}, updatedProject) {
-      let reloadOntology = state.project.ontology !== updatedProject.ontology;
+      let reloadOntology = state.project?.ontology !== updatedProject?.ontology;
       commit('setProject', updatedProject);
       commit(`projects/${updatedProject.id}/setProject`, updatedProject, {root: true});
       if (reloadOntology) {

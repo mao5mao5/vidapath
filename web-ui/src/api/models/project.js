@@ -41,6 +41,22 @@ export default class Project extends Model {
 
     this.hideUsersLayers = null;
     this.hideAdminsLayers = null;
+    
+    // 新增字段
+    this.patientId = null;
+    this.patientName = null;
+    this.patientAge = null;
+    this.accessionId = null;
+    this.status = null;
+    this.accessDate = null;
+    this.medicalRecordNumber = null;
+    this.tissue = null;
+    this.specimen = null;
+    this.type = null;
+    
+    // 添加性别和染色方式字段
+    this.patientSex = null;
+    this.stain = null;
   }
 
   /**

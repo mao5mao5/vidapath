@@ -3,6 +3,12 @@ ARG PYTHON_VERSION=3.10
 
 FROM ${PROXY_CACHE}/python:${PYTHON_VERSION}-slim-bullseye AS base
 
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/usr/local
+
 COPY --from=ghcr.io/astral-sh/uv:0.8.13 /uv /uvx /bin/
 
 WORKDIR /app
@@ -28,19 +34,18 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends --no-install-suggests openssh-server rsync
 
 WORKDIR /app
-ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONPATH=/app
 
-CMD ["fastapi", "dev", "main.py"]
+CMD ["fastapi", "dev", "app/main.py"]
 
 
 FROM ${PROXY_CACHE}/python:${PYTHON_VERSION}-slim AS production
 
-ENV PATH="/app/.venv/bin:$PATH" \
-    PYTHONPATH=/app \
+ENV PYTHONPATH=/app \
     PYTHONUNBUFFERED=1 \
     UV_COMPILE_BYTECODE=1 \
-    UV_LINK_MODE=copy
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/usr/local
 
 COPY --from=registry.cytomine.org/github/ghcr.io/astral-sh/uv:0.8.13 /uv /uvx /bin/
 

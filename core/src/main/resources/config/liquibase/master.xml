@@ -48,4 +48,8 @@
 
     <include file="/config/liquibase/changelog/2025-03-28-geometry.xml" relativeToChangelogFile="false"/>
 
+    <include file="config/liquibase/changelog/00000000_14_add_project_fields.xml" relativeToChangelogFile="false"/>
+
+    <include file="config/liquibase/changelog/00000000_15_add_patient_sex_stain_fields.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>

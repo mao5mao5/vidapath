@@ -13,62 +13,100 @@
  limitations under the License.-->
 
 <template>
-<form @submit.prevent="createProject(); loading = true">
-  <b-loading :active="loading" :is-full-page="false" />
+  <form @submit.prevent="createProject(); loading = true">
+    <b-loading :active="loading" :is-full-page="false" />
 
-  <template v-if="!loading">
-    <cytomine-modal :active="active" :title="$t('create-project')" @close="$emit('update:active', false)">
-      <b-field :label="$t('name')" :type="{ 'is-danger': errors.has('name') }" :message="errors.first('name')">
-        <b-input v-model="name" name="name" v-validate="'required'" />
-      </b-field>
+    <template v-if="!loading">
+      <cytomine-modal :active="active" title="Create Case" @close="$emit('update:active', false)">
+        <!-- Patient Information Section -->
+        <div class="section">
+          <h2 class="subtitle section-title">{{ $t('patient-information') }}</h2>
 
-      <b-field :label="$t('ontology')">
-        <b-radio v-model="ontology" native-value="NEW">
-          {{ $t('create-ontology-for-project') }}
-        </b-radio>
-      </b-field>
-      <b-field>
-        <b-radio v-model="ontology" native-value="EXISTING">
-          {{ $t('use-existing-ontology') }}
-        </b-radio>
-      </b-field>
-      <b-field>
-        <b-radio v-model="ontology" native-value="NO">
-          {{ $t('no-ontology') }}
-        </b-radio>
-      </b-field>
+          <b-field :label="$t('patient-id')" class="field-spacing">
+            <b-input v-model="patientId" :placeholder="$t('patient-id')" />
+          </b-field>
 
-      <template v-if="ontology === 'EXISTING'">
-        <b-field :type="{ 'is-danger': errors.has('ontology') }" :message="errors.first('ontology')">
-          <b-select
-            size="is-small"
-            v-model="selectedOntology"
-            :placeholder="$t('select-ontology')"
-            name="ontology"
-            v-validate="'required'"
-          >
-            <option v-for="ontology in ontologies" :value="ontology.id" :key="ontology.id">
-              {{ ontology.name }}
-            </option>
+          <b-field :label="$t('patient-name')" class="field-spacing">
+            <b-input v-model="patientName" :placeholder="$t('patient-name')" />
+          </b-field>
+
+          <b-field :label="$t('patient-age')" class="field-spacing">
+            <b-input v-model="patientAge" type="number" :placeholder="$t('patient-age')" />
+          </b-field>
+
+          <b-field label="Patient Gender" class="field-spacing">
+            <b-input v-model="patientSex" :placeholder="$t('patient-sex')" />
+          </b-field>
+        </div>
+
+        <!-- Project Details Section -->
+        <div class="section">
+          <h2 class="subtitle section-title">{{ $t('case-details') }}</h2>
+
+          <b-field :label="$t('accession-id')" class="field-spacing">
+            <b-input v-model="accessionId" :placeholder="$t('accession-id')" />
+          </b-field>
+
+          <b-field :label="$t('medical-record-number')" class="field-spacing">
+            <b-input v-model="medicalRecordNumber" :placeholder="$t('medical-record-number')" />
+          </b-field>
+
+          <b-field :label="$t('access-date')" class="field-spacing">
+            <b-datepicker v-model="accessDate" :placeholder="$t('access-date')" icon="calendar-today"
+              :mobile-native="true" expanded />
+          </b-field>
+        </div>
+
+        <!-- Specimen Information Section -->
+        <div class="section">
+          <h2 class="subtitle section-title">{{ $t('specimen-information') }}</h2>
+
+          <b-field :label="$t('tissue')" class="field-spacing">
+            <b-input v-model="tissue" :placeholder="$t('tissue')" />
+          </b-field>
+
+          <b-field :label="$t('specimen')" class="field-spacing">
+            <b-input v-model="specimen" :placeholder="$t('specimen')" />
+          </b-field>
+
+          <b-field label="Stain" class="field-spacing">
+            <b-input v-model="stain" :placeholder="$t('stain')" />
+          </b-field>
+        </div>
+
+        <!-- Project Type and Status -->
+        <!-- <div class="section">
+        <b-field :label="$t('project-type')" class="field-spacing">
+          <b-select v-model="projectType" :placeholder="$t('select-project-type')" expanded>
+            <option value="CLINICAL">{{$t('project-type-clinical')}}</option>
+            <option value="RESEARCH">{{$t('project-type-research')}}</option>
           </b-select>
         </b-field>
-      </template>
+        
+        <b-field :label="$t('status')" class="field-spacing">
+          <b-select v-model="projectStatus" :placeholder="$t('select-status')" expanded>
+            <option value="NOT_READY">{{$t('status-not-ready')}}</option>
+            <option value="READY">{{$t('status-ready')}}</option>
+            <option value="REVIEWED">{{$t('status-reviewed')}}</option>
+          </b-select>
+        </b-field>
+      </div> -->
 
-      <template #footer>
-        <button class="button" type="button" @click="$emit('update:active', false)">
-          {{ $t('button-cancel') }}
-        </button>
-        <button class="button is-link" :disabled="errors.any()">
-          {{ $t('button-save') }}
-        </button>
-      </template>
-    </cytomine-modal>
-  </template>
-</form>
+        <template #footer>
+          <button class="button" type="button" @click="$emit('update:active', false)">
+            {{ $t('button-cancel') }}
+          </button>
+          <button class="button is-link" :disabled="errors.any()">
+            {{ $t('button-save') }}
+          </button>
+        </template>
+      </cytomine-modal>
+    </template>
+  </form>
 </template>
 
 <script>
-import {Project, Ontology} from '@/api';
+import { Project, Ontology } from '@/api';
 
 import CytomineModal from '@/components/utils/CytomineModal';
 
@@ -78,14 +116,28 @@ export default {
     active: Boolean,
     ontologies: Array
   },
-  components: {CytomineModal},
-  $_veeValidate: {validator: 'new'},
+  components: { CytomineModal },
+  $_veeValidate: { validator: 'new' },
   data() {
     return {
       loading: false,
       name: '',
       ontology: 'NEW',
       selectedOntology: null,
+
+      // 新增字段
+      patientId: '',
+      patientName: '',
+      patientAge: null,
+      accessionId: '',
+      medicalRecordNumber: '',
+      accessDate: null,
+      tissue: '',
+      specimen: '',
+      patientSex: '',
+      stain: '',
+      projectType: 'CLINICAL',
+      projectStatus: 'NOT_READY'
     };
   },
   watch: {
@@ -94,6 +146,20 @@ export default {
         this.name = '';
         this.ontology = 'NEW';
         this.selectedOntology = null;
+
+        // 重置新增字段
+        this.patientId = '';
+        this.patientName = '';
+        this.patientAge = null;
+        this.accessionId = '';
+        this.medicalRecordNumber = '';
+        this.accessDate = null;
+        this.tissue = '';
+        this.specimen = '';
+        this.patientSex = '';
+        this.stain = '';
+        this.projectType = 'CLINICAL';
+        this.projectStatus = 'NOT_READY';
       }
     }
   },
@@ -106,27 +172,55 @@ export default {
 
       try {
         let idOntology;
-        if (this.ontology === 'NEW') {
-          let ontology = await new Ontology({name: this.name}).save();
-          idOntology = ontology.id;
-        } else if (this.ontology === 'EXISTING') {
-          idOntology = this.selectedOntology;
-        }
+        // if (this.ontology === 'NEW') {
+        //   let ontology = await new Ontology({ name: this.name }).save();
+        //   idOntology = ontology.id;
+        // } else if (this.ontology === 'EXISTING') {
+        //   idOntology = this.selectedOntology;
+        // }
 
-        let project = await new Project({name: this.name, ontology: idOntology}).save();
+        // 创建项目时包含新字段
+        let projectData = {
+          name: this.accessionId,
+          ontology: idOntology,
+          patientId: this.patientId,
+          patientName: this.patientName,
+          patientAge: this.patientAge,
+          accessionId: this.accessionId,
+          medicalRecordNumber: this.medicalRecordNumber,
+          accessDate: this.accessDate,
+          tissue: this.tissue,
+          specimen: this.specimen,
+          patientSex: this.patientSex,
+          stain: this.stain,
+          type: this.projectType,
+          status: this.projectStatus,
+          isReadOnly: false,
+          isRestricted: true,
+        };
+
+        let project = await new Project(projectData).save();
 
         this.loading = false;
-        this.$notify({type: 'success', text: this.$t('notif-success-project-creation')});
+        this.$notify({ type: 'success', text: "The case was successfully created" });
         this.$emit('update:active', false);
-        await this.$router.push(`/project/${project.id}/configuration`);
+        // await this.$router.push(`/project/${project.id}/configuration`);
       } catch (error) {
         if (error.response.status === 409) {
-          this.$notify({type: 'error', text: this.$t('notif-error-project-already-exists')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-project-already-exists') });
+          this.loading = false;
         } else {
-          this.$notify({type: 'error', text: this.$t('notif-error-project-creation')});
+          this.$notify({ type: 'error', text: this.$t('notif-error-project-creation') });
+          this.loading = false;
         }
       }
     }
   },
 };
 </script>
+
+<style scoped lang="scss">
+.section {
+  padding: 1rem 1rem;
+}
+</style>

@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -60,6 +61,35 @@ public class Project extends CytomineDomain {
     @Enumerated(EnumType.STRING)
     EditingMode mode = EditingMode.CLASSIC;
 
+    // 新增字段
+    private String patientId;
+    
+    private String patientName;
+    
+    private Integer patientAge;
+    
+    private String accessionId;
+    
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status = ProjectStatus.NOT_READY;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date accessDate;
+    
+    private String medicalRecordNumber;
+    
+    private String tissue;
+    
+    private String specimen;
+    
+    // 添加性别和染色方式字段
+    private String patientSex;
+    
+    private String stain;
+
+    @Enumerated(EnumType.STRING)
+    private ProjectType type = ProjectType.CLINICAL;
+
     public CytomineDomain buildDomainFromJson(JsonObject json, EntityManager entityManager) {
         Project project = (Project)this;
         project.id = json.getJSONAttrLong("id",null);
@@ -78,7 +108,22 @@ public class Project extends CytomineDomain {
 
         project.hideUsersLayers = json.getJSONAttrBoolean("hideUsersLayers", false);
         project.hideAdminsLayers = json.getJSONAttrBoolean("hideAdminsLayers", false);
-
+        
+        // 新增字段处理
+        project.patientId = json.getJSONAttrStr("patientId");
+        project.patientName = json.getJSONAttrStr("patientName");
+        project.patientAge = json.getJSONAttrInteger("patientAge", null);
+        project.accessionId = json.getJSONAttrStr("accessionId");
+        String statusStr = json.getJSONAttrStr("status");
+        project.status = statusStr != null ? ProjectStatus.valueOf(statusStr) : null;
+        project.accessDate = json.getJSONAttrDate("accessDate");
+        project.medicalRecordNumber = json.getJSONAttrStr("medicalRecordNumber");
+        project.tissue = json.getJSONAttrStr("tissue");
+        project.specimen = json.getJSONAttrStr("specimen");
+        
+        // 添加性别和染色方式字段处理
+        project.patientSex = json.getJSONAttrStr("patientSex");
+        project.stain = json.getJSONAttrStr("stain");
 
         project.created = json.getJSONAttrDate("created");
         project.updated = json.getJSONAttrDate("updated");
@@ -112,6 +157,21 @@ public class Project extends CytomineDomain {
 
         returnArray.put("hideUsersLayers", project.hideUsersLayers);
         returnArray.put("hideAdminsLayers", project.hideAdminsLayers);
+        
+        // 新增字段处理
+        returnArray.put("patientId", project.getPatientId());
+        returnArray.put("patientName", project.getPatientName());
+        returnArray.put("patientAge", project.getPatientAge());
+        returnArray.put("accessionId", project.getAccessionId());
+        returnArray.put("status", project.getStatus() != null ? project.getStatus().name() : null);
+        returnArray.put("accessDate", project.getAccessDate());
+        returnArray.put("medicalRecordNumber", project.getMedicalRecordNumber());
+        returnArray.put("tissue", project.getTissue());
+        returnArray.put("specimen", project.getSpecimen());
+        
+        // 添加性别和染色方式字段处理
+        returnArray.put("patientSex", project.getPatientSex());
+        returnArray.put("stain", project.getStain());
 
         return returnArray;
     }
