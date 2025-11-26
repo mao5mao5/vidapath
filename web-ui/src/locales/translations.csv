@@ -640,9 +640,9 @@ notif-error-ontology-rename,Failed to rename ontology {name},Une erreur a empêc
 notif-error-ontology-tree-update,Failed to update the ontology tree organization,Une erreur a empêché de modifir l'arborescence de l'ontologie,Error al actualizar la jerarquía de términos en la ontología,Een fout verhinderde het wijzigen van de ontologieboom
 notif-error-password-not-saved,Error during update of password,Une erreur a empêché de sauvegarder le mot de passe,A ocurrido un error durante la actualización de contraseña,Een fout verhinderde het opslaan van het paswoord
 notif-error-profile-computation,Error during profile computation,Une erreur a empêché le calcul du profil,Error durante el cálculo del perfil,Fout tijdens profielberekening
-notif-error-project-already-exists,Failed to create the project: This project name is already used,Une erreur a empêché la création du projet: ce nom de projet est déjà utilisé,,Een fout verhinderde het aanmaken van het project: deze projectnaam is al in gebruik
+notif-error-project-already-exists,Failed to create the case: This case id is already used,Une erreur a empêché la création du projet: ce nom de projet est déjà utilisé,,Een fout verhinderde het aanmaken van het project: deze projectnaam is al in gebruik
 notif-error-profile-deletion,Error during profile deletion,Une erreur a empêché la suppresion du profil,Error durante la eliminación del perfil,Fout tijdens het verwijderen van het profiel
-notif-error-project-creation,Failed to create the project,Une erreur a empêché la création du projet,,Door een fout kon het project niet worden aangemaakt
+notif-error-project-creation,Failed to create the case,Une erreur a empêché la création du projet,,Door een fout kon het project niet worden aangemaakt
 notif-error-project-deletion,Failed to delete project {projectName},Une erreur a empêché la suppression du projet {projectName},Error al eliminar el proyecto {projectName},Een fout verhinderde de verwijdering van het project {projectName}
 notif-error-project-ontology-change-job-terms,Cannot change the ontology of this project: some analyses associated terms to annotations. You must clean these associations prior to the ontology change.,Impossible de changer l'ontologie de ce projet : des analyses ont associé des termes à des annotations.,No se puede cambiar la ontología de este proyecto: algunos análisis asocian términos a anotaciones. Debe limpiar estas asociaciones antes del cambio de ontología.,Onmogelijk om de ontologie van dit project te veranderen: analyses hebben geassocieerde termen met annotaties.
 notif-error-project-ontology-change-reviewed-terms,Cannot change the ontology of this project: some terms are associated to reviewed annotations. You must remove these associations prior to the ontology change.,Impossible de changer l'ontologie de ce projet : des termes sont associés à des annotations validées.,No se puede cambiar la ontología de este proyecto: algunos términos están asociados a anotaciones revisadas. Debe eliminar estas asociaciones antes del cambio de ontología.,De ontologie van dit project kan niet worden gewijzigd: termen zijn gekoppeld aan gevalideerde annotaties.
@@ -1167,3 +1167,13 @@ app-engine.parameter.type,Type,Type,Tipo,Type
 app-engine.parameter.value,Value,Valeur,Valor,Waarde
 app-engine.runs.title,Runs,Exécutions,Ejecuciones,Uitvoeringen
 app-engine.task-run.state.title,State,État,Estado,Status
+
+patient-information,Patient Information,Informations sur le patient,Información del paciente,Patiëntgegevens
+specimen-information,Specimen Information,Informations sur le spécimen,Información del espécimen,Monstergegevens
+tissue,Tissue,Tissu,Tejido,Weefsel
+project-type,Project Type,Type de projet,Tipo de proyecto,Projecttype
+project-type-clinical,Clinical,Clinique,Clínico,Klinisch
+project-type-research,Research,Recherche,Investigación,Onderzoek
+project-type-teaching,Teaching,Enseignement,Enseñanza,Onderwijs
+select-project-type,Select project type,Choisir le type de projet,Seleccionar tipo de proyecto,Selecteer projecttype
+select-status,Select status,Choisir le statut,Seleccionar estado,Selecteer status
