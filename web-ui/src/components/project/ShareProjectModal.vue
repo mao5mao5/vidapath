@@ -22,11 +22,11 @@
 
       <div class="form-section element-spacing">
         <b-field :label="'Share with'" class="field-spacing">
-        <b-radio v-model="shareType" name="share-type" native-value="public" class="radio-spacing">
-          Public (all users)
+          <b-radio v-model="shareType" name="share-type" native-value="public" class="radio-spacing">
+            Public (all users)
           </b-radio>
-        <b-radio v-model="shareType" name="share-type" native-value="users"class="radio-spacing">
-          Specific users
+          <b-radio v-model="shareType" name="share-type" native-value="users" class="radio-spacing">
+            Specific users
           </b-radio>
         </b-field>
       </div>
@@ -70,7 +70,7 @@
 
     <template #footer>
       <button class="button" @click="$emit('update:active', false)">
-        Cancel
+        Close
       </button>
       <button class="button is-link" @click="shareProject" :disabled="loading || !canShare">
         Share
@@ -178,6 +178,13 @@ export default {
 
           this.generatedLink = `${window.location.origin}/#/project/${this.project.id}`;
           this.$notify({ type: 'success', text: 'Project shared with selected users successfully.' });
+
+          navigator.clipboard.writeText(this.generatedLink).then(() => {
+            this.$notify({ type: 'success', text: 'Link copied to clipboard.' });
+          }).catch(err => {
+            console.error('Failed to copy: ', err);
+            this.$notify({ type: 'error', text: 'Failed to copy link.' });
+          });
         }
       } catch (error) {
         console.error(error);

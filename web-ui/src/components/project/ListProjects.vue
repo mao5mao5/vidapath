@@ -214,7 +214,7 @@
                 {{$t('button-add-image')}}
               </button>
               <button class="button is-small is-link" @click="openProject(project)">
-                {{$t('button-open-in-viewer')}}
+                Open in viewer
               </button>
               <button class="button is-small is-info" @click="openShareModal(project)">
                 {{$t('button-share')}}
