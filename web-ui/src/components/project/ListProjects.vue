@@ -13,138 +13,128 @@
  limitations under the License.-->
 
 <template>
-<div class="list-projects-wrapper content-wrapper">
-  <b-loading :is-full-page="false" :active="loading" />
-  <div class="box error" v-if="error">
-    <h2> {{ $t('error') }} </h2>
-    <p>{{ $t('unexpected-error-info-message') }}</p>
-  </div>
-  <div v-else-if="!loading" class="panel">
-    <p class="panel-heading">
-      {{$t('case-management')}}
-      <button v-if="!currentUser.guestByNow" class="button is-link" @click="creationModal = true">
-        {{$t('new-case')}}
-      </button>
-    </p>
-    <div class="panel-block">
-      <div class="search-block">
-        <b-input
-          class="search-projects"
-          v-model="searchString"
-          :placeholder="$t('search-placeholder')"
-          type="search" icon="search"
-        />
-        <button class="button" @click="toggleFilterDisplay()">
-          <span class="icon">
-            <i class="fas fa-filter"></i>
-          </span>
-          <span>
-            {{filtersOpened ? $t('button-hide-filters') : $t('button-show-filters')}}
-          </span>
-          <span v-if="nbActiveFilters" class="nb-active-filters">
-            {{nbActiveFilters}}
-          </span>
+  <div class="list-projects-wrapper content-wrapper">
+    <b-loading :is-full-page="false" :active="loading" />
+    <div class="box error" v-if="error">
+      <h2> {{ $t('error') }} </h2>
+      <p>{{ $t('unexpected-error-info-message') }}</p>
+    </div>
+    <div v-else-if="!loading" class="panel">
+      <p class="panel-heading">
+        {{ $t('case-management') }}
+        <button v-if="!currentUser.guestByNow" class="button is-link" @click="creationModal = true">
+          {{ $t('new-case') }}
         </button>
-      </div>
-
-      <b-collapse :open="filtersOpened">
-        <div class="filters">
-          <div class="columns">
-            <div class="column filter">
-              <div class="filter-label">
-                {{$t('ontology')}}
-              </div>
-              <div class="filter-body">
-                <cytomine-multiselect v-model="selectedOntologies" :options="availableOntologies"
-                  label="name" track-by="id" :multiple="true" :allPlaceholder="$t('all-ontologies')" />
-              </div>
-            </div>
-
-            <div class="column filter">
-              <div class="filter-label">
-                {{$t('my-role')}}
-              </div>
-              <div class="filter-body">
-                <cytomine-multiselect v-model="selectedRoles" :options="availableRoles" multiple :searchable="false" />
-              </div>
-            </div>
-
-            <div class="column filter">
-              <div class="filter-label">
-                {{$t('tags')}}
-              </div>
-              <div class="filter-body">
-                <cytomine-multiselect v-model="selectedTags" :options="availableTags"
-                  label="name" track-by="id" :multiple="true" :allPlaceholder="$t('all')" />
-              </div>
-            </div>
-          </div>
-
-          <div class="columns">
-              <div class="column filter">
-                <div class="filter-label">
-                  {{$t('members')}}
-                </div>
-                <div class="filter-body">
-                  <cytomine-slider v-model="boundsMembers" :max="maxNbMembers" />
-                </div>
-              </div>
-
-              <div class="column filter">
-                <div class="filter-label">
-                  {{$t('images')}}
-                </div>
-                <div class="filter-body">
-                  <cytomine-slider v-model="boundsImages" :max="maxNbImages" />
-                </div>
-              </div>
-
-              <div class="column"></div>
-          </div>
-
-          <div class="columns">
-            <div class="column filter">
-              <div class="filter-label">
-                {{$t('user-annotations')}}
-              </div>
-              <div class="filter-body">
-                <cytomine-slider v-model="boundsUserAnnotations" :max="maxNbUserAnnotations" />
-              </div>
-            </div>
-
-            <div class="column filter">
-              <div class="filter-label">
-                {{$t('reviewed-annotations')}}
-              </div>
-              <div class="filter-body">
-                <cytomine-slider v-model="boundsReviewedAnnotations" :max="maxNbReviewedAnnotations" />
-              </div>
-            </div>
-            <div class="column"></div>
-          </div>
+      </p>
+      <div class="panel-block">
+        <div class="search-block">
+          <b-input class="search-projects" v-model="searchString" :placeholder="$t('search-placeholder')" type="search"
+            icon="search" />
+          <button class="button" @click="toggleFilterDisplay()">
+            <span class="icon">
+              <i class="fas fa-filter"></i>
+            </span>
+            <span>
+              {{ filtersOpened ? $t('button-hide-filters') : $t('button-show-filters') }}
+            </span>
+            <span v-if="nbActiveFilters" class="nb-active-filters">
+              {{ nbActiveFilters }}
+            </span>
+          </button>
         </div>
-      </b-collapse>
 
-      <cytomine-table
-        :collection="projectCollection"
-        :is-empty="nbEmptyFilters > 0"
-        class="table-projects"
-        :currentPage.sync="currentPage"
-        :perPage.sync="perPage"
-        :openedDetailed.sync="openedDetails"
-        :sort.sync="sortField"
-        :order.sync="sortOrder"
-        :revision="revision"
-      >
-        <template #default="{row: project}">
-          <b-table-column field="currentUserRole" label="" centered width="1" sortable>
-            <icon-project-member-role
-              :is-manager="project.currentUserRoles.admin"
-              :is-representative="project.currentUserRoles.representative"
-            />
-          </b-table-column>
+        <b-collapse :open="filtersOpened">
+          <div class="filters">
 
-          <!-- <b-table-column field="name" :label="$t('name')" sortable width="250">
+
+            <div class="columns">
+              <div class="column filter">
+                <div class="filter-label">
+                  {{ $t('my-role') }}
+                </div>
+                <div class="filter-body">
+                  <cytomine-multiselect v-model="selectedRoles" :options="availableRoles" multiple
+                    :searchable="false" />
+                </div>
+              </div>
+              <div class="column filter">
+                <div class="filter-label">
+                  Patient ID
+                </div>
+                <div class="filter-body">
+                  <b-input v-model="patientIdFilter" placeholder="Filter by patient ID" />
+                </div>
+              </div>
+
+              <div class="column filter">
+                <div class="filter-label">
+                  Patient Name
+                </div>
+                <div class="filter-body">
+                  <b-input v-model="patientNameFilter" placeholder="Filter by patient name" />
+                </div>
+              </div>
+
+              <div class="column filter">
+                <div class="filter-label">
+                  Status
+                </div>
+                <div class="filter-body">
+                  <cytomine-multiselect v-model="selectedStatuses" :options="availableStatuses" label="name"
+                    track-by="id" :multiple="true" :allPlaceholder="'All statuses'" />
+                </div>
+              </div>
+            </div>
+
+            <div class="columns">
+              <div class="column filter">
+                <div class="filter-label">
+                  Accession ID
+                </div>
+                <div class="filter-body">
+                  <b-input v-model="accessionIdFilter" placeholder="Filter by accession ID" />
+                </div>
+              </div>
+
+              <div class="column filter">
+                <div class="filter-label">
+                  Medical Record Number
+                </div>
+                <div class="filter-body">
+                  <b-input v-model="medicalRecordNumberFilter" placeholder="Filter by MRN" />
+                </div>
+              </div>
+
+              <div class="column filter">
+                <div class="filter-label">
+                  Tissue
+                </div>
+                <div class="filter-body">
+                  <b-input v-model="tissueFilter" placeholder="Filter by tissue" />
+                </div>
+              </div>
+              <div class="column filter">
+                <div class="filter-label">
+                  Specimen
+                </div>
+                <div class="filter-body">
+                  <b-input v-model="specimenFilter" placeholder="Filter by specimen" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </b-collapse>
+
+        <cytomine-table :collection="projectCollection" :is-empty="nbEmptyFilters > 0" class="table-projects"
+          :currentPage.sync="currentPage" :perPage.sync="perPage" :openedDetailed.sync="openedDetails"
+          :sort.sync="sortField" :order.sync="sortOrder" :revision="revision">
+          <template #default="{ row: project }">
+            <b-table-column field="currentUserRole" label="" centered width="1" sortable>
+              <icon-project-member-role :is-manager="project.currentUserRoles.admin"
+                :is-representative="project.currentUserRoles.representative" />
+            </b-table-column>
+
+            <!-- <b-table-column field="name" :label="$t('name')" sortable width="250">
             <a @click="openProject(project)">
               {{ project.name }}
             </a>
@@ -166,100 +156,89 @@
             {{ project.numberOfReviewedAnnotations }}
           </b-table-column> -->
 
-          <b-table-column field="patientId" :label="$t('patient-id')" centered sortable width="150">
-            {{ project.patientId }}
-          </b-table-column>
+            <b-table-column field="patientId" :label="$t('patient-id')" centered sortable width="150">
+              {{ project.patientId }}
+            </b-table-column>
 
-          <b-table-column field="patientName" :label="$t('patient-name')" centered sortable width="150">
-            {{ project.patientName }}
-          </b-table-column>
+            <b-table-column field="patientName" :label="$t('patient-name')" centered sortable width="150">
+              {{ project.patientName }}
+            </b-table-column>
 
-          <b-table-column field="patientAge" :label="$t('patient-age')" centered sortable width="150">
-            {{ project.patientAge }}
-          </b-table-column>
+            <b-table-column field="patientAge" :label="$t('patient-age')" centered sortable width="150">
+              {{ project.patientAge }}
+            </b-table-column>
 
-          <b-table-column field="accessionId" :label="$t('accession-id')" centered sortable width="150">
-            {{ project.accessionId }}
-          </b-table-column>
+            <b-table-column field="accessionId" :label="$t('accession-id')" centered sortable width="150">
+              {{ project.accessionId }}
+            </b-table-column>
 
-          <b-table-column field="status" :label="$t('status')" centered sortable width="150">
-            <span :class="`status-${project.status?.toLowerCase().replace('_', '-')}`">
-              {{ formatStatus(project.status) }}
-            </span>
-          </b-table-column>
+            <b-table-column field="status" :label="$t('status')" centered sortable width="150">
+              <span :class="`status-${project.status?.toLowerCase().replace('_', '-')}`">
+                {{ formatStatus(project.status) }}
+              </span>
+            </b-table-column>
 
-          <b-table-column field="accessDate" :label="$t('access-date')" centered sortable width="180">
-            {{ project.accessDate | moment('ll') }}
-          </b-table-column>
+            <b-table-column field="accessDate" :label="$t('access-date')" centered sortable width="180">
+              {{ project.accessDate | moment('ll') }}
+            </b-table-column>
 
-          <b-table-column field="medicalRecordNumber" :label="$t('medical-record-number')" centered sortable width="150">
-            {{ project.medicalRecordNumber }}
-          </b-table-column>
+            <b-table-column field="medicalRecordNumber" :label="$t('medical-record-number')" centered sortable
+              width="150">
+              {{ project.medicalRecordNumber }}
+            </b-table-column>
 
-          <b-table-column field="tissue" :label="$t('tissue')" centered sortable width="150">
-            {{ project.tissue }}
-          </b-table-column>
+            <b-table-column field="tissue" :label="$t('tissue')" centered sortable width="150">
+              {{ project.tissue }}
+            </b-table-column>
 
-          <b-table-column field="specimen" :label="$t('specimen')" centered sortable width="150">
-            {{ project.specimen }}
-          </b-table-column>
+            <b-table-column field="specimen" :label="$t('specimen')" centered sortable width="150">
+              {{ project.specimen }}
+            </b-table-column>
 
-          <!-- <b-table-column field="lastActivity" :label="$t('last-activity')" centered sortable width="180">
+            <!-- <b-table-column field="lastActivity" :label="$t('last-activity')" centered sortable width="180">
             {{ Number(project.lastActivity) | moment('ll') }}
           </b-table-column> -->
 
-          <b-table-column label="Actions" centered width="150">
-            <div class="buttons">
-              <button class="button is-small is-link" @click="openAddImageModal(project)">
-                {{$t('button-add-image')}}
-              </button>
-              <button class="button is-small is-link" @click="openProject(project)">
-                Open in viewer
-              </button>
-              <button class="button is-small is-info" @click="openShareModal(project)">
-                {{$t('button-share')}}
-              </button>
+            <b-table-column label="Actions" centered width="150">
+              <div class="buttons">
+                <button class="button is-small is-link" @click="openAddImageModal(project)">
+                  {{ $t('button-add-image') }}
+                </button>
+                <button class="button is-small is-link" @click="openProject(project)">
+                  Open in viewer
+                </button>
+                <button class="button is-small is-info" @click="openShareModal(project)">
+                  {{ $t('button-share') }}
+                </button>
+              </div>
+            </b-table-column>
+          </template>
+
+          <template #detail="{ row: project }">
+            <project-details :project="project" :excluded-properties="excludedProperties" editable
+              @update="updateProject()" @delete="deleteProject(project)" />
+          </template>
+
+          <template #empty>
+            <div class="content has-text-grey has-text-centered">
+              <p>{{ $t('no-project') }}</p>
             </div>
-          </b-table-column>
-        </template>
+          </template>
+        </cytomine-table>
 
-        <template #detail="{row: project}">
-          <project-details
-            :project="project"
-            :excluded-properties="excludedProperties"
-            editable
-            @update="updateProject()"
-            @delete="deleteProject(project)"
-          />
-        </template>
-
-        <template #empty>
-          <div class="content has-text-grey has-text-centered">
-            <p>{{$t('no-project')}}</p>
-          </div>
-        </template>
-      </cytomine-table>
-
-      <!-- <div class="legend">
+        <!-- <div class="legend">
           <h2>{{$t('legend')}}</h2>
           <p><icon-project-member-role /> : {{$t('contributor-icon-label')}}</p>
           <p><icon-project-member-role :is-manager="true" /> : {{$t('manager-icon-label')}}</p>
           <p><icon-project-member-role :is-manager="true" :is-representative="true" /> : {{$t('representative-icon-label')}}</p>
       </div> -->
+      </div>
     </div>
-  </div>
 
-  <add-project-modal :active.sync="creationModal" :ontologies="ontologies" />
-  <add-image-modal
-    :active.sync="addImageModal" 
-    :project="selectedProject"
-    @addImage="updateProject()" 
-  />
-  <share-project-modal
-    :active.sync="shareProjectModal"
-    :project="selectedProject"
-  />
-</div>
+    <add-project-modal :active.sync="creationModal" :ontologies="ontologies" />
+    <add-image-modal :active.sync="addImageModal" :project="selectedProject" @addImage="updateProject()" />
+    <share-project-modal :active.sync="shareProjectModal" :project="selectedProject" />
+  </div>
 </template>
 
 <script>
@@ -270,9 +249,9 @@ import ProjectDetails from './ProjectDetails';
 import AddProjectModal from './AddProjectModal';
 import ShareProjectModal from './ShareProjectModal';
 
-import {get, sync, syncBoundsFilter, syncMultiselectFilter} from '@/utils/store-helpers';
+import { get, sync, syncBoundsFilter, syncMultiselectFilter } from '@/utils/store-helpers';
 
-import {ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection} from '@/api';
+import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection } from '@/api';
 import IconProjectMemberRole from '@/components/icons/IconProjectMemberRole';
 import AddImageModal from '@/components/image/AddImageModal.vue';
 export default {
@@ -294,7 +273,7 @@ export default {
 
       projects: [],
       ontologies: [],
-      availableTags:[],
+      availableTags: [],
 
       contributorLabel: this.$t('contributor'),
       managerLabel: this.$t('manager'),
@@ -326,20 +305,36 @@ export default {
       maxNbUserAnnotations: 100,
       maxNbReviewedAnnotations: 100,
 
+      // 新增的过滤字段
+      patientIdFilter: '',
+      patientNameFilter: '',
+      accessionIdFilter: '',
+      medicalRecordNumberFilter: '',
+      tissueFilter: '',
+      specimenFilter: '',
+      selectedStatuses: [],
+
       revision: 0
     };
   },
   computed: {
     currentUser: get('currentUser/user'),
 
-    searchString: sync('listProjects/searchString', {debounce: 500}),
+    searchString: sync('listProjects/searchString', { debounce: 500 }),
     filtersOpened: sync('listProjects/filtersOpened'),
 
     availableRoles() {
       return [this.contributorLabel, this.managerLabel];
     },
     availableOntologies() {
-      return [{id: 'null', name: this.$t('no-ontology')}, ...this.ontologies];
+      return [{ id: 'null', name: this.$t('no-ontology') }, ...this.ontologies];
+    },
+    availableStatuses() {
+      return [
+        { id: 'NOT_READY', name: this.$t('status-not-ready') },
+        { id: 'READY', name: this.$t('status-ready') },
+        { id: 'REVIEWED', name: this.$t('status-reviewed') }
+      ];
     },
 
     querySearchTags() {
@@ -363,13 +358,16 @@ export default {
     selectedOntologiesIds() {
       return this.selectedOntologies.map(ontology => ontology.id);
     },
+    selectedStatusesIds() {
+      return this.selectedStatuses.map(status => status.id);
+    },
 
     boundsFilters() {
       return [
-        {prop: 'numberOfImages', bounds: this.boundsImages, max: this.maxNbImages},
-        {prop: 'membersCount', bounds: this.boundsMembers, max: this.maxNbMembers},
-        {prop: 'numberOfAnnotations', bounds: this.boundsUserAnnotations, max: this.maxNbUserAnnotations},
-        {prop: 'numberOfReviewedAnnotations', bounds: this.boundsReviewedAnnotations, max: this.maxNbReviewedAnnotations},
+        { prop: 'numberOfImages', bounds: this.boundsImages, max: this.maxNbImages },
+        { prop: 'membersCount', bounds: this.boundsMembers, max: this.maxNbMembers },
+        { prop: 'numberOfAnnotations', bounds: this.boundsUserAnnotations, max: this.maxNbUserAnnotations },
+        { prop: 'numberOfReviewedAnnotations', bounds: this.boundsReviewedAnnotations, max: this.maxNbReviewedAnnotations },
       ];
     },
 
@@ -399,7 +397,7 @@ export default {
         };
       }
       if (this.searchString) {
-        collection['name'] = {
+        collection['patientName'] = {
           ilike: encodeURIComponent(this.searchString)
         };
       }
@@ -408,7 +406,45 @@ export default {
           in: this.selectedTags.map(t => t.id).join()
         };
       }
-      for (let {prop, bounds, max} of this.boundsFilters) {
+
+      // 添加新的过滤条件
+      if (this.patientIdFilter) {
+        collection['patientId'] = {
+          ilike: encodeURIComponent(this.patientIdFilter)
+        };
+      }
+      if (this.patientNameFilter) {
+        collection['patientName'] = {
+          ilike: encodeURIComponent(this.patientNameFilter)
+        };
+      }
+      if (this.accessionIdFilter) {
+        collection['accessionId'] = {
+          ilike: encodeURIComponent(this.accessionIdFilter)
+        };
+      }
+      if (this.medicalRecordNumberFilter) {
+        collection['medicalRecordNumber'] = {
+          ilike: encodeURIComponent(this.medicalRecordNumberFilter)
+        };
+      }
+      if (this.tissueFilter) {
+        collection['tissue'] = {
+          ilike: encodeURIComponent(this.tissueFilter)
+        };
+      }
+      if (this.specimenFilter) {
+        collection['specimen'] = {
+          ilike: encodeURIComponent(this.specimenFilter)
+        };
+      }
+      if (this.selectedStatusesIds.length > 0) {
+        collection['status'] = {
+          in: this.selectedStatusesIds.join()
+        };
+      }
+
+      for (let { prop, bounds, max } of this.boundsFilters) {
         collection[prop] = {};
         if (bounds[1] !== max) {
           // if max bounds is the max possible value, do not set the filter in the request
@@ -443,16 +479,40 @@ export default {
           this.selectedTags = queriedTags;
         }
       }
+    },
+    patientIdFilter() {
+      this.revision++;
+    },
+    patientNameFilter() {
+      this.revision++;
+    },
+    accessionIdFilter() {
+      this.revision++;
+    },
+    medicalRecordNumberFilter() {
+      this.revision++;
+    },
+    tissueFilter() {
+      this.revision++;
+    },
+    specimenFilter() {
+      this.revision++;
+    },
+    selectedStatuses: {
+      handler() {
+        this.revision++;
+      },
+      deep: true
     }
   },
   methods: {
     async fetchOntologies() {
-      let ontologies = (await OntologyCollection.fetchAll({light: true})).array;
+      let ontologies = (await OntologyCollection.fetchAll({ light: true })).array;
       ontologies.sort((a, b) => a.name.localeCompare(b.name));
       this.ontologies = ontologies;
     },
     async fetchMaxFilters() {
-      let stats = await ProjectCollection.fetchBounds({withMembersCount:true});
+      let stats = await ProjectCollection.fetchBounds({ withMembersCount: true });
 
       this.maxNbMembers = Math.max(10, stats.members.max);
       this.maxNbImages = Math.max(10, stats.numberOfImages.max);
@@ -460,7 +520,7 @@ export default {
       this.maxNbReviewedAnnotations = Math.max(100, stats.numberOfReviewedAnnotations.max);
     },
     async fetchTags() {
-      this.availableTags = [{id: 'null', name: this.$t('no-tag')}, ...(await TagCollection.fetchAll()).array];
+      this.availableTags = [{ id: 'null', name: this.$t('no-tag') }, ...(await TagCollection.fetchAll()).array];
     },
     toggleFilterDisplay() {
       this.filtersOpened = !this.filtersOpened;
@@ -474,17 +534,17 @@ export default {
         this.revision++;
         this.$notify({
           type: 'success',
-          text: this.$t('notif-success-project-deletion', {projectName: projectToDelete.name})
+          text: this.$t('notif-success-project-deletion', { projectName: projectToDelete.name })
         });
       } catch (error) {
         this.$notify({
           type: 'error',
-          text: this.$t('notif-error-project-deletion', {projectName: projectToDelete.name})
+          text: this.$t('notif-error-project-deletion', { projectName: projectToDelete.name })
         });
         return;
       }
     },
-    
+
     updateProject() {
       this.revision++;
     },
@@ -499,7 +559,7 @@ export default {
           order: 'asc',
           max: 1
         });
-        
+
         const images = await imageCollection.fetchPage(0);
         if (images.array.length > 0) {
           const firstImage = images.array[0];
@@ -541,6 +601,34 @@ export default {
     updateProject() {
       this.revision++;
     },
+
+    resetFilters() {
+      // 重置搜索字符串
+      this.searchString = '';
+
+      // 重置选择的过滤器
+      this.selectedOntologies = [];
+      this.selectedRoles = [];
+      this.selectedTags = [];
+      this.selectedStatuses = [];
+
+      // 重置滑块过滤器
+      this.boundsMembers = [0, this.maxNbMembers];
+      this.boundsImages = [0, this.maxNbImages];
+      this.boundsUserAnnotations = [0, this.maxNbUserAnnotations];
+      this.boundsReviewedAnnotations = [0, this.maxNbReviewedAnnotations];
+
+      // 重置新的文本过滤字段
+      this.patientIdFilter = '';
+      this.patientNameFilter = '';
+      this.accessionIdFilter = '';
+      this.medicalRecordNumberFilter = '';
+      this.tissueFilter = '';
+      this.specimenFilter = '';
+
+      // 触发重新查询
+      this.revision++;
+    }
   },
   async created() {
     try {
@@ -883,10 +971,11 @@ export default {
 }
 
 .table-projects {
-  margin-top: 1rem;  
+  margin-top: 1rem;
 }
 
-.list-projects-wrapper td, .list-projects-wrapper th {
+.list-projects-wrapper td,
+.list-projects-wrapper th {
   vertical-align: middle !important;
 }
 

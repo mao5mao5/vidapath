@@ -294,6 +294,52 @@ public class ProjectService extends ModelService {
                     parameter.setValue(SQLSearchParameter.convertSearchParameter(Long.class, parameter.getValue(), getEntityManager()));
                     validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
                     break;
+                // 添加对新增字段的支持
+                case "patientId":
+                    property = "p.patient_id";
+                    parameter.setValue(SQLSearchParameter.convertSearchParameter(String.class, parameter.getValue(), getEntityManager()));
+                    validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
+                    break;
+                case "patientName":
+                    property = "p.patient_name";
+                    parameter.setValue(SQLSearchParameter.convertSearchParameter(String.class, parameter.getValue(), getEntityManager()));
+                    validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
+                    break;
+                case "patientAge":
+                    property = "p.patient_age";
+                    parameter.setValue(SQLSearchParameter.convertSearchParameter(Integer.class, parameter.getValue(), getEntityManager()));
+                    validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
+                    break;
+                case "accessionId":
+                    property = "p.accession_id";
+                    parameter.setValue(SQLSearchParameter.convertSearchParameter(String.class, parameter.getValue(), getEntityManager()));
+                    validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
+                    break;
+                case "status":
+                    property = "p.status";
+                    parameter.setValue(SQLSearchParameter.convertSearchParameter(String.class, parameter.getValue(), getEntityManager()));
+                    validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
+                    break;
+                case "accessDate":
+                    property = "p.access_date";
+                    parameter.setValue(SQLSearchParameter.convertSearchParameter(Date.class, parameter.getValue(), getEntityManager()));
+                    validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
+                    break;
+                case "medicalRecordNumber":
+                    property = "p.medical_record_number";
+                    parameter.setValue(SQLSearchParameter.convertSearchParameter(String.class, parameter.getValue(), getEntityManager()));
+                    validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
+                    break;
+                case "tissue":
+                    property = "p.tissue";
+                    parameter.setValue(SQLSearchParameter.convertSearchParameter(String.class, parameter.getValue(), getEntityManager()));
+                    validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
+                    break;
+                case "specimen":
+                    property = "p.specimen";
+                    parameter.setValue(SQLSearchParameter.convertSearchParameter(String.class, parameter.getValue(), getEntityManager()));
+                    validParameters.add(new SearchParameterEntry(property, parameter.getOperation(), parameter.getValue()));
+                    break;
                 default:
                     continue;
             }
