@@ -183,7 +183,7 @@
           </b-table-column>
 
           <b-table-column field="status" :label="$t('status')" centered sortable width="150">
-            <span :class="`status-${project.status.toLowerCase().replace('_', '-')}`">
+            <span :class="`status-${project.status?.toLowerCase().replace('_', '-')}`">
               {{ formatStatus(project.status) }}
             </span>
           </b-table-column>
@@ -214,7 +214,10 @@
                 {{$t('button-add-image')}}
               </button>
               <button class="button is-small is-link" @click="openProject(project)">
-                View
+                {{$t('button-open-in-viewer')}}
+              </button>
+              <button class="button is-small is-info" @click="openShareModal(project)">
+                {{$t('button-share')}}
               </button>
             </div>
           </b-table-column>
@@ -252,6 +255,10 @@
     :project="selectedProject"
     @addImage="updateProject()" 
   />
+  <share-project-modal
+    :active.sync="shareProjectModal"
+    :project="selectedProject"
+  />
 </div>
 </template>
 
@@ -261,6 +268,7 @@ import CytomineMultiselect from '@/components/form/CytomineMultiselect';
 import CytomineSlider from '@/components/form/CytomineSlider';
 import ProjectDetails from './ProjectDetails';
 import AddProjectModal from './AddProjectModal';
+import ShareProjectModal from './ShareProjectModal';
 
 import {get, sync, syncBoundsFilter, syncMultiselectFilter} from '@/utils/store-helpers';
 
@@ -274,6 +282,7 @@ export default {
     CytomineTable,
     ProjectDetails,
     AddProjectModal,
+    ShareProjectModal,
     AddImageModal,
     CytomineMultiselect,
     CytomineSlider
@@ -292,6 +301,7 @@ export default {
 
       creationModal: false,
       addImageModal: false,
+      shareProjectModal: false,
       selectedProject: null,
 
       excludedProperties: [
@@ -521,7 +531,16 @@ export default {
     openAddImageModal(project) {
       this.selectedProject = project;
       this.addImageModal = true;
-    }
+    },
+
+    openShareModal(project) {
+      this.selectedProject = project;
+      this.shareProjectModal = true;
+    },
+
+    updateProject() {
+      this.revision++;
+    },
   },
   async created() {
     try {
