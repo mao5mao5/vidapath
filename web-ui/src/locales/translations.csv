@@ -1167,10 +1167,8 @@ app-engine.parameter.type,Type,Type,Tipo,Type
 app-engine.parameter.value,Value,Valeur,Valor,Waarde
 app-engine.runs.title,Runs,Exécutions,Ejecuciones,Uitvoeringen
 app-engine.task-run.state.title,State,État,Estado,Status
-
 patient-information,Patient Information,Informations sur le patient,Información del paciente,Patiëntgegevens
 specimen-information,Specimen Information,Informations sur le spécimen,Información del espécimen,Monstergegevens
-tissue,Tissue,Tissu,Tejido,Weefsel
 project-type,Project Type,Type de projet,Tipo de proyecto,Projecttype
 project-type-clinical,Clinical,Clinique,Clínico,Klinisch
 project-type-research,Research,Recherche,Investigación,Onderzoek
