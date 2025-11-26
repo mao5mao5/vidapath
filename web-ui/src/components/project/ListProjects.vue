@@ -168,6 +168,10 @@
               {{ project.patientAge }}
             </b-table-column>
 
+            <b-table-column field="patientSex" label="Gender" centered sortable width="150">
+              {{ project.patientSex }}
+            </b-table-column>
+
             <b-table-column field="accessionId" :label="$t('accession-id')" centered sortable width="150">
               {{ project.accessionId }}
             </b-table-column>
@@ -193,6 +197,10 @@
 
             <b-table-column field="specimen" :label="$t('specimen')" centered sortable width="150">
               {{ project.specimen }}
+            </b-table-column>
+
+            <b-table-column field="stain" label="Stain" centered sortable width="150">
+              {{ project.stain }}
             </b-table-column>
 
             <!-- <b-table-column field="lastActivity" :label="$t('last-activity')" centered sortable width="180">

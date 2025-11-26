@@ -64,6 +64,14 @@
           <b-field :label="$t('specimen')" class="field-spacing">
             <b-input v-model="specimen" :placeholder="$t('specimen')" />
           </b-field>
+
+          <b-field :label="$t('patient-sex')" class="field-spacing">
+            <b-input v-model="patientSex" :placeholder="$t('patient-sex')" />
+          </b-field>
+
+          <b-field :label="$t('stain')" class="field-spacing">
+            <b-input v-model="stain" :placeholder="$t('stain')" />
+          </b-field>
         </div>
 
         <!-- Project Type and Status -->
@@ -126,6 +134,8 @@ export default {
       accessDate: null,
       tissue: '',
       specimen: '',
+      patientSex: '',
+      stain: '',
       projectType: 'CLINICAL',
       projectStatus: 'NOT_READY'
     };
@@ -146,6 +156,8 @@ export default {
         this.accessDate = null;
         this.tissue = '';
         this.specimen = '';
+        this.patientSex = '';
+        this.stain = '';
         this.projectType = 'CLINICAL';
         this.projectStatus = 'NOT_READY';
       }
@@ -160,12 +172,12 @@ export default {
 
       try {
         let idOntology;
-        if (this.ontology === 'NEW') {
-          let ontology = await new Ontology({ name: this.name }).save();
-          idOntology = ontology.id;
-        } else if (this.ontology === 'EXISTING') {
-          idOntology = this.selectedOntology;
-        }
+        // if (this.ontology === 'NEW') {
+        //   let ontology = await new Ontology({ name: this.name }).save();
+        //   idOntology = ontology.id;
+        // } else if (this.ontology === 'EXISTING') {
+        //   idOntology = this.selectedOntology;
+        // }
 
         // 创建项目时包含新字段
         let projectData = {
@@ -179,16 +191,20 @@ export default {
           accessDate: this.accessDate,
           tissue: this.tissue,
           specimen: this.specimen,
+          patientSex: this.patientSex,
+          stain: this.stain,
           type: this.projectType,
-          status: this.projectStatus
+          status: this.projectStatus,
+          isReadOnly: false,
+          isRestricted:true,
         };
 
         let project = await new Project(projectData).save();
 
         this.loading = false;
-        this.$notify({ type: 'success', text: this.$t('notif-success-project-creation') });
+        this.$notify({ type: 'success', text: "The case was successfully created"});
         this.$emit('update:active', false);
-        await this.$router.push(`/project/${project.id}/configuration`);
+        // await this.$router.push(`/project/${project.id}/configuration`);
       } catch (error) {
         if (error.response.status === 409) {
           this.$notify({ type: 'error', text: this.$t('notif-error-project-already-exists') });

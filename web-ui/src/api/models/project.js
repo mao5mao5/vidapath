@@ -53,6 +53,10 @@ export default class Project extends Model {
     this.tissue = null;
     this.specimen = null;
     this.type = null;
+    
+    // 添加性别和染色方式字段
+    this.patientSex = null;
+    this.stain = null;
   }
 
   /**

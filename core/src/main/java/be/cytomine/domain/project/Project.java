@@ -81,6 +81,11 @@ public class Project extends CytomineDomain {
     private String tissue;
     
     private String specimen;
+    
+    // 添加性别和染色方式字段
+    private String patientSex;
+    
+    private String stain;
 
     @Enumerated(EnumType.STRING)
     private ProjectType type = ProjectType.CLINICAL;
@@ -115,6 +120,10 @@ public class Project extends CytomineDomain {
         project.medicalRecordNumber = json.getJSONAttrStr("medicalRecordNumber");
         project.tissue = json.getJSONAttrStr("tissue");
         project.specimen = json.getJSONAttrStr("specimen");
+        
+        // 添加性别和染色方式字段处理
+        project.patientSex = json.getJSONAttrStr("patientSex");
+        project.stain = json.getJSONAttrStr("stain");
 
         project.created = json.getJSONAttrDate("created");
         project.updated = json.getJSONAttrDate("updated");
@@ -159,6 +168,10 @@ public class Project extends CytomineDomain {
         returnArray.put("medicalRecordNumber", project.getMedicalRecordNumber());
         returnArray.put("tissue", project.getTissue());
         returnArray.put("specimen", project.getSpecimen());
+        
+        // 添加性别和染色方式字段处理
+        returnArray.put("patientSex", project.getPatientSex());
+        returnArray.put("stain", project.getStain());
 
         return returnArray;
     }

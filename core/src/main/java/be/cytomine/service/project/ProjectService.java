@@ -499,6 +499,13 @@ public class ProjectService extends ModelService {
             case "specimen":
                 sortColumn = "p.specimen";
                 break;
+            // 添加新字段的排序支持
+            case "patientSex":
+                sortColumn = "p.patientSex";
+                break;
+            case "stain":
+                sortColumn = "p.stain";
+                break;
         }
 
         sort = " ORDER BY "+sortColumn;
