@@ -33,6 +33,10 @@
           <b-field :label="$t('patient-age')" class="field-spacing">
             <b-input v-model="patientAge" type="number" :placeholder="$t('patient-age')" />
           </b-field>
+
+          <b-field label="Patient Gender" class="field-spacing">
+            <b-input v-model="patientSex" :placeholder="$t('patient-sex')" />
+          </b-field>
         </div>
 
         <!-- Project Details Section -->
@@ -65,11 +69,7 @@
             <b-input v-model="specimen" :placeholder="$t('specimen')" />
           </b-field>
 
-          <b-field :label="$t('patient-sex')" class="field-spacing">
-            <b-input v-model="patientSex" :placeholder="$t('patient-sex')" />
-          </b-field>
-
-          <b-field :label="$t('stain')" class="field-spacing">
+          <b-field label="Stain" class="field-spacing">
             <b-input v-model="stain" :placeholder="$t('stain')" />
           </b-field>
         </div>
@@ -196,13 +196,13 @@ export default {
           type: this.projectType,
           status: this.projectStatus,
           isReadOnly: false,
-          isRestricted:true,
+          isRestricted: true,
         };
 
         let project = await new Project(projectData).save();
 
         this.loading = false;
-        this.$notify({ type: 'success', text: "The case was successfully created"});
+        this.$notify({ type: 'success', text: "The case was successfully created" });
         this.$emit('update:active', false);
         // await this.$router.push(`/project/${project.id}/configuration`);
       } catch (error) {
