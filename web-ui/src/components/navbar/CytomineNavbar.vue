@@ -13,33 +13,33 @@
  limitations under the License.-->
 
 <template>
-<nav class="navbar is-light" role="navigation">
-  <div class="navbar-brand">
-    <router-link to="/projects" exact class="navbar-item">
-      <div class="logo-container">
-        <img src="@/assets/icon.svg" id="logo" alt="VidaPath">
-        <h1 class="brand">VidaPath</h1>
-      </div>
-    </router-link>
-  </div>
-  <div id="topMenu" class="navbar-menu" :class="{'is-active':openedTopMenu}">
-    <div class="navbar-start">
-      <!-- <navbar-dropdown
+  <nav class="navbar is-light" role="navigation">
+    <div class="navbar-brand">
+      <router-link to="/projects" exact class="navbar-item">
+        <div class="logo-container">
+          <img src="@/assets/icon.svg" id="logo" alt="VidaPath">
+          <h1 class="brand">VidaPath</h1>
+        </div>
+      </router-link>
+    </div>
+    <div id="topMenu" class="navbar-menu" :class="{ 'is-active': openedTopMenu }">
+      <div class="navbar-start">
+        <!-- <navbar-dropdown
       icon="fa-folder-open"
       v-if="this.nbActiveProjects > 0"
       :title="$t('workspace')"
       :listPathes="['/project/']">
         <navigation-tree />
       </navbar-dropdown> -->
-      <router-link to="/projects" class="navbar-item">
-        <i class="fas fa-list-alt"></i>
-        {{ $t('cases') }}
-      </router-link>
-      <router-link v-if="!currentUser.guestByNow" to="/storage" class="navbar-item">
-        <i class="fas fa-download"></i>
-        {{ $t('storage') }}
-      </router-link>
-      <!-- <router-link to="/ontology" class="navbar-item">
+        <router-link to="/projects" class="navbar-item">
+          <i class="fas fa-list-alt"></i>
+          {{ $t('cases') }}
+        </router-link>
+        <router-link v-if="!currentUser.guestByNow" to="/storage" class="navbar-item">
+          <i class="fas fa-download"></i>
+          {{ $t('storage') }}
+        </router-link>
+        <!-- <router-link to="/ontology" class="navbar-item">
         <i class="fas fa-hashtag"></i>
         {{ $t('ontologies') }}
       </router-link>
@@ -51,12 +51,22 @@
         <i class="fas fa-wrench"></i>
         {{ $t('admin-menu') }}
       </router-link> -->
-    </div>
+      </div>
 
-    <div class="navbar-end">
-      <!-- <cytomine-searcher /> -->
-      <!-- TODO IAM -->
-      <!-- <navbar-dropdown
+      <div v-if="showPatientInfo" class="patient-info">
+        <div class="patient-details">
+          <span v-if="currentProject.patientName" class="patient-field">PATIENT: {{ currentProject.patientName }}</span>
+          <span v-if="currentProject.patientId" class="patient-field">ID: {{ currentProject.patientId }}</span>
+          <span v-if="currentProject.patientAge" class="patient-field">AGE: {{ currentProject.patientAge }}</span>
+        </div>
+      </div>
+
+      <div class="navbar-end">
+        <!-- 显示患者信息 -->
+
+        <!-- <cytomine-searcher /> -->
+        <!-- TODO IAM -->
+        <!-- <navbar-dropdown
         :icon="currentUser.adminByNow ? 'fa-star' : 'fa-user'"
         :title="currentUser.fullName"
         :tag="currentUser.adminByNow ? {type: 'is-danger', text: $t('admin')} : null"
@@ -76,12 +86,12 @@
             <span class="icon"><i class="far fa-star fa-xs"></i></span> {{$t('close-admin-session')}}
           </a>
         </template>
-        <a class="navbar-item" @click="logout()">
-          <span class="icon"><i class="fas fa-power-off fa-xs"></i></span> {{ $t('logout') }}
-        </a>
-      </navbar-dropdown> -->
+<a class="navbar-item" @click="logout()">
+  <span class="icon"><i class="fas fa-power-off fa-xs"></i></span> {{ $t('logout') }}
+</a>
+</navbar-dropdown> -->
 
-      <!-- <navbar-dropdown icon="fa-question-circle" :title="$t('help')" :classes="['is-right']">
+        <!-- <navbar-dropdown icon="fa-question-circle" :title="$t('help')" :classes="['is-right']">
         <a class="navbar-item" @click="openHotkeysModal()">
           <span class="icon"><i class="far fa-keyboard fa-xs"></i></span> {{$t('shortcuts')}}
         </a>
@@ -89,15 +99,15 @@
           <span class="icon"><i class="fas fa-info-circle fa-xs"></i></span> {{$t('about-cytomine')}}
         </a>
       </navbar-dropdown> -->
+      </div>
     </div>
-  </div>
-  <div class="hidden" v-shortkey.once="openHotkeysModalShortcut" @shortkey="openHotkeysModal"></div>
-</nav>
+    <div class="hidden" v-shortkey.once="openHotkeysModalShortcut" @shortkey="openHotkeysModal"></div>
+  </nav>
 </template>
 
 <script>
-import {get} from '@/utils/store-helpers';
-import {changeLanguageMixin} from '@/lang.js';
+import { get } from '@/utils/store-helpers';
+import { changeLanguageMixin } from '@/lang.js';
 
 import NavbarDropdown from './NavbarDropdown';
 import NavigationTree from './NavigationTree';
@@ -125,11 +135,17 @@ export default {
   },
   computed: {
     currentUser: get('currentUser/user'),
+    currentProject: get('currentProject/project'),
     nbActiveProjects() {
       return Object.keys(this.$store.state.projects).length;
     },
     openHotkeysModalShortcut() {
       return shortcuts['general-shortcuts-modal'];
+    },
+    showPatientInfo() {
+      // 检查是否在Viewer页面并且当前项目有患者信息
+      return this.$route.path.includes('/image/') && this.currentProject &&
+        (this.currentProject.patientName || this.currentProject.patientId || this.currentProject.patientAge);
     }
   },
   watch: {
@@ -186,7 +202,7 @@ export default {
         await this.$keycloak.logout();
       } catch (error) {
         console.log(error);
-        this.$notify({type: 'error', text: this.$t('notif-error-logout')});
+        this.$notify({ type: 'error', text: this.$t('notif-error-logout') });
       }
     }
   }
@@ -201,8 +217,8 @@ export default {
   height: 30px;
 }
 
-.navbar-brand{
-  .brand{
+.navbar-brand {
+  .brand {
     color: white;
   }
 }
@@ -216,10 +232,11 @@ export default {
 }
 
 /* Special styling for IE */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
   #logo {
     height: 40px;
-    max-height: none ;
+    max-height: none;
   }
 }
 
@@ -229,23 +246,48 @@ export default {
   background-color: #1e2939 !important;
   color: white !important;
 
-  .fas, .far {
+  .fas,
+  .far {
     padding-right: 0.5rem;
   }
-  
-  .navbar-item, .navbar-link {
+
+  .navbar-item,
+  .navbar-link {
     background-color: transparent !important;
     color: white !important;
   }
-  
-  .navbar-item:hover, .navbar-link:hover {
+
+  .navbar-item:hover,
+  .navbar-link:hover {
     background-color: #28364d !important;
     color: white !important;
   }
-  
+
   .navbar-dropdown .navbar-item:hover {
     background-color: #28364d !important;
     color: white !important;
   }
+}
+
+.patient-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  padding-right: 4rem;
+}
+
+.patient-details {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.patient-feild {
+  font-weight: bold;
+  font-size: 1.1rem;
 }
 </style>
