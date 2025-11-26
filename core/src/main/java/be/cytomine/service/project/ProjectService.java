@@ -425,6 +425,34 @@ public class ProjectService extends ModelService {
                 String replacement = "$1_$2";
                 sortColumn ="p."+sortColumn.replaceAll("numberOf", "count").replaceAll(regex, replacement).toLowerCase();
                 break;
+            // 添加对新增字段的支持
+            case "patientId":
+                sortColumn = "p.patient_id";
+                break;
+            case "patientName":
+                sortColumn = "p.patient_name";
+                break;
+            case "patientAge":
+                sortColumn = "p.patient_age";
+                break;
+            case "accessionId":
+                sortColumn = "p.accession_id";
+                break;
+            case "status":
+                sortColumn = "p.status";
+                break;
+            case "accessDate":
+                sortColumn = "p.access_date";
+                break;
+            case "medicalRecordNumber":
+                sortColumn = "p.medical_record_number";
+                break;
+            case "tissue":
+                sortColumn = "p.tissue";
+                break;
+            case "specimen":
+                sortColumn = "p.specimen";
+                break;
         }
 
         sort = " ORDER BY "+sortColumn;
