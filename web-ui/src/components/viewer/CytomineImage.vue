@@ -62,6 +62,13 @@
             <ontology-panel class="panel-options" v-show="activePanel === 'ontology'" :index="index" />
           </li>
 
+          <!-- AI Analysis Panel Button -->
+          <li>
+            <a title="AI Analysis" @click="toggleAIAnalysisPanel" :class="{ active: showAIAnalysisPanel }">
+              <i class="fas fa-brain"></i>
+            </a>
+          </li>
+
           <!-- <li v-if="isPanelDisplayed('property')">
             <a @click="togglePanel('properties')" :class="{ active: activePanel === 'properties' }">
               <i class="fas fa-tag"></i>
@@ -120,6 +127,11 @@
         <modify-interaction v-if="activeModifyInteraction" :index="index" />
 
       </vl-map>
+
+      <!-- AI Analysis Panel -->
+      <div v-if="showAIAnalysisPanel" class="ai-analysis-panel">
+        <pathology-viewer />
+      </div>
 
       <div v-if="configUI['project-tools-main']" class="draw-tools">
         <draw-tools :index="index" @screenshot="takeScreenshot()" />
@@ -256,6 +268,8 @@ import DrawInteraction from './interactions/DrawInteraction';
 import ModifyInteraction from './interactions/ModifyInteraction';
 import ToggleScaleLine from './interactions/ToggleScaleLine';
 
+import PathologyViewer from './PathologyViewer.vue';
+
 import { addProj, createProj, getProj } from 'vuelayers/lib/ol-ext';
 
 import View from 'ol/View';
@@ -301,7 +315,9 @@ export default {
     SelectInteraction,
     DrawInteraction,
     ModifyInteraction,
-    ToggleScaleLine
+    ToggleScaleLine,
+
+    PathologyViewer
   },
   data() {
     return {
@@ -321,7 +337,10 @@ export default {
 
       format: new WKT(),
 
-      isFullscreen: false
+      isFullscreen: false,
+
+      // AI Analysis Panel
+      showAIAnalysisPanel: false
     };
   },
   computed: {
@@ -525,7 +544,7 @@ export default {
     }
   },
   methods: {
-    rotate(){
+    rotate() {
       //TODO
     },
     zoomIn() {
@@ -544,7 +563,11 @@ export default {
       this.zoom = this.idealZoom;
     },
 
-    ShareByLink(){
+    toggleAIAnalysisPanel() {
+      this.showAIAnalysisPanel = !this.showAIAnalysisPanel;
+    },
+
+    ShareByLink() {
       // TODO
     },
 
@@ -989,6 +1012,28 @@ $colorHoverPanelLink: white;
 $colorBorderPanelLink: #3e3e3e;
 $colorOpenedPanelLink: #6c95c8;
 
+.ai-analysis-panel {
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .ai-analysis-panel {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90vw;
+  }
+}
+
 .map-container {
   display: flex;
   background-color: #101828;
@@ -1141,17 +1186,13 @@ $colorOpenedPanelLink: #6c95c8;
 
 /* ----- CUSTOM STYLE FOR OL CONTROLS ----- */
 
-.ol-zoom{
+.ol-zoom {
   display: none;
 }
 
 .ol-rotate {
   background: none !important;
   z-index: 20;
-  // display: none;
-}
-
-.ol-rotate:not(.custom) {
   // display: none;
 }
 
