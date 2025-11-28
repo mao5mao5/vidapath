@@ -143,7 +143,7 @@ export default {
     showAllHPFResults() {
       // 实现显示所有HPF结果的逻辑
       console.log("Showing all HPF results");
-      alert("显示所有HPF结果的功能待实现");
+      alert("to be implemented");
     }
   }
 };

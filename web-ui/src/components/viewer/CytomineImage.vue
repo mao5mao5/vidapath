@@ -20,6 +20,18 @@
       </a>
     </div>
     <template v-if="!loading && zoom !== null">
+      <!-- AI Analysis Panel -->
+      <div v-if="showAIAnalysisPanel" class="ai-analysis-panel">
+        <pathology-viewer />
+      </div>
+      
+      <!-- Share Project Modal -->
+      <share-project-modal 
+        :active="shareModalActive" 
+        :project="project"
+        @update:active="shareModalActive = $event"
+      />
+      
       <div class="map-tools">
         <ul class="map-tools-list">
           <li><a title="Zoom in" @click="zoomIn()"><i class="fas fa-search-plus"></i></a></li>
@@ -127,11 +139,6 @@
         <modify-interaction v-if="activeModifyInteraction" :index="index" />
 
       </vl-map>
-
-      <!-- AI Analysis Panel -->
-      <div v-if="showAIAnalysisPanel" class="ai-analysis-panel">
-        <pathology-viewer />
-      </div>
 
       <div v-if="configUI['project-tools-main']" class="draw-tools">
         <draw-tools :index="index" @screenshot="takeScreenshot()" />
@@ -269,6 +276,7 @@ import ModifyInteraction from './interactions/ModifyInteraction';
 import ToggleScaleLine from './interactions/ToggleScaleLine';
 
 import PathologyViewer from './PathologyViewer.vue';
+import ShareProjectModal from '@/components/project/ShareProjectModal.vue';
 
 import { addProj, createProj, getProj } from 'vuelayers/lib/ol-ext';
 
@@ -316,8 +324,9 @@ export default {
     DrawInteraction,
     ModifyInteraction,
     ToggleScaleLine,
-
-    PathologyViewer
+    
+    PathologyViewer,
+    ShareProjectModal
   },
   data() {
     return {
@@ -338,9 +347,12 @@ export default {
       format: new WKT(),
 
       isFullscreen: false,
-
+      
       // AI Analysis Panel
-      showAIAnalysisPanel: false
+      showAIAnalysisPanel: false,
+      
+      // Share Modal
+      shareModalActive: false
     };
   },
   computed: {
@@ -567,8 +579,8 @@ export default {
       this.showAIAnalysisPanel = !this.showAIAnalysisPanel;
     },
 
-    ShareByLink() {
-      // TODO
+    ShareByLink(){
+      this.shareModalActive = true;
     },
 
     async updateMapSize() {
