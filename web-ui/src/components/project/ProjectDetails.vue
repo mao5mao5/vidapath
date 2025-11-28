@@ -20,7 +20,7 @@
 <table v-else class="table">
   <b-loading :is-full-page="false" :active="loading" class="small" />
   <tbody v-if="!loading">
-    <tr v-if="isPropDisplayed('id') && currentAccount.isDeveloper">
+    <!-- <tr v-if="isPropDisplayed('id') && currentAccount.isDeveloper">
       <td class="prop-label">{{$t('id')}}</td>
       <td class="prop-content">{{project.id}}</td>
     </tr>
@@ -57,14 +57,14 @@
           {{project.numberOfReviewedAnnotations}}
         </router-link>
       </td>
-    </tr>
+    </tr> -->
     <tr v-if="isPropDisplayed('description')">
       <td class="prop-label">{{$t('description')}}</td>
       <td class="prop-content">
         <cytomine-description :object="project" :canEdit="canManageProject" />
       </td>
     </tr>
-    <tr v-if="isPropDisplayed('tags')">
+    <!-- <tr v-if="isPropDisplayed('tags')">
       <td class="prop-label">{{$t('tags')}}</td>
       <td class="prop-content">
         <cytomine-tags :object="project" :canEdit="canManageProject" />
@@ -75,14 +75,14 @@
       <td class="prop-content">
         <cytomine-properties :object="project" :canEdit="canManageProject" />
       </td>
-    </tr>
+    </tr> -->
     <tr v-if="isPropDisplayed('attachedFiles')">
       <td class="prop-label">{{$t('attached-files')}}</td>
       <td class="prop-content">
         <attached-files :object="project" :canEdit="canManageProject" />
       </td>
     </tr>
-    <tr v-if="isPropDisplayed('ontology')">
+    <!-- <tr v-if="isPropDisplayed('ontology')">
       <td class="prop-label">{{$t('ontology')}}</td>
       <td class="prop-content">
         <router-link v-if="project.ontology" :to="`/ontology/${project.ontology}`">
@@ -90,7 +90,7 @@
         </router-link>
         <em v-else>{{$t('no-ontology')}}</em>
       </td>
-    </tr>
+    </tr> -->
     <tr v-if="isPropDisplayed('created')">
       <td class="prop-label">{{$t('created-on')}}</td>
       <td class="prop-content">
@@ -103,12 +103,12 @@
         <list-usernames :users="[creator]" :onlines="onlines" />
       </td>
     </tr>
-    <tr v-if="isPropDisplayed('representatives')">
+    <!-- <tr v-if="isPropDisplayed('representatives')">
       <td class="prop-label">{{$t('representatives')}} ({{representatives.length}})</td>
       <td class="prop-content">
         <list-usernames :users="representatives" :onlines="onlines" />
       </td>
-    </tr>
+    </tr> -->
     <tr v-if="isPropDisplayed('managers')">
       <td class="prop-label">{{$t('managers')}} ({{managers.length}})</td>
       <td class="prop-content">
