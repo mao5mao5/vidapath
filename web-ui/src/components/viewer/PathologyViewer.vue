@@ -1,5 +1,5 @@
 <template>
-  <div class="pathology-viewer">
+  <div class="pathology-viewer dark-theme">
     <div class="panel">
 
       <!-- Title -->
@@ -36,10 +36,10 @@
         </div>
 
         <div class="grade">Overall grade for the image:
-          <strong>Grade 3</strong>
+          <strong style="color: orange;">Grade 3</strong>
         </div>
         <div class="grade">Mitosis density in invasive carcinoma:
-          <strong>6.3 / mm²</strong>
+          <strong style="color: orange;">6.3 / mm²</strong>
         </div>
       </div>
 
@@ -149,26 +149,31 @@ export default {
 };
 </script>
 
-<style scoped>
-.pathology-viewer {
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
+.pathology-viewer.dark-theme {
   padding: 10px;
 }
 
 .panel {
   width: 380px;
-  border: 1px solid #ddd;
+  border: 1px solid $dark-border-color;
   border-radius: 6px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #fff;
+  background: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
 .panel-title {
   padding: 12px 14px;
   font-weight: bold;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid $dark-border-color;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
 }
 
 .arrow {
@@ -181,6 +186,7 @@ export default {
 
 .panel-body {
   padding: 10px 14px;
+  background-color: $dark-bg-primary;
 }
 
 .switch-row {
@@ -192,6 +198,7 @@ export default {
 .label {
   margin-left: 10px;
   font-size: 14px;
+  color: $dark-text-primary;
 }
 
 /* Switch */
@@ -212,7 +219,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #ccc;
+  background: $dark-bg-panel;
   border-radius: 20px;
   transition: 0.2s;
 }
@@ -224,7 +231,7 @@ export default {
   height: 16px;
   left: 2px;
   top: 2px;
-  background: white;
+  background: $dark-text-secondary;
   border-radius: 50%;
   transition: 0.2s;
 }
@@ -243,6 +250,12 @@ input:checked+.slider:before {
   justify-content: space-between;
   padding: 6px 0;
   font-size: 14px;
+  color: $dark-text-primary;
+  border-bottom: 1px solid $dark-border-color;
+}
+
+.item:last-child {
+  border-bottom: none;
 }
 
 .left {
@@ -269,17 +282,22 @@ input:checked+.slider:before {
 .grade {
   margin-top: 4px;
   font-size: 14px;
+  color: $dark-text-primary;
+  padding: 4px 0;
 }
 
 .link {
   font-size: 14px;
-  color: #1976D2;
+  color: #64B5F6;
   cursor: pointer;
+  display: inline-block;
+  margin-top: 8px;
 }
 
 .report-content p {
   margin: 5px 0;
   font-size: 14px;
   line-height: 1.4;
+  color: $dark-text-primary;
 }
 </style>

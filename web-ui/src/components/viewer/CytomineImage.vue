@@ -1017,7 +1017,7 @@ $colorOpenedPanelLink: #6c95c8;
   top: 60px;
   left: 60px;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.95);
+  // background: rgba(255, 255, 255, 0.95);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   max-width: 400px;
