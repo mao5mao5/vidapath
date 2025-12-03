@@ -24,14 +24,10 @@
       <div v-if="showAIAnalysisPanel" class="ai-analysis-panel">
         <pathology-viewer />
       </div>
-      
+
       <!-- Share Project Modal -->
-      <share-project-modal 
-        :active="shareModalActive" 
-        :project="project"
-        @update:active="shareModalActive = $event"
-      />
-      
+      <share-project-modal :active="shareModalActive" :project="project" @update:active="shareModalActive = $event" />
+
       <div class="map-tools">
         <ul class="map-tools-list">
           <li><a title="Zoom in" @click="zoomIn()"><i class="fas fa-search-plus"></i></a></li>
@@ -52,13 +48,13 @@
             <rotation-selector class="panel-options" v-show="activePanel === 'rotation'" :index="index" />
           </li>
           <a-divider />
-          <li>
+          <!-- <li>
             <a @click="togglePanel('layers')" :class="{ active: activePanel === 'layers' }">
               <i class="fas fa-copy"></i>
             </a>
-            <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
-              :layers-to-preload="layersToPreload" />
-          </li>
+          </li> -->
+          <!-- <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
+            :layers-to-preload="layersToPreload" /> -->
 
           <li v-if="isPanelDisplayed('color-manipulation')">
             <a @click="togglePanel('colors')" :class="{ active: activePanel === 'colors' }">
@@ -286,7 +282,7 @@ import { KeyboardPan, KeyboardZoom } from 'ol/interaction';
 import { noModifierKeys, targetNotEditable } from 'ol/events/condition';
 import WKT from 'ol/format/WKT';
 
-import { Cytomine, ImageConsultation, Annotation, AnnotationType, UserPosition, SliceInstance } from '@/api';
+import { Cytomine, ImageConsultation, Annotation, AnnotationType, UserPosition, SliceInstance, ProjectDefaultLayerCollection } from '@/api';
 
 // import {constLib, operation} from '@/utils/color-manipulation.js';
 
@@ -324,7 +320,7 @@ export default {
     DrawInteraction,
     ModifyInteraction,
     ToggleScaleLine,
-    
+
     PathologyViewer,
     ShareProjectModal
   },
@@ -347,12 +343,13 @@ export default {
       format: new WKT(),
 
       isFullscreen: false,
-      
+
       // AI Analysis Panel
       showAIAnalysisPanel: false,
-      
+
       // Share Modal
-      shareModalActive: false
+      shareModalActive: false,
+      layers: [], // Array<User> (representing user layers)
     };
   },
   computed: {
@@ -502,17 +499,17 @@ export default {
       };
     },
 
-    layersToPreload() {
-      let layers = [];
-      let annot = this.selectedAnnotation || this.routedAnnotation;
-      if (annot) {
-        layers.push(annot.type === AnnotationType.REVIEWED ? -1 : (annot.username));
-      }
-      if (this.routedAction === 'review' && !layers.includes(-1)) {
-        layers.push(-1);
-      }
-      return layers;
-    },
+    // layersToPreload() {
+    //   let layers = [];
+    //   let annot = this.selectedAnnotation || this.routedAnnotation;
+    //   if (annot) {
+    //     layers.push(annot.type === AnnotationType.REVIEWED ? -1 : (annot.username));
+    //   }
+    //   if (this.routedAction === 'review' && !layers.includes(-1)) {
+    //     layers.push(-1);
+    //   }
+    //   return layers;
+    // },
 
     overviewCollapsed() {
       return this.overview ? this.overview.getCollapsed() : this.imageWrapper.view.overviewCollapsed;
@@ -579,7 +576,7 @@ export default {
       this.showAIAnalysisPanel = !this.showAIAnalysisPanel;
     },
 
-    ShareByLink(){
+    ShareByLink() {
       this.shareModalActive = true;
     },
 
@@ -904,6 +901,18 @@ export default {
         document.mozFullScreenElement ||
         document.msFullscreenElement);
     },
+
+    async fetchLayers() {
+      this.layers = (await this.project.fetchUserLayers(this.image.id)).array;
+
+      let layers = (await Cytomine.instance.api.get(`image-instances/${this.image.id}/annotation-layers`)).data;
+      this.layers.push(...layers);
+
+      // if image instance was changed (e.g. with previous/next image navigation), some of the selected layers
+      // may not be relevant for the current image => filter them
+      let idLayers = this.layers.map(layer => layer.id);
+      this.$store.commit(this.imageModule + 'filterSelectedLayers', idLayers);
+    },
   },
   async created() {
     if (!getProj(this.projectionName)) { // if image opened for the first time
@@ -980,6 +989,21 @@ export default {
       console.log(error);
       this.$notify({ type: 'error', text: this.$t('notif-error-save-image-consultation') });
     }
+
+    try {
+      await this.fetchLayers();
+    } catch (error) {
+      console.log(error);
+      this.$notify({ type: 'error', text: this.$t('notif-error-loading-annotation-layers') });
+      return;
+    }
+
+    this.layers[0].visible = true;
+    this.layers[0].drawOn = true;
+
+    this.$store.dispatch(this.imageModule + 'addLayer', this.layers[0]);
+    console.log('layers', this.layers);
+    console.log('imageWrapper.layers',this.imageWrapper.layers);
 
     this.loading = false;
   },
