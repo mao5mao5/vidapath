@@ -53,8 +53,8 @@
               <i class="fas fa-copy"></i>
             </a>
           </li> -->
-          <!-- <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
-            :layers-to-preload="layersToPreload" /> -->
+          <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
+            :layers-to-preload="layersToPreload" />
 
           <li v-if="isPanelDisplayed('color-manipulation')">
             <a @click="togglePanel('colors')" :class="{ active: activePanel === 'colors' }">
@@ -499,17 +499,17 @@ export default {
       };
     },
 
-    // layersToPreload() {
-    //   let layers = [];
-    //   let annot = this.selectedAnnotation || this.routedAnnotation;
-    //   if (annot) {
-    //     layers.push(annot.type === AnnotationType.REVIEWED ? -1 : (annot.username));
-    //   }
-    //   if (this.routedAction === 'review' && !layers.includes(-1)) {
-    //     layers.push(-1);
-    //   }
-    //   return layers;
-    // },
+    layersToPreload() {
+      let layers = [];
+      let annot = this.selectedAnnotation || this.routedAnnotation;
+      if (annot) {
+        layers.push(annot.type === AnnotationType.REVIEWED ? -1 : (annot.username));
+      }
+      if (this.routedAction === 'review' && !layers.includes(-1)) {
+        layers.push(-1);
+      }
+      return layers;
+    },
 
     overviewCollapsed() {
       return this.overview ? this.overview.getCollapsed() : this.imageWrapper.view.overviewCollapsed;
@@ -990,20 +990,20 @@ export default {
       this.$notify({ type: 'error', text: this.$t('notif-error-save-image-consultation') });
     }
 
-    try {
-      await this.fetchLayers();
-    } catch (error) {
-      console.log(error);
-      this.$notify({ type: 'error', text: this.$t('notif-error-loading-annotation-layers') });
-      return;
-    }
+    // try {
+    //   await this.fetchLayers();
+    // } catch (error) {
+    //   console.log(error);
+    //   this.$notify({ type: 'error', text: this.$t('notif-error-loading-annotation-layers') });
+    //   return;
+    // }
 
-    this.layers[0].visible = true;
-    this.layers[0].drawOn = true;
+    // this.layers[0].visible = true;
+    // this.layers[0].drawOn = true;
 
-    this.$store.dispatch(this.imageModule + 'addLayer', this.layers[0]);
-    console.log('layers', this.layers);
-    console.log('imageWrapper.layers',this.imageWrapper.layers);
+    // this.$store.dispatch(this.imageModule + 'addLayer', this.layers[0]);
+    // console.log('layers', this.layers);
+    // console.log('imageWrapper.layers',this.imageWrapper.layers);
 
     this.loading = false;
   },
