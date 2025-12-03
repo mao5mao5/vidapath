@@ -290,7 +290,6 @@ export default {
 @import '../../../assets/styles/dark-variables';
 
 .table {
-  font-size: $details-font-size;
   margin-bottom: 0 !important;
   width: 100%;
   table-layout: fixed;

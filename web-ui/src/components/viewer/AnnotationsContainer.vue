@@ -1,6 +1,6 @@
 <template>
   <div class="annotations-container">
-    <a-collapse :bordered="false" v-model="activeKey" class="dark-collapse" :expand-icon-position="right">
+    <!-- <a-collapse :bordered="false" v-model="activeKey" class="dark-collapse" :expand-icon-position="right">
       <a-collapse-panel key="container-0" header="Information" class="dark-panel">
         <information-panel class="dark-content" :index="index" @openMetadata="togglePanel('metadata')" />
       </a-collapse-panel>
@@ -11,16 +11,17 @@
           @delete="handleDeletion" />
       </a-collapse-panel>
       <a-collapse-panel key="container-2" header="Annotations List" class="dark-panel">
-        <!-- <template #extra>
-          <a-icon type="down" />
-        </template> -->
         <annotations-list class="dark-content" :index="index" @select="selectAnnotation" @centerView="centerView"
           @addTerm="addTerm" @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks"
           @updateProperties="updateProperties" @delete="handleDeletion" />
       </a-collapse-panel>
-    </a-collapse>
+    </a-collapse> -->
     <!-- <similar-annotation v-if="showSimilarAnnotations" :image="image" :index="index" @select="selectAnnotation"
       @updateTermsOrTracks="updateTermsOrTracks" /> -->
+    <annotation-details-container v-if="isPanelDisplayed('annotation-main')" class="dark-content" :index="index"
+      @select="selectAnnotation" @centerView="centerView({ annot: $event, sameView: true })" @addTerm="addTerm"
+      @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks" @updateProperties="updateProperties"
+      @delete="handleDeletion" />
   </div>
 </template>
 

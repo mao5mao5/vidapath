@@ -85,6 +85,12 @@
           </li> -->
 
           <a-divider />
+          <li v-if="isPanelDisplayed('info')">
+            <a @click="togglePanel('info')" :class="{ active: ['info', 'metadata'].includes(activePanel) }">
+              <i class="fas fa-info"></i>
+            </a>
+            <information-panel class="panel-options" v-show="activePanel === 'info'" :index="index" />
+          </li>
 
           <li v-if="configUI['project-tools-screenshot']">
             <a @click="takeScreenshot()" :class="{ active: activePanel === 'screenshot' }">
