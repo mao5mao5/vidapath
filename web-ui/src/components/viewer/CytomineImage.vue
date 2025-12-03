@@ -63,7 +63,7 @@
             <color-manipulation class="panel-options" v-show="activePanel === 'colors'" :index="index" />
           </li>
 
-          <li v-if="isPanelDisplayed('ontology') && terms && terms.length > 0">
+          <li v-if="isPanelDisplayed('ontology')">
             <a @click="togglePanel('ontology')" :class="{ active: activePanel === 'ontology' }">
               <i class="fa fa-tags" aria-hidden="true"></i>
             </a>

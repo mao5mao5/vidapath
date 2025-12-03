@@ -2,15 +2,9 @@
   <div class="annotations-container">
     <a-collapse :bordered="false" v-model="activeKey" class="dark-collapse" :expand-icon-position="right">
       <a-collapse-panel key="container-0" header="Information" class="dark-panel">
-        <!-- <template #extra>
-          <a-icon type="down" />
-        </template> -->
         <information-panel class="dark-content" :index="index" @openMetadata="togglePanel('metadata')" />
       </a-collapse-panel>
       <a-collapse-panel key="container-1" header="Annotation Details" class="dark-panel">
-        <!-- <template #extra>
-          <a-icon type="down" />
-        </template> -->
         <annotation-details-container v-if="isPanelDisplayed('annotation-main')" class="dark-content" :index="index"
           @select="selectAnnotation" @centerView="centerView({ annot: $event, sameView: true })" @addTerm="addTerm"
           @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks" @updateProperties="updateProperties"
