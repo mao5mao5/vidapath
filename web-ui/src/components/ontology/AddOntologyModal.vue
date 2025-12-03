@@ -14,7 +14,7 @@
 
 <template>
 <form @submit.prevent="createOntology()">
-  <cytomine-modal :active="active" title="Create Term-tree" @close="$emit('update:active', false)">
+  <cytomine-modal :active="active" title="Create term-tree" @close="$emit('update:active', false)">
     <b-field :label="$t('name')" :type="{'is-danger': errors.has('name')}" :message="errors.first('name')">
       <b-input v-model="name" name="name" v-validate="'required'" />
     </b-field>
@@ -28,7 +28,7 @@
       </button>
     </template>
   </cytomine-modal>
-</form>
+</form>xw
 </template>
 
 <script>
