@@ -214,6 +214,7 @@ export default {
 
       // 在后台异步保存到服务器
       this.activeLayers.forEach(async (layer, idx) => {
+        console.log('Saving annotation', layer);
         let annot = new Annotation({
           location: this.getWktLocation(drawnFeature),
           image: this.image.id,

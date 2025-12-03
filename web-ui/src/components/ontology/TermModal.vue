@@ -153,4 +153,121 @@ export default {
 .term-modal .vc-sketch-alpha-wrap {
   display: none;
 }
+
+.term-modal .modal-card {
+  background-color: #1e1e1e;
+}
+
+.term-modal .modal-card-head {
+  background-color: #2d2d2d;
+  border-color: #3a3a3a;
+}
+
+.term-modal .modal-card-title {
+  color: #ffffff;
+}
+
+.term-modal .modal-card-body {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.term-modal .modal-card-foot {
+  background-color: #2d2d2d;
+  border-color: #3a3a3a;
+}
+
+.term-modal .input {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #555;
+}
+
+.term-modal .input:focus {
+  border-color: #6899d0;
+  box-shadow: 0 0 0 0.125em rgba(104, 153, 208, 0.25);
+}
+
+.term-modal .field-label {
+  color: #ffffff;
+}
+
+.term-modal .help.is-danger {
+  color: #ff3860 !important;
+}
+
+.term-modal .button {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-color: #555;
+}
+
+.term-modal .button:hover {
+  background-color: #4d4d4d;
+  border-color: #666;
+}
+
+.term-modal .button.is-link {
+  background-color: #3273dc;
+  border-color: transparent;
+  color: #fff;
+}
+
+.term-modal .button.is-link:hover {
+  background-color: #2366d1;
+}
+
+.term-modal .button:disabled {
+  background-color: #3a3a3a;
+  color: #aaa;
+  border-color: #555;
+  opacity: 0.5;
+}
+
+/* 暗色主题的 Sketch Picker */
+.term-modal .vc-sketch {
+  background-color: #2d2d2d;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.term-modal .vc-sketch-saturation-wrap,
+.term-modal .vc-sketch-controls,
+.term-modal .vc-sketch-sliders,
+.term-modal .vc-sketch-fields {
+  background-color: #2d2d2d;
+}
+
+.term-modal .vc-sketch-presets {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.term-modal .vc-sketch-color-wrap {
+  background-color: #1e1e1e;
+  border-radius: 3px;
+}
+
+.term-modal .vc-sketch-active-color {
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.term-modal .vc-input__label {
+  color: #ffffff;
+}
+
+.term-modal .vc-input__input {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #555;
+  border-radius: 3px;
+}
+
+.term-modal .vc-input__input:focus {
+  border-color: #6899d0;
+  box-shadow: 0 0 0 0.125em rgba(104, 153, 208, 0.25);
+}
+
+.term-modal .vc-sketch-field--single div {
+  color: #ffffff;
+}
 </style>

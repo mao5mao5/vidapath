@@ -35,15 +35,15 @@
           <i class="fas fa-list-alt"></i>
           {{ $t('cases') }}
         </router-link>
-        <router-link v-if="!currentUser.guestByNow" to="/storage" class="navbar-item">
-          <i class="fas fa-download"></i>
-          {{ $t('storage') }}
+        <router-link to="/ontology" class="navbar-item">
+          <i class="fa fa-tags" aria-hidden="true"></i>
+          Terms
         </router-link>
-        <!-- <router-link to="/ontology" class="navbar-item">
-        <i class="fas fa-hashtag"></i>
-        {{ $t('ontologies') }}
-      </router-link>
-      <router-link v-if="appEngineEnabled" to="/apps" class="navbar-item">
+        <router-link v-if="!currentUser.guestByNow" to="/storage" class="navbar-item">
+          <i class="fas fa-upload"></i>
+          Upload
+        </router-link>
+        <!-- <router-link v-if="appEngineEnabled" to="/apps" class="navbar-item">
         <i class="fas fa-code"></i>
         {{ $t('app-engine.applications') }}
       </router-link>

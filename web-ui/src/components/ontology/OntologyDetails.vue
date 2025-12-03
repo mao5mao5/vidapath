@@ -34,7 +34,7 @@
             </ontology-tree>
           </td>
         </tr>
-        <tr v-if="currentAccount.isDeveloper">
+        <!-- <tr v-if="currentAccount.isDeveloper">
           <td><strong>{{$t('id')}}</strong></td>
           <td>{{ontology.id}}</td>
         </tr>
@@ -54,7 +54,7 @@
               {{$t('not-used-in-any-project')}}
             </em>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <td><strong>{{$t('creator')}}</strong></td>
           <td>
@@ -218,12 +218,71 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .ontology-details-wrapper .ontology-tree {
   max-width: 40em;
 }
 
 .ontology-details-wrapper td:first-child {
   width: 8em;
+}
+
+.ontology-details-wrapper .table {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+.ontology-details-wrapper .table td,
+.ontology-details-wrapper .table th {
+  border-color: $dark-border-color;
+}
+
+.ontology-details-wrapper .table tr:hover {
+  background-color: $dark-bg-hover;
+}
+
+.ontology-details-wrapper .table tr:nth-child(even) {
+  background-color: $dark-bg-tertiary;
+}
+
+.ontology-details-wrapper .table tr:nth-child(even):hover {
+  background-color: $dark-bg-hover;
+}
+
+.ontology-details-wrapper strong {
+  color: $dark-text-primary;
+}
+
+.ontology-details-wrapper .button {
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border-color: $dark-button-border;
+}
+
+.ontology-details-wrapper .button:hover {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.ontology-details-wrapper .button.is-danger {
+  background-color: $dark-button-danger-bg;
+  border-color: $dark-button-danger-border;
+}
+
+.ontology-details-wrapper .button.is-danger:hover {
+  background-color: $dark-button-danger-hover-bg;
+  border-color: $dark-button-danger-hover-border;
+}
+
+.ontology-details-wrapper .message-body {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
+}
+
+.ontology-details-wrapper .message.is-info .message-body {
+  color: #2196F3;
 }
 </style>

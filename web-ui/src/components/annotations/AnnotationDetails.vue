@@ -109,7 +109,8 @@
             </td>
           </tr>
           <tr>
-            <td v-if="annotation.perimeter > 0">{{ $t(annotation.area > 0 ? 'perimeter' : 'length') }}: {{ `${annotation.perimeter.toFixed(3)}
+            <td v-if="annotation.perimeter > 0">{{ $t(annotation.area > 0 ? 'perimeter' : 'length') }}: {{
+              `${annotation.perimeter.toFixed(3)}
               ${annotation.perimeterUnit}` }}</td>
           </tr>
 
@@ -161,6 +162,13 @@
           </td>
         </tr>
 
+        <tr v-if="isPropDisplayed('tags')">
+          <td>
+            <!-- <h5>{{ $t('tags') }}</h5> -->
+            <cytomine-tags :object="annotation" :canEdit="canEdit" />
+          </td>
+        </tr>
+
         <tr v-if="isPropDisplayed('description')">
           <td>
             <!-- <h5>{{ $t('description') }} :</h5> -->
@@ -207,20 +215,13 @@
         </td>
       </tr> -->
 
-        <!-- <tr v-if="isPropDisplayed('tags')">
-        <td colspan="2">
-          <h5>{{$t('tags')}}</h5>
-          <cytomine-tags :object="annotation" :canEdit="canEdit" />
-        </td>
-      </tr> -->
-
         <!-- PROPERTIES -->
         <!-- <tr v-if="isPropDisplayed('properties')">
-        <td colspan="2">
-          <h5>{{$t('properties')}}</h5>
-          <cytomine-properties :object="annotation" :canEdit="canEdit" @update="$emit('updateProperties')" />
-        </td>
-      </tr> -->
+          <td colspan="2">
+            <h5>{{ $t('properties') }}</h5>
+            <cytomine-properties :object="annotation" :canEdit="canEdit" @update="$emit('updateProperties')" />
+          </td>
+        </tr> -->
 
         <!-- <tr v-if="isPropDisplayed('attached-files')">
         <td colspan="2">
