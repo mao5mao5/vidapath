@@ -39,11 +39,11 @@
           <i class="fas fa-download"></i>
           {{ $t('storage') }}
         </router-link>
-        <!-- <router-link to="/ontology" class="navbar-item">
-        <i class="fas fa-hashtag"></i>
-        {{ $t('ontologies') }}
-      </router-link>
-      <router-link v-if="appEngineEnabled" to="/apps" class="navbar-item">
+        <router-link to="/ontology" class="navbar-item">
+          <i class="fa fa-tags" aria-hidden="true"></i>
+           Terms
+        </router-link>
+        <!-- <router-link v-if="appEngineEnabled" to="/apps" class="navbar-item">
         <i class="fas fa-code"></i>
         {{ $t('app-engine.applications') }}
       </router-link>

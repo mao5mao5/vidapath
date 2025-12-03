@@ -46,3 +46,11 @@ export default {
   top: 0.2em;
 }
 </style>
+
+<style lang="scss">
+@import '../../assets/styles/dark-variables';
+
+.cyterm {
+  color: $dark-text-primary;
+}
+</style>

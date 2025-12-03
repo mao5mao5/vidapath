@@ -305,11 +305,11 @@ export default {
         this.$notify({type: 'error', text: this.$t('notif-error-term-deletion')});
       }
     }
-  },
-  created() {
-    this.internalSelectedNodes = this.selectedNodes.slice();
-    this.makeTree();
-  }
+},
+created() {
+  this.internalSelectedNodes = this.selectedNodes.slice();
+  this.makeTree();
+}
 };
 </script>
 
@@ -322,23 +322,29 @@ export default {
 </style>
 
 
-<style>
+<style lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .ontology-tree {
   padding: 0 0 2px 0;
 }
 
 .ontology-tree .tree-checkbox {
   margin-right: 10px;
-  color: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.5);
   font-size: 1rem;
 }
 
+.ontology-tree.selector .sl-vue-tree-node-item {
+  color: $dark-text-primary;
+}
+
 .ontology-tree.selector .sl-vue-tree-node-item:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: $dark-bg-hover;
 }
 
 .ontology-tree.selector .sl-vue-tree-selected > .sl-vue-tree-node-item {
-  background: rgba(0, 0, 0, 0.05);
+  background: $dark-bg-active;
   font-weight: 600;
 }
 
@@ -357,6 +363,7 @@ export default {
 
 .ontology-tree .tree-selector {
   min-width: 0; /* to allow correct handling of overflow-wrap */
+  color: $dark-text-primary;
 }
 
 .ontology-tree .tree-selector:hover .tree-checkbox {
@@ -367,6 +374,7 @@ export default {
   margin-left: 20px;
   line-height: 1.5;
   font-size: 0.9rem;
+  color: $dark-text-disabled;
 }
 
 .ontology-tree .buttons, .ontology-tree .button {
@@ -382,5 +390,19 @@ export default {
 .ontology-tree.editable .sl-vue-tree-sidebar {
   display: flex;
   align-items: top;
+}
+
+.sl-vue-tree-node-item {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+.sl-vue-tree-cursor-before:before,
+.sl-vue-tree-cursor-after:after {
+  background-color: #61b2e8;
+}
+
+.sl-vue-tree-node-item:hover {
+  background-color: $dark-bg-hover;
 }
 </style>

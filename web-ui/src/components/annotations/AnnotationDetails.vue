@@ -162,6 +162,13 @@
           </td>
         </tr>
 
+        <tr v-if="isPropDisplayed('tags')">
+          <td>
+            <!-- <h5>{{ $t('tags') }}</h5> -->
+            <cytomine-tags :object="annotation" :canEdit="canEdit" />
+          </td>
+        </tr>
+
         <tr v-if="isPropDisplayed('description')">
           <td>
             <!-- <h5>{{ $t('description') }} :</h5> -->
@@ -207,13 +214,6 @@
           <em v-else-if="!associatedTracks.length">{{$t('no-track')}}</em>
         </td>
       </tr> -->
-
-        <tr v-if="isPropDisplayed('tags')">
-          <td colspan="2">
-            <h5>{{ $t('tags') }}</h5>
-            <cytomine-tags :object="annotation" :canEdit="canEdit" />
-          </td>
-        </tr>
 
         <!-- PROPERTIES -->
         <!-- <tr v-if="isPropDisplayed('properties')">

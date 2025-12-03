@@ -14,7 +14,7 @@
 
 <template>
 <form @submit.prevent="createOntology()">
-  <cytomine-modal :active="active" :title="$t('create-ontology')" @close="$emit('update:active', false)">
+  <cytomine-modal :active="active" title="Create Term-tree" @close="$emit('update:active', false)">
     <b-field :label="$t('name')" :type="{'is-danger': errors.has('name')}" :message="errors.first('name')">
       <b-input v-model="name" name="name" v-validate="'required'" />
     </b-field>
@@ -74,3 +74,77 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/styles/dark-variables';
+
+.add-ontology-modal .modal-card {
+  background-color: $dark-bg-primary;
+}
+
+.add-ontology-modal .modal-card-head {
+  background-color: $dark-bg-secondary;
+  border-color: $dark-border-color;
+}
+
+.add-ontology-modal .modal-card-title {
+  color: $dark-text-primary;
+}
+
+.add-ontology-modal .modal-card-body {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+.add-ontology-modal .modal-card-foot {
+  background-color: $dark-bg-secondary;
+  border-color: $dark-border-color;
+}
+
+.add-ontology-modal .input {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.add-ontology-modal .input:focus {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.125em $dark-input-focus-shadow;
+}
+
+.add-ontology-modal .field-label {
+  color: $dark-text-primary;
+}
+
+.add-ontology-modal .help.is-danger {
+  color: #ff3860 !important;
+}
+
+.add-ontology-modal .button {
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border-color: $dark-button-border;
+}
+
+.add-ontology-modal .button:hover {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.add-ontology-modal .button.is-link {
+  background-color: #3273dc;
+  border-color: transparent;
+  color: #fff;
+}
+
+.add-ontology-modal .button.is-link:hover {
+  background-color: #2366d1;
+}
+
+.add-ontology-modal .button:disabled {
+  background-color: $dark-button-bg;
+  color: $dark-text-disabled;
+  border-color: $dark-button-border;
+  opacity: 0.5;
+}
+</style>
