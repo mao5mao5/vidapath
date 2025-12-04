@@ -58,6 +58,19 @@
         </b-field>
       </div>
 
+      <!-- 添加过期时间选项 -->
+      <div class="form-section element-spacing">
+        <b-field :label="'Expiration time'" class="field-spacing">
+          <b-select v-model="expirationTime" expanded>
+            <option value="never">Never expire</option>
+            <option value="1">In 1 hour</option>
+            <option value="24">In 1 day</option>
+            <option value="168">In 7 days</option>
+            <option value="720">In 30 days</option>
+          </b-select>
+        </b-field>
+      </div>
+
       <div class="share-link element-spacing" v-if="generatedLink">
         <b-field :label="'Share link'" class="field-spacing">
           <b-input v-model="generatedLink" readonly expanded class="share-link-input" />
@@ -82,7 +95,7 @@
 <script>
 import CytomineModal from '@/components/utils/CytomineModal';
 import DomainTagInput from '@/components/utils/DomainTagInput';
-import { UserCollection, Project } from '@/api';
+import { UserCollection, Project, Cytomine } from '@/api';
 
 export default {
   name: 'share-project-modal',
@@ -99,6 +112,7 @@ export default {
       loading: false,
       shareType: 'users', // 'public' or 'users'
       permissionLevel: 'READ', // 'READ' or 'WRITE'
+      expirationTime: 'never', // 过期时间选项
       selectedUsers: [],
       allUsers: [],
       generatedLink: ''
@@ -134,6 +148,7 @@ export default {
     resetForm() {
       this.shareType = 'users';
       this.permissionLevel = 'READ';
+      this.expirationTime = 'never'; // 重置过期时间选项
       this.selectedUsers = [];
       this.generatedLink = '';
     },
@@ -178,14 +193,30 @@ export default {
 
           this.generatedLink = `${window.location.origin}/#/project/${this.project.id}`;
           this.$notify({ type: 'success', text: 'Project shared with selected users successfully.' });
-
-          navigator.clipboard.writeText(this.generatedLink).then(() => {
-            this.$notify({ type: 'success', text: 'Link copied to clipboard.' });
-          }).catch(err => {
-            console.error('Failed to copy: ', err);
-            this.$notify({ type: 'error', text: 'Failed to copy link.' });
-          });
         }
+
+        // 如果设置了过期时间，则生成临时访问令牌
+        if (this.expirationTime !== 'never') {
+          try {
+            // 调用后端API生成临时访问令牌
+            const response = await Cytomine.instance.api.post(`/project/${this.project.id}/temporary_access_token.json`, {
+              expirationHours: parseInt(this.expirationTime)
+            });
+            
+            const token = response.data.tokenKey;
+            this.generatedLink += `?access_token=${token}`;
+          } catch (error) {
+            console.error('Error generating temporary access token:', error);
+            this.$notify({ type: 'error', text: 'Failed to generate temporary access token.' });
+          }
+        }
+
+        navigator.clipboard.writeText(this.generatedLink).then(() => {
+          this.$notify({ type: 'success', text: 'Link copied to clipboard.' });
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+          this.$notify({ type: 'error', text: 'Failed to copy link.' });
+        });
       } catch (error) {
         console.error(error);
         this.$notify({ type: 'error', text: 'Failed to share project.' });
