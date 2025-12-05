@@ -27,82 +27,110 @@ public class TemporaryTokenFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        
-        // 首先检查是否已经有认证信息（如JWT认证）
-        if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        // 从请求参数中获取临时访问令牌
-        String accessToken = request.getParameter("access_token");
-        if (accessToken == null || accessToken.isEmpty()) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        // 验证临时访问令牌
-        try {
-            // 尝试从URI中提取项目ID
-            Long projectId = extractProjectIdFromUri(request.getRequestURI());
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                throws ServletException, IOException {
             
-            // 如果能从URI提取到项目ID，则验证特定项目的令牌
-            if (projectId != null) {
-                Optional<TemporaryAccessToken> tokenOpt = temporaryAccessTokenService.findByTokenKeyAndProjectId(accessToken, projectId);
-                if (tokenOpt.isPresent() && temporaryAccessTokenService.isValidToken(accessToken, projectId)) {
-                    // 创建临时认证对象
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            "temporary_user", 
-                            null, 
-                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_TEMPORARY_USER"))
-                    );
+            log.info("Processing request: {} with parameters: {}", request.getRequestURI(), request.getParameterMap());
+
+            // 首先检查是否已经有认证信息（如JWT认证）
+            if (SecurityContextHolder.getContext().getAuthentication() != null) {
+                log.info("Authentication already exists: {}", SecurityContextHolder.getContext().getAuthentication());
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            // 从请求参数中获取临时访问令牌
+            String accessToken = request.getParameter("access_token");
+            if (accessToken == null || accessToken.isEmpty()) {
+                log.info("No access_token parameter found in request");
+                filterChain.doFilter(request, response);
+                return;
+            }
+            
+            log.info("Found access_token parameter: {}", accessToken);
+
+            // 验证临时访问令牌
+            try {
+                // 尝试从URI中提取项目ID
+                Long projectId = extractProjectIdFromUri(request.getRequestURI());
+                log.info("Extracted project ID from URI: {}", projectId);
+
+                // 如果能从URI提取到项目ID，则验证特定项目的令牌
+                if (projectId != null) {
+                    log.info("Checking token for project ID: {}", projectId);
+                    Optional<TemporaryAccessToken> tokenOpt = temporaryAccessTokenService.findByTokenKeyAndProjectId(accessToken, projectId);
+                    log.info("Token lookup result present: {}", tokenOpt.isPresent());
                     
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    log.debug("Temporary access token validated for project {}", projectId);
-                }
-            } else {
-                // 如果无法从URI提取项目ID，则验证令牌是否存在且有效（不绑定特定项目）
-                if (temporaryAccessTokenService.isValidToken(accessToken)) {
-                    // 创建临时认证对象
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            "temporary_user", 
-                            null, 
-                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_TEMPORARY_USER"))
-                    );
-                    
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    log.debug("Temporary access token validated without project binding");
-                }
-            }
-        } catch (Exception e) {
-            log.warn("Invalid temporary access token: {}", e.getMessage());
-        }
+                    if (tokenOpt.isPresent() && temporaryAccessTokenService.isValidToken(accessToken, projectId)) {
+                        log.info("Token is valid for project ID: {}", projectId);
+                        // 创建临时认证对象
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                "temporary_user",
+                                null,
+                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_TEMPORARY_USER"))
+                        );
 
-        filterChain.doFilter(request, response);
-    }
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        log.info("Temporary access token validated for project {}", projectId);
+                    } else {
+                        log.info("Token is invalid or not found for project ID: {}", projectId);
+                    }
+                } else {
+                    log.info("No project ID found in URI, checking token without project binding");
+                    // 如果无法从URI提取项目ID，则验证令牌是否存在且有效（不绑定特定项目）
+                    if (temporaryAccessTokenService.isValidToken(accessToken)) {
+                        log.info("Token is valid without project binding");
+                        // 创建临时认证对象
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                "temporary_user",
+                                null,
+                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_TEMPORARY_USER"))
+                        );
 
-    private Long extractProjectIdFromUri(String uri) {
-        // 从URI中提取项目ID，支持多种路径格式：
-        // 1. 前端路径: /project/103587/image/103600
-        // 2. 后端API路径: /api/project/103587/imageinstance/103600.json
-        try {
-            String path = uri;
-            if (path.startsWith("api/project/")) {
-                String[] parts = path.substring("api/project/".length()).split("/");
-                if (parts.length > 0) {
-                    return Long.parseLong(parts[0]);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        log.info("Temporary access token validated without project binding");
+                    } else {
+                        log.info("Token is invalid without project binding");
+                    }
                 }
-            }
-            else if (uri.startsWith("/api/")) {
-                path = uri.substring("/api".length());
+            } catch (Exception e) {
+                log.warn("Invalid temporary access token: {}", e.getMessage(), e);
             }
             
-            
-        } catch (NumberFormatException e) {
-            log.debug("Cannot extract project ID from URI: {}", uri);
+            log.info("Final authentication context: {}", SecurityContextHolder.getContext().getAuthentication());
+
+            filterChain.doFilter(request, response);
         }
-        return null;
-    }
+
+        private Long extractProjectIdFromUri(String uri) {
+            // 从URI中提取项目ID，支持多种路径格式：
+            // 1. 前端路径: /#/project/103587
+            // 2. 后端API路径: /api/project/103587/imageinstance/103600.json
+            
+            log.info("Attempting to extract project ID from URI: {}", uri);
+            
+            try {
+                // 处理前端路径，包括带hash的部分
+                if (uri.contains("/#/project/")) {
+                    String[] parts = uri.split("/#/project/");
+                    if (parts.length > 1) {
+                        String projectIdPart = parts[1].split("/")[0];
+                        log.info("Extracted project ID part from hash URL: {}", projectIdPart);
+                        return Long.parseLong(projectIdPart);
+                    }
+                }
+                
+                // 处理后端API路径
+                if (uri.startsWith("/api/project/")) {
+                    String[] parts = uri.substring("/api/project/".length()).split("/");
+                    if (parts.length > 0) {
+                        log.info("Extracted project ID part from API URL: {}", parts[0]);
+                        return Long.parseLong(parts[0]);
+                    }
+                }   
+            } catch (NumberFormatException e) {
+                log.info("Cannot extract project ID from URI: {}", uri);
+            }
+            return null;
+        }
 }

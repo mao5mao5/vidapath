@@ -14,37 +14,37 @@
 
 
 <template>
-<div id="app" class="wrapper">
-  <notifications position="top center" width="30%" :max="5">
-    <template #body="props">
-      <div class="notification vue-notification" :class="props.item.type">
-        <button class="delete" @click="props.close"></button>
-        <strong class="notification-title">
-          {{props.item.title}}
-        </strong>
-        <div class="notification-content" v-html="props.item.text"></div>
-      </div>
-    </template>
-  </notifications>
+  <div id="app" class="wrapper">
+    <notifications position="top center" width="30%" :max="5">
+      <template #body="props">
+        <div class="notification vue-notification" :class="props.item.type">
+          <button class="delete" @click="props.close"></button>
+          <strong class="notification-title">
+            {{ props.item.title }}
+          </strong>
+          <div class="notification-content" v-html="props.item.text"></div>
+        </div>
+      </template>
+    </notifications>
 
-  <template v-if="!loading">
-    <div class="box error" v-if="communicationError">
-      <h2>
-        {{$t('communication-error')}}
-      </h2>
-      {{$t('core-cannot-be-reached')}}
-    </div>
-
-    <template v-else-if="currentUser">
-      <cytomine-navbar />
-      <div class="bottom">
-        <keep-alive include="cytomine-storage">
-          <router-view v-if="currentUser" />
-        </keep-alive>
+    <template v-if="!loading">
+      <div class="box error" v-if="communicationError">
+        <h2>
+          {{ $t('communication-error') }}
+        </h2>
+        {{ $t('core-cannot-be-reached') }}
       </div>
+
+      <template v-else-if="currentUser || $keycloak.hasTemporaryToken">
+        <cytomine-navbar v-if="!$keycloak.hasTemporaryToken" />
+        <div class="bottom">
+          <keep-alive include="cytomine-storage">
+            <router-view />
+          </keep-alive>
+        </div>
+      </template>
     </template>
-  </template>
-</div>
+  </div>
 </template>
 
 <script>
@@ -52,11 +52,11 @@ import axios from 'axios';
 import ifvisible from 'ifvisible';
 ifvisible.setIdleDuration(constants.IDLE_DURATION);
 
-import {Cytomine} from '@/api';
+import { Cytomine } from '@/api';
 import constants from '@/utils/constants.js';
-import {get} from '@/utils/store-helpers';
-import {updateToken} from '@/utils/token-utils';
-import {changeLanguageMixin} from '@/lang.js';
+import { get } from '@/utils/store-helpers';
+import { updateToken } from '@/utils/token-utils';
+import { changeLanguageMixin } from '@/lang.js';
 
 import CytomineNavbar from '@/components/navbar/CytomineNavbar.vue';
 
@@ -99,6 +99,12 @@ export default {
         return; // window not visible or inactive user => stop pinging
       }
       try {
+        // 对于临时访问令牌用户，跳过ping操作
+        if (this.$keycloak.hasTemporaryToken) {
+          this.loading = false;
+          return;
+        }
+
         // TODO IAM - still needed ?
         // await Cytomine.instance.ping(this.project ? this.project.id : null);
         if (!this.currentUser) {
@@ -107,7 +113,7 @@ export default {
         this.communicationError = false;
       } catch (error) {
         console.log(error);
-        this.communicationError = error.toString().indexOf('401') === -1;
+        // this.communicationError = error.toString().indexOf('401') === -1;
       }
 
       clearTimeout(this.timeout);
@@ -133,8 +139,22 @@ export default {
       }
     }
     Object.freeze(constants);
-
+    // 为临时访问令牌用户创建特殊的认证头拦截器
     const authorizationHeaderInterceptor = async config => {
+      // 如果是临时访问令牌用户，在URL中添加临时令牌作为查询参数
+      if (this.$keycloak.hasTemporaryToken) {
+        const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+        const accessToken = urlParams.get('access_token');
+
+        if (accessToken) {
+          // 将临时令牌作为查询参数添加到URL中
+          config.params = config.params || {};
+          config.params.access_token = accessToken;
+        }
+        return config;
+      }
+
+      // 对于正常用户，使用原有的认证逻辑
       const token = await updateToken();
 
       config.headers = config.headers || {};
@@ -166,7 +186,8 @@ export default {
   src: url('assets/cytomine-font.woff') format('woff');
 }
 
-html, body {
+html,
+body {
   height: 100vh;
   margin: 0;
   padding: 0;
@@ -232,7 +253,8 @@ h2 {
   background-color: #2d2d2d;
 }
 
-strong, .label {
+strong,
+.label {
   font-weight: 600 !important;
 }
 
@@ -280,7 +302,8 @@ strong, .label {
 }
 
 /* For correct display of svg images on IE > 10 */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
   img[src$=".svg"] {
     width: 100%;
   }

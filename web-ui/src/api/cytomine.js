@@ -36,7 +36,12 @@ export default class Cytomine {
       this._iamPath = prepareBasePath(iamPath);
 
       const onRejectedResponseInterceptor = error => {
-        error.message += ' - Response data: ' + JSON.stringify(error.response.data);
+        // 确保error.response和error.response.data存在再访问
+        if (error.response && error.response.data) {
+          error.message += ' - Response data: ' + JSON.stringify(error.response.data);
+        } else {
+          error.message += ' - No response data available';
+        }
         return Promise.reject(error);
       };
 
@@ -53,6 +58,30 @@ export default class Cytomine {
         baseURL: this._host + this._basePath,
         withCredentials: true
       });
+      
+      // 添加请求拦截器，为临时访问令牌用户在所有请求中添加access_token查询参数
+      this.api.interceptors.request.use(config => {
+        // 检查是否存在临时访问令牌
+        if (typeof window !== 'undefined' && window.location && window.location.hash) {
+          const hash = window.location.hash;
+          if (hash.includes('?')) {
+            const queryString = hash.split('?')[1];
+            if (queryString) {
+              const queryParams = new URLSearchParams(queryString);
+              const accessToken = queryParams.get('access_token');
+              console.log('Access token found in query string:', accessToken);
+              // if (accessToken) {
+              //   // 为所有请求添加access_token查询参数
+              //   config.params = config.params || {};
+              //   config.params['access_token'] = accessToken;
+              // }
+            }
+          }
+        }
+        
+        return config;
+      });
+      
       if (authorizationHeaderInterceptor !== null) {
         this.api.interceptors.request.use(authorizationHeaderInterceptor);
       }
