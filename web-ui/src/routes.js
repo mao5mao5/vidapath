@@ -183,8 +183,8 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: 'history',
-  routes
+  routes: routes,
+  linkActiveClass: 'is-active'
 });
 
 // 添加路由守卫，处理临时访问令牌的情况

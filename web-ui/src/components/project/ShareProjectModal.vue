@@ -23,10 +23,10 @@
       <div class="form-section element-spacing">
         <b-field :label="'Share with'" class="field-spacing">
           <b-radio v-model="shareType" name="share-type" native-value="public" class="radio-spacing">
-            Public (all users)
+            Public
           </b-radio>
           <b-radio v-model="shareType" name="share-type" native-value="users" class="radio-spacing">
-            Specific users
+            Assign to users
           </b-radio>
         </b-field>
       </div>
@@ -36,38 +36,26 @@
           Warning: Making the case public will grant access to all users in the system.
         </b-message>
 
-        <b-field :label="'Permission level'" class="field-spacing">
-          <b-select v-model="permissionLevel" expanded>
-            <option value="READ">Annotation only on their layer</option>
-            <!-- When sharing publicly, only READ permission is allowed -->
-          </b-select>
-        </b-field>
+
+
+        <!-- 添加过期时间选项 -->
+        <div class="form-section element-spacing">
+          <b-field :label="'Expiration time'" class="field-spacing">
+            <b-select v-model="expirationTime" expanded>
+              <option value="5">In 5 hours</option>
+              <option value="24">In 1 day</option>
+              <option value="72">In 3 days</option>
+              <option value="168">In 1 week</option>
+              <option value="720">In 1 month</option>
+            </b-select>
+          </b-field>
+        </div>
       </div>
 
       <div v-if="shareType === 'users'" class="form-section element-spacing">
         <b-field :label="'Select users'" class="field-spacing">
           <domain-tag-input v-model="selectedUsers" :domains="allUsers" :placeholder="'Search users...'"
             searchedProperty="fullName" displayedProperty="fullName" />
-        </b-field>
-
-        <b-field :label="'Permission level'" class="field-spacing">
-          <b-select v-model="permissionLevel" expanded>
-            <option value="READ">Annotation only on their layer</option>
-            <option value="WRITE">Annotation on all layers</option>
-          </b-select>
-        </b-field>
-      </div>
-
-      <!-- 添加过期时间选项 -->
-      <div class="form-section element-spacing">
-        <b-field :label="'Expiration time'" class="field-spacing">
-          <b-select v-model="expirationTime" expanded>
-            <option value="never">Never expire</option>
-            <option value="1">In 1 hour</option>
-            <option value="24">In 1 day</option>
-            <option value="168">In 7 days</option>
-            <option value="720">In 30 days</option>
-          </b-select>
         </b-field>
       </div>
 
@@ -95,7 +83,7 @@
 <script>
 import CytomineModal from '@/components/utils/CytomineModal';
 import DomainTagInput from '@/components/utils/DomainTagInput';
-import { UserCollection, Project, Cytomine } from '@/api';
+import { UserCollection, Project, Cytomine, ImageInstanceCollection } from '@/api';
 
 export default {
   name: 'share-project-modal',
@@ -110,9 +98,8 @@ export default {
   data() {
     return {
       loading: false,
-      shareType: 'users', // 'public' or 'users'
-      permissionLevel: 'READ', // 'READ' or 'WRITE'
-      expirationTime: 'never', // 过期时间选项
+      shareType: 'public', // 'public' or 'users'
+      expirationTime: '24', // 过期时间选项
       selectedUsers: [],
       allUsers: [],
       generatedLink: ''
@@ -120,11 +107,13 @@ export default {
   },
   computed: {
     canShare() {
-      if (this.shareType === 'public') {
-        return true;
-      } else {
+      // Check if there are any images in the project (requires imageInstances to be populated)
+      // Since we can't make API calls in computed properties, we'll rely on the shareProject method
+      // to check for images when the button is clicked.
+      if (this.shareType === 'users') {
         return this.selectedUsers.length > 0;
       }
+      return true;
     }
   },
   watch: {
@@ -140,15 +129,14 @@ export default {
       // Reset permission level when changing share type
       // For public sharing, only READ permission is allowed
       if (newVal === 'public') {
-        this.permissionLevel = 'READ';
+        this.expirationTime = '24'; // 重置过期时间选项
       }
     }
   },
   methods: {
     resetForm() {
-      this.shareType = 'users';
-      this.permissionLevel = 'READ';
-      this.expirationTime = 'never'; // 重置过期时间选项
+      this.shareType = 'public';
+      this.expirationTime = '24'; // 重置过期时间选项
       this.selectedUsers = [];
       this.generatedLink = '';
     },
@@ -168,31 +156,58 @@ export default {
     async shareProject() {
       this.loading = true;
       try {
+        // 首先获取项目的第一张图像
+        let firstImage = null;
+        try {
+          const imageCollection = new ImageInstanceCollection({
+            filterKey: 'project',
+            filterValue: this.project.id,
+            sort: 'id',
+            order: 'asc',
+            max: 1
+          });
+
+          const images = await imageCollection.fetchPage(0);
+          if (images.array.length > 0) {
+            firstImage = images.array[0];
+          } else {
+            this.$notify({ type: 'error', text: 'No images found in this project. Cannot generate share link.' });
+            return;
+          }
+        } catch (error) {
+          console.error('Error fetching images:', error);
+          this.$notify({ type: 'error', text: 'Failed to fetch project images.' });
+          return;
+        }
+
         if (this.shareType === 'public') {
           // For public sharing, add all users to the project as regular members
-          const userIds = this.allUsers.map(user => user.id);
-          await this.project.addUsers(userIds);
-          this.generatedLink = `${window.location.origin}/#/project/${this.project.id}`;
-          this.$notify({ type: 'success', text: 'Project shared publicly successfully.' });
+          try {
+            // 调用后端API生成临时访问令牌
+            const response = await Cytomine.instance.api.post(`/project/${this.project.id}/temporary_access_token.json`, {
+              expirationHours: parseInt(this.expirationTime)
+            });
+
+            const token = response.data.tokenKey;
+            this.generatedLink = `${window.location.origin}/#/project/${this.project.id}/image/${firstImage.id}`
+          } catch (error) {
+            console.error('Error generating temporary access token:', error);
+            this.$notify({ type: 'error', text: 'Failed to generate temporary access token.' });
+          }
+          this.$notify({ type: 'success', text: 'Case shared publicly successfully.' });
         } else {
           // Share with specific users
           const userIds = this.selectedUsers.map(user => user.id);
 
-          // Add users to the project based on permission level
-          if (this.permissionLevel === 'WRITE') {
-            // WRITE permission means manager role
-            await this.project.addUsers(userIds);
-            // Then promote them to managers
-            for (const userId of userIds) {
-              await this.project.addAdmin(userId);
-            }
-          } else {
-            // READ permission means contributor role
-            await this.project.addUsers(userIds);
+          // WRITE permission means manager role
+          await this.project.addUsers(userIds);
+          // Then promote them to managers
+          for (const userId of userIds) {
+            await this.project.addAdmin(userId);
           }
 
-          this.generatedLink = `${window.location.origin}/#/project/${this.project.id}`;
-          this.$notify({ type: 'success', text: 'Project shared with selected users successfully.' });
+          this.generatedLink = `${window.location.origin}/#/project/${this.project.id}/image/${firstImage.id}`;
+          this.$notify({ type: 'success', text: 'Case shared with selected users successfully.' });
         }
 
         // 如果设置了过期时间，则生成临时访问令牌
@@ -202,7 +217,7 @@ export default {
             const response = await Cytomine.instance.api.post(`/project/${this.project.id}/temporary_access_token.json`, {
               expirationHours: parseInt(this.expirationTime)
             });
-            
+
             const token = response.data.tokenKey;
             this.generatedLink += `?access_token=${token}`;
           } catch (error) {

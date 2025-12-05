@@ -22,8 +22,8 @@
         </div>
       </router-link>
     </div>
-    <div id="topMenu" class="navbar-menu" :class="{ 'is-active': openedTopMenu }">
-      <div class="navbar-start">
+    <div id="topMenu"  class="navbar-menu" :class="{ 'is-active': openedTopMenu }">
+      <div v-if="!$keycloak.hasTemporaryToken" class="navbar-start">
         <!-- <navbar-dropdown
       icon="fa-folder-open"
       v-if="this.nbActiveProjects > 0"
@@ -53,7 +53,7 @@
       </router-link> -->
       </div>
 
-      <div v-if="showPatientInfo" class="patient-info">
+      <div  v-if="showPatientInfo" class="patient-info">
         <div class="patient-details">
           <span v-if="currentProject.patientName" class="patient-field">PATIENT: {{ currentProject.patientName }}</span>
           <span v-if="currentProject.patientId" class="patient-field">ID: {{ currentProject.patientId }}</span>
@@ -146,7 +146,8 @@ export default {
     showPatientInfo() {
       // 检查是否在Viewer页面并且当前项目有患者信息
       return this.$route.path.includes('/image/') && this.currentProject &&
-        (this.currentProject.patientName || this.currentProject.patientId || this.currentProject.patientAge);
+        (this.currentProject.patientName || this.currentProject.patientId || this.currentProject.patientAge) &&
+        !this.$keycloak.hasTemporaryToken;
     }
   },
   watch: {

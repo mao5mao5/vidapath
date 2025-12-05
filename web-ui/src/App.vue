@@ -36,7 +36,7 @@
       </div>
 
       <template v-else-if="currentUser || $keycloak.hasTemporaryToken">
-        <cytomine-navbar v-if="!$keycloak.hasTemporaryToken" />
+        <cytomine-navbar />
         <div class="bottom">
           <keep-alive include="cytomine-storage">
             <router-view />
@@ -101,6 +101,7 @@ export default {
       try {
         // 对于临时访问令牌用户，跳过ping操作
         if (this.$keycloak.hasTemporaryToken) {
+          this.setTemporaryUserAndAccount();
           this.loading = false;
           return;
         }
@@ -124,6 +125,46 @@ export default {
       if (this.currentAccount) {
         this.changeLanguage(this.currentAccount.locale);
       }
+    },
+    // 创建临时用户对象
+    createTemporaryUser() {
+      return {
+        id: 0,
+        username: 'temporary_user',
+        firstname: 'Temporary',
+        lastname: 'User',
+        email: 'temporary@example.com',
+        admin: false,
+        adminByNow: false,
+        guest: true,
+        // 添加clone方法以保持与真实用户对象的一致性
+        clone: function() {
+          return Object.assign({}, this);
+        }
+      };
+    },
+    // 创建临时账户对象
+    createTemporaryAccount() {
+      return {
+        id: 0,
+        user: 0,
+        firstname: 'Temporary',
+        lastname: 'User',
+        email: 'temporary@example.com',
+        locale: 'en',
+        // 添加clone方法以保持与真实账户对象的一致性
+        clone: function() {
+          return Object.assign({}, this);
+        }
+      };
+    },
+    // 设置临时用户和账户
+    setTemporaryUserAndAccount() {
+      const tempUser = this.createTemporaryUser();
+      const tempAccount = this.createTemporaryAccount();
+      
+      this.$store.commit('currentUser/setUser', tempUser);
+      this.$store.commit('currentUser/setAccount', tempAccount);
     }
   },
   async created() {
