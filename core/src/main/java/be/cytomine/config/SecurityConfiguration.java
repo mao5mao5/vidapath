@@ -17,8 +17,13 @@ package be.cytomine.config;
  */
 
 import be.cytomine.config.security.ApiKeyFilter;
+import be.cytomine.config.security.TemporaryTokenFilter;
 import be.cytomine.repository.security.UserRepository;
+import be.cytomine.service.security.TemporaryAccessTokenService;
+import be.cytomine.service.CurrentUserService;
+import be.cytomine.service.security.SecurityACLService;
 import be.cytomine.utils.JwtAuthConverter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -39,10 +44,20 @@ public class SecurityConfiguration {
 
     private final JwtAuthConverter customJwtAuthConverter;
     private final UserRepository userRepository;
+    private final TemporaryAccessTokenService temporaryAccessTokenService;
+    private final CurrentUserService currentUserService;
+    private final SecurityACLService securityACLService;
 
-    public SecurityConfiguration(UserRepository userRepository, JwtAuthConverter customJwtAuthConverter) {
+    public SecurityConfiguration(UserRepository userRepository, 
+                               JwtAuthConverter customJwtAuthConverter,
+                               TemporaryAccessTokenService temporaryAccessTokenService,
+                               CurrentUserService currentUserService,
+                               SecurityACLService securityACLService) {
         this.userRepository = userRepository;
         this.customJwtAuthConverter = customJwtAuthConverter;
+        this.temporaryAccessTokenService = temporaryAccessTokenService;
+        this.currentUserService = currentUserService;
+        this.securityACLService = securityACLService;
     }
 
 
@@ -51,6 +66,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new ApiKeyFilter(userRepository), BasicAuthenticationFilter.class) // Deprecated. Kept as transitional in 2024.2
+                .addFilterBefore(new TemporaryTokenFilter(temporaryAccessTokenService, currentUserService, securityACLService), BasicAuthenticationFilter.class)
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling
                                 .authenticationEntryPoint(
@@ -76,6 +92,12 @@ public class SecurityConfiguration {
                 .jwt(jwtAuthConverter -> jwtAuthConverter.jwtAuthenticationConverter(customJwtAuthConverter)));
         return http.build();
     }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "temporaryTokenFilter")
+    public TemporaryTokenFilter temporaryTokenFilter(TemporaryAccessTokenService temporaryAccessTokenService,
+                                                    CurrentUserService currentUserService,
+                                                    SecurityACLService securityACLService) {
+        return new TemporaryTokenFilter(temporaryAccessTokenService, currentUserService, securityACLService);
+    }
 }
-
-

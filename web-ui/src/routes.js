@@ -1,4 +1,5 @@
 import VueRouter from 'vue-router';
+import Vue from 'vue';
 
 import AppConfigurationPage from '@/components/appengine/AppConfigurationPage.vue';
 import AppInfoPage from './components/appengine/AppInfoPage.vue';
@@ -184,6 +185,20 @@ const routes = [
 const router = new VueRouter({
   routes: routes,
   linkActiveClass: 'is-active'
+});
+
+// 添加路由守卫，处理临时访问令牌的情况
+router.beforeEach((to, from, next) => {
+  console.log('Router beforeEach - has temporary token:', Vue.$keycloak.hasTemporaryToken);
+  
+  // 如果已经有临时访问令牌，则允许访问任何路由
+  if (Vue.$keycloak.hasTemporaryToken) {
+    next();
+    return;
+  }
+  
+  // 没有临时访问令牌，继续正常的路由流程
+  next();
 });
 
 export default router;

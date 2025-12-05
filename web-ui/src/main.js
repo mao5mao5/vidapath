@@ -105,7 +105,7 @@ Vue.prototype.$eventBus = new Vue();
 
 Vue.$keycloak
   .init({
-    onLoad: 'login-required'
+    onLoad: Vue.$keycloak.hasTemporaryToken ? 'check-sso' : 'login-required'
   })
   .then(() => {
     new Vue({
