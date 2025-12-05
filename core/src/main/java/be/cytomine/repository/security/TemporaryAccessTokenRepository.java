@@ -13,8 +13,10 @@ import java.util.Optional;
 @Repository
 public interface TemporaryAccessTokenRepository extends JpaRepository<TemporaryAccessToken, Long> {
     
+    @Query("SELECT t FROM TemporaryAccessToken t JOIN FETCH t.user WHERE t.tokenKey = ?1")
     Optional<TemporaryAccessToken> findByTokenKey(String tokenKey);
     
+    @Query("SELECT t FROM TemporaryAccessToken t JOIN FETCH t.user WHERE t.tokenKey = ?1 AND t.projectId = ?2")
     Optional<TemporaryAccessToken> findByTokenKeyAndProjectId(String tokenKey, Long projectId);
     
     List<TemporaryAccessToken> findAllByProjectId(Long projectId);

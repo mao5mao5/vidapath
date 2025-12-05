@@ -1,12 +1,14 @@
 package be.cytomine.config.security;
 
 import be.cytomine.domain.security.TemporaryAccessToken;
+import be.cytomine.domain.security.User;
+import be.cytomine.service.CurrentUserService;
 import be.cytomine.service.security.TemporaryAccessTokenService;
+import be.cytomine.service.security.SecurityACLService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
@@ -14,16 +16,21 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Optional;
 
 @Slf4j
 public class TemporaryTokenFilter extends OncePerRequestFilter {
 
     private final TemporaryAccessTokenService temporaryAccessTokenService;
+    private final CurrentUserService currentUserService;
+    private final SecurityACLService securityACLService;
 
-    public TemporaryTokenFilter(TemporaryAccessTokenService temporaryAccessTokenService) {
+    public TemporaryTokenFilter(TemporaryAccessTokenService temporaryAccessTokenService, 
+                               CurrentUserService currentUserService,
+                               SecurityACLService securityACLService) {
         this.temporaryAccessTokenService = temporaryAccessTokenService;
+        this.currentUserService = currentUserService;
+        this.securityACLService = securityACLService;
     }
 
     @Override
@@ -63,12 +70,17 @@ public class TemporaryTokenFilter extends OncePerRequestFilter {
                     
                     if (tokenOpt.isPresent() && temporaryAccessTokenService.isValidToken(accessToken, projectId)) {
                         log.info("Token is valid for project ID: {}", projectId);
-                        // 创建临时认证对象
+                        // 获取真实的User对象
+                        User user = currentUserService.getCurrentUser(tokenOpt.get().getUser().getUsername());
+                        
+                        // 创建认证对象，使用User对象作为principal和details，并获取用户的真实角色权限
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                                "temporary_user",
+                                user,
                                 null,
-                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_TEMPORARY_USER"))
+                                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).toList()
                         );
+                        // 设置User对象作为details
+                        authentication.setDetails(user);
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                         log.info("Temporary access token validated for project {}", projectId);
@@ -78,14 +90,20 @@ public class TemporaryTokenFilter extends OncePerRequestFilter {
                 } else {
                     log.info("No project ID found in URI, checking token without project binding");
                     // 如果无法从URI提取项目ID，则验证令牌是否存在且有效（不绑定特定项目）
-                    if (temporaryAccessTokenService.isValidToken(accessToken)) {
+                    Optional<TemporaryAccessToken> tokenOpt = temporaryAccessTokenService.findByTokenKey(accessToken);
+                    if (tokenOpt.isPresent() && temporaryAccessTokenService.isValidToken(accessToken)) {
                         log.info("Token is valid without project binding");
-                        // 创建临时认证对象
+                        // 获取真实的User对象
+                        User user = currentUserService.getCurrentUser(tokenOpt.get().getUser().getUsername());
+                        
+                        // 创建认证对象，使用User对象作为principal和details，并获取用户的真实角色权限
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                                "temporary_user",
+                                user,
                                 null,
-                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_TEMPORARY_USER"))
+                                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).toList()
                         );
+                        // 设置User对象作为details
+                        authentication.setDetails(user);
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                         log.info("Temporary access token validated without project binding");
@@ -101,6 +119,7 @@ public class TemporaryTokenFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         }
+
 
         private Long extractProjectIdFromUri(String uri) {
             // 从URI中提取项目ID，支持多种路径格式：
