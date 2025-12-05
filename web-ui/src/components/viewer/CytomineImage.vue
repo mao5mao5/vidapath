@@ -493,8 +493,26 @@ export default {
       return (tile, src) => {
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
-        xhr.open('GET', src);
-        xhr.setRequestHeader('Authorization', 'Bearer ' + this.shortTermToken);
+        
+        // 检查是否为临时访问令牌用户
+        if (this.$keycloak && this.$keycloak.hasTemporaryToken) {
+          // 从URL中提取access_token并添加到请求URL中
+          const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+          const accessToken = urlParams.get('access_token');
+          
+          if (accessToken) {
+            const separator = src.includes('?') ? '&' : '?';
+            const urlWithToken = `${src}${separator}access_token=${accessToken}`;
+            xhr.open('GET', urlWithToken);
+          } else {
+            xhr.open('GET', src);
+          }
+        } else {
+          // 正常用户使用shortTermToken
+          xhr.open('GET', src);
+          xhr.setRequestHeader('Authorization', 'Bearer ' + this.shortTermToken);
+        }
+        
         xhr.addEventListener('load', () => {
           const url = URL.createObjectURL(xhr.response);
           const tileImage = tile.getImage();
