@@ -152,6 +152,9 @@ public class ImageInstanceService extends ModelService {
     @Autowired
     MongoClient mongoClient;
 
+    @Autowired
+    OntologyService ontologyService;
+
     @Override
     public Class currentDomain() {
         return ImageInstance.class;
@@ -1007,5 +1010,55 @@ public class ImageInstanceService extends ModelService {
             imageInstance.setReviewStop(new Date());
         }
         saveDomain(imageInstance);
+    }
+
+
+    /**
+     * Add an ontology to an image instance
+     *
+     * @param imageInstanceId Image instance ID
+     * @param ontologyId Ontology ID
+     * @return Command response
+     */
+    public CommandResponse addOntologyToImageInstance(Long imageInstanceId, Long ontologyId) {
+        ImageInstance imageInstance = find(imageInstanceId)
+                .orElseThrow(() -> new ObjectNotFoundException("ImageInstance", imageInstanceId));
+                
+        Ontology ontology = ontologyService.find(ontologyId)
+                .orElseThrow(() -> new ObjectNotFoundException("Ontology", ontologyId));
+                
+        imageInstance.addOntology(ontology);
+        return update(imageInstance, imageInstance.toJsonObject());
+    }
+
+    /**
+     * Remove an ontology from an image instance
+     *
+     * @param imageInstanceId Image instance ID
+     * @param ontologyId Ontology ID
+     * @return Command response
+     */
+    public CommandResponse removeOntologyFromImageInstance(Long imageInstanceId, Long ontologyId) {
+        ImageInstance imageInstance = find(imageInstanceId)
+                .orElseThrow(() -> new ObjectNotFoundException("ImageInstance", imageInstanceId));
+                
+        Ontology ontology = ontologyService.find(ontologyId)
+                .orElseThrow(() -> new ObjectNotFoundException("Ontology", ontologyId));
+                
+        imageInstance.removeOntology(ontology);
+        return update(imageInstance, imageInstance.toJsonObject());
+    }
+
+    /**
+     * Get all ontologies for an image instance
+     *
+     * @param imageInstanceId Image instance ID
+     * @return List of ontologies
+     */
+    public Set<Ontology> getOntologiesForImageInstance(Long imageInstanceId) {
+        ImageInstance imageInstance = find(imageInstanceId)
+                .orElseThrow(() -> new ObjectNotFoundException("ImageInstance", imageInstanceId));
+                
+        return imageInstance.getOntologies();
     }
 }

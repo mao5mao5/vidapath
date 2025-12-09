@@ -19,6 +19,7 @@ package be.cytomine.domain.image;
 import be.cytomine.domain.CytomineDomain;
 import be.cytomine.domain.project.Project;
 import be.cytomine.domain.security.User;
+import be.cytomine.domain.ontology.Ontology;
 import be.cytomine.exceptions.WrongArgumentException;
 import be.cytomine.service.UrlApi;
 import be.cytomine.utils.JsonObject;
@@ -28,6 +29,9 @@ import lombok.Setter;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -73,6 +77,15 @@ public class ImageInstance extends CytomineDomain {
     private Double physicalSizeZ;
 
     private Double fps;
+
+    // 添加多本体关联支持
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "image_instance_ontology",
+        joinColumns = @JoinColumn(name = "image_instance_id"),
+        inverseJoinColumns = @JoinColumn(name = "ontology_id")
+    )
+    private Set<Ontology> ontologies = new HashSet<>();
 
     public CytomineDomain buildDomainFromJson(JsonObject json, EntityManager entityManager) {
         return buildDomainFromJson(this, json, entityManager);
@@ -165,6 +178,9 @@ public class ImageInstance extends CytomineDomain {
         returnArray.put("thumb", UrlApi.getImageInstanceThumbUrlWithMaxSize(imageInstance.id, 512, "png"));
         returnArray.put("preview", UrlApi.getImageInstanceThumbUrlWithMaxSize(imageInstance.id, 1024, "png"));
         returnArray.put("macroURL", UrlApi.getAssociatedImage(imageInstance, "macro", Optional.ofNullable(imageInstance.getBaseImage()).map(AbstractImage::getUploadedFile).map(UploadedFile::getContentType).orElse(null), 512, "png"));
+
+        // 添加本体信息到返回的JSON对象中
+        returnArray.put("ontologies", imageInstance.getOntologies().stream().map(Ontology::getId).collect(Collectors.toSet()));
 
         return returnArray;
     }
@@ -282,4 +298,23 @@ public class ImageInstance extends CytomineDomain {
         return Optional.ofNullable(baseImage).map(AbstractImage::getMagnification).orElse(null);
     }
 
+    // 添加获取本体的方法
+    public Set<Ontology> getOntologies() {
+        return ontologies;
+    }
+
+    // 添加设置本体的方法
+    public void setOntologies(Set<Ontology> ontologies) {
+        this.ontologies = ontologies;
+    }
+
+    // 添加添加本体的方法
+    public void addOntology(Ontology ontology) {
+        this.ontologies.add(ontology);
+    }
+
+    // 添加移除本体的方法
+    public void removeOntology(Ontology ontology) {
+        this.ontologies.remove(ontology);
+    }
 }
