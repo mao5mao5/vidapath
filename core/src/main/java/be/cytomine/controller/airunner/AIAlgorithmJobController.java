@@ -77,4 +77,36 @@ public class AIAlgorithmJobController {
             throw new RuntimeException("Error running AI algorithm: " + e.getMessage());
         }
     }
+    
+    /**
+     * 接收AI Runner发送的算法结果
+     * POST /api/algorithm-result.json
+     */
+    @PostMapping("/algorithm-result.json")
+    public ResponseEntity<String> receiveAlgorithmResult(@RequestBody AlgorithmResultRequest request) {
+        log.debug("Receiving algorithm result for session ID: {}", request.getSession_id());
+        
+        try {
+            // 根据session_id查找对应的AI算法任务
+            Optional<AIAlgorithmJob> jobOpt = aiAlgorithmJobService.findBySessionId(request.getSession_id());
+            if (!jobOpt.isPresent()) {
+                log.warn("AI algorithm job not found for session ID: {}", request.getSession_id());
+                return new ResponseEntity<>("AI algorithm job not found for session ID: " + request.getSession_id(), 
+                                          HttpStatus.NOT_FOUND);
+            }
+            
+            AIAlgorithmJob job = jobOpt.get();
+        
+            // 更新任务状态和结果数据
+            aiAlgorithmJobService.updateJobStatus(job, null, request.getStatus(), null);
+            aiAlgorithmJobService.updateJobData(job, request.getData());
+            
+            log.info("Successfully updated algorithm result for session ID: {}", request.getSession_id());
+            return new ResponseEntity<>("Result received and stored successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Error receiving algorithm result for session ID: {}", request.getSession_id(), e);
+            return new ResponseEntity<>("Error receiving algorithm result: " + e.getMessage(), 
+                                      HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
