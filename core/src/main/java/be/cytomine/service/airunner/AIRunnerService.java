@@ -5,7 +5,7 @@ import be.cytomine.domain.CytomineDomain;
 import be.cytomine.exceptions.ObjectNotFoundException;
 import be.cytomine.repository.airunner.AIRunnerRepository;
 import be.cytomine.service.ModelService;
-import be.cytomine.service.aiservice.dto.AIRunnerInfoResponse;
+import be.cytomine.service.airunner.dto.AIRunnerInfoResponse;
 import be.cytomine.utils.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

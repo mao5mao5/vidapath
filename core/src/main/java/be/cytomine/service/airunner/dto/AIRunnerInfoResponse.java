@@ -1,4 +1,4 @@
-package be.cytomine.service.aiservice.dto;
+package be.cytomine.service.airunner.dto;
 
 import lombok.Data;
 import java.util.List;

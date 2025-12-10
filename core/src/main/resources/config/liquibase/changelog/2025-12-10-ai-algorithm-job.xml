@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2025-12-10-ai-algorithm-job-1" author="cytomine">
+        <createTable tableName="ai_algorithm_job">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="session_id" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="airunner_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="parameters" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="source" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image_server" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status_code" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="message" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="data" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="version" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ai_algorithm_job"
+                                 baseColumnNames="airunner_id"
+                                 constraintName="fk_ai_algorithm_job_airunner"
+                                 referencedTableName="ai_runner"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="2025-12-10-ai-algorithm-job-2" author="cytomine">
+        <createIndex indexName="idx_ai_algorithm_job_session_id" tableName="ai_algorithm_job">
+            <column name="session_id"/>
+        </createIndex>
+        
+        <createIndex indexName="idx_ai_algorithm_job_airunner_id" tableName="ai_algorithm_job">
+            <column name="airunner_id"/>
+        </createIndex>
+        
+        <createIndex indexName="idx_ai_algorithm_job_project_id" tableName="ai_algorithm_job">
+            <column name="project_id"/>
+        </createIndex>
+        
+        <createIndex indexName="idx_ai_algorithm_job_image_id" tableName="ai_algorithm_job">
+            <column name="image_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
