@@ -56,4 +56,6 @@
     
     <include file="config/liquibase/changelog/00000000_16_add_image_instance_ontology_table.xml" relativeToChangelogFile="false"/>
 
+    <include file="config/liquibase/changelog/2025-12-10-ai-runner.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>
