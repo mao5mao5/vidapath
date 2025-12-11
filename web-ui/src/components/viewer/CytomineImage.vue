@@ -73,7 +73,7 @@
           <!-- AI Analysis Panel Button -->
           <li>
             <a title="AI Analysis" @click="toggleAIAnalysisPanel" :class="{ active: showAIAnalysisPanel }">
-              <i class="fas fa-brain"></i>
+              <i class="fas fa-robot"></i>
             </a>
           </li>
 
@@ -105,7 +105,7 @@
           </li>
           <li>
             <a @click="ShareByLink()">
-              <i class="fa fa-share-square" aria-hidden="true"></i>
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
           </li>
         </ul>

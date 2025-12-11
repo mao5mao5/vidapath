@@ -356,7 +356,7 @@ import ShareProjectModal from './ShareProjectModal';
 
 import { get, sync, syncBoundsFilter, syncMultiselectFilter } from '@/utils/store-helpers';
 
-import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection, AIRunner } from '@/api';
+import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection, AIRunner, AIAlgorithmJob } from '@/api';
 import IconProjectMemberRole from '@/components/icons/IconProjectMemberRole';
 import AddImageModal from '@/components/image/AddImageModal.vue';
 export default {
@@ -640,7 +640,7 @@ export default {
     },
     async fetchAIRunners() {
       // 导入AIRunner
-      this.aiRunners = await AIRunner.fetchAll();
+       this.aiRunners = await AIRunner.fetchAll();
     },
 
     toggleFilterDisplay() {
@@ -835,13 +835,10 @@ export default {
         });
         return;
       }
-
+      
       this.$buefy.dialog.confirm({
-        title: this.$t('confirm-bulk-ai-processing'),
-        message: this.$t('confirm-bulk-ai-processing-message', {
-          count: this.checkedProjects.length,
-          runnerName: this.selectedAIRunner.name
-        }),
+        title: `Confirm whether to run the ${this.selectedAIRunner.name} algorithm`,
+        message: 'This run will be in the background, so don\'t need to wait for.',
         type: 'is-primary',
         confirmText: this.$t('button-confirm'),
         cancelText: this.$t('button-cancel'),
@@ -850,21 +847,34 @@ export default {
             // 关闭模态框
             this.aiRunnerSelectionModal = false;
             this.bulkActionModal = false;
-
-            // 这里应该实现实际的AI处理逻辑
+            
+            // 为每个选中的项目运行AI算法
+            const runPromises = this.checkedProjects.map(async (project) => {
+              const requestData = {
+                airunnerId: this.selectedAIRunner.id,
+                projectId: project.id
+              };
+              
+              // 调用API运行AI算法
+              await AIAlgorithmJob.runAlgorithm(requestData);
+            });
+            
+            // 等待所有项目开始运行AI算法
+            await Promise.all(runPromises);
+            
             this.$buefy.toast.open({
               message: this.$t('bulk-ai-processing-started'),
               type: 'is-success'
             });
-
-            console.log('Running AI on projects:', this.checkedProjects, 'with runner:', this.selectedAIRunner);
-
+            
+            console.log('Started AI processing on projects:', this.checkedProjects, 'with runner:', this.selectedAIRunner);
+            
             // 清空选择
             this.checkedProjects = [];
             this.selectedAIRunner = null;
           } catch (error) {
             this.$buefy.toast.open({
-              message: this.$t('bulk-ai-processing-failed'),
+              message: "Failed to run the AI algorithm.",
               type: 'is-danger'
             });
             console.error('AI processing failed:', error);
@@ -881,13 +891,10 @@ export default {
         });
         return;
       }
-
+      
       this.$buefy.dialog.confirm({
-        title: this.$t('confirm-single-ai-processing'),
-        message: this.$t('confirm-single-ai-processing-message', {
-          projectName: this.projectToRunAI.name,
-          runnerName: this.selectedSingleAIRunner.name
-        }),
+        title: `Confirm whether to run the ${this.selectedSingleAIRunner.name} algorithm`,
+        message: 'This run will be in the background, so don\'t need to wait for.',
         type: 'is-primary',
         confirmText: this.$t('button-confirm'),
         cancelText: this.$t('button-cancel'),
@@ -895,21 +902,29 @@ export default {
           try {
             // 关闭模态框
             this.singleAIRunnerSelectionModal = false;
-
-            // 这里应该实现实际的AI处理逻辑
+            
+            // 为单个项目运行AI算法
+            const requestData = {
+              airunnerId: this.selectedSingleAIRunner.id,
+              projectId: this.projectToRunAI.id
+            };
+            
+            // 调用API运行AI算法
+            await AIAlgorithmJob.runAlgorithm(requestData);
+            
             this.$buefy.toast.open({
               message: this.$t('single-ai-processing-started'),
               type: 'is-success'
             });
-
-            console.log('Running AI on project:', this.projectToRunAI, 'with runner:', this.selectedSingleAIRunner);
-
+            
+            console.log('Started AI processing on project:', this.projectToRunAI, 'with runner:', this.selectedSingleAIRunner);
+            
             // 清空选择
             this.projectToRunAI = null;
             this.selectedSingleAIRunner = null;
           } catch (error) {
             this.$buefy.toast.open({
-              message: this.$t('single-ai-processing-failed'),
+              message: "Failed to run the AI algorithm.",
               type: 'is-danger'
             });
             console.error('AI processing failed:', error);
