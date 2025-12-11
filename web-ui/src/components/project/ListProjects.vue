@@ -22,12 +22,9 @@
     <div v-else-if="!loading" class="panel">
       <p class="panel-heading">
         {{ $t('case-management') }}
-        <button class="button is-link" @click="creationModal = true">
-          {{ $t('new-case') }}
-        </button>
       </p>
       <div class="panel-block">
-        <div class="search-block">
+        <div class="panel-heading-buttons">
           <b-input class="search-projects" v-model="searchString" :placeholder="$t('search-placeholder')" type="search"
             icon="search" />
           <button class="button" @click="toggleFilterDisplay()">
@@ -41,12 +38,17 @@
               {{ nbActiveFilters }}
             </span>
           </button>
+          <button v-if="checkedProjects.length > 0" class="button is-info bulk-action-button"
+            @click="bulkActionModal = true">
+            Bulk actions ({{ checkedProjects.length }})
+          </button>
+          <button class="button is-link" @click="creationModal = true">
+            {{ $t('new-case') }}
+          </button>
         </div>
 
         <b-collapse :open="filtersOpened">
           <div class="filters">
-
-
             <div class="columns">
               <div class="column filter">
                 <div class="filter-label">
@@ -127,34 +129,13 @@
 
         <cytomine-table :collection="projectCollection" :is-empty="nbEmptyFilters > 0" class="table-projects"
           :currentPage.sync="currentPage" :perPage.sync="perPage" :openedDetailed.sync="openedDetails"
-          :sort.sync="sortField" :order.sync="sortOrder" :revision="revision">
+          :sort.sync="sortField" :order.sync="sortOrder" :revision="revision" :checkable="true"
+          :checked-rows.sync="checkedProjects">
           <template #default="{ row: project }">
             <b-table-column field="currentUserRole" label="" centered width="1" sortable>
               <icon-project-member-role :is-manager="project.currentUserRoles.admin"
                 :is-representative="project.currentUserRoles.representative" />
             </b-table-column>
-
-            <!-- <b-table-column field="name" :label="$t('name')" sortable width="250">
-            <a @click="openProject(project)">
-              {{ project.name }}
-            </a>
-          </b-table-column>
-
-          <b-table-column field="membersCount" :label="$t('members')" centered sortable width="150">
-            {{ project.membersCount }}
-          </b-table-column>
-
-          <b-table-column field="numberOfImages" :label="$t('images')" centered sortable width="150">
-             {{ project.numberOfImages }}
-          </b-table-column>
-
-          <b-table-column field="numberOfAnnotations" :label="$t('user-annotations')" centered sortable width="150">
-             {{ project.numberOfAnnotations }}
-          </b-table-column>
-
-          <b-table-column field="numberOfReviewedAnnotations" :label="$t('reviewed-annotations')" centered sortable width="150">
-            {{ project.numberOfReviewedAnnotations }}
-          </b-table-column> -->
 
             <b-table-column field="patientId" :label="$t('patient-id')" centered sortable width="150">
               {{ project.patientId }}
@@ -218,6 +199,9 @@
                 <button class="button is-small is-info" @click="openShareModal(project)">
                   {{ $t('button-share') }}
                 </button>
+                <button class="button is-small is-primary" @click="runAIOnProject(project)">
+                  Run AI
+                </button>
               </div>
             </b-table-column>
           </template>
@@ -233,19 +217,109 @@
             </div>
           </template>
         </cytomine-table>
-
-        <!-- <div class="legend">
-          <h2>{{$t('legend')}}</h2>
-          <p><icon-project-member-role /> : {{$t('contributor-icon-label')}}</p>
-          <p><icon-project-member-role :is-manager="true" /> : {{$t('manager-icon-label')}}</p>
-          <p><icon-project-member-role :is-manager="true" :is-representative="true" /> : {{$t('representative-icon-label')}}</p>
-      </div> -->
       </div>
     </div>
 
     <add-project-modal :active.sync="creationModal" :ontologies="ontologies" />
     <add-image-modal :active.sync="addImageModal" :project="selectedProject" @addImage="updateProject()" />
     <share-project-modal :active.sync="shareProjectModal" :project="selectedProject" />
+
+    <!-- Bulk Action Modal -->
+    <div v-if="bulkActionModal" class="modal is-active">
+      <div class="modal-background" @click="bulkActionModal = false"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Bulk actions</p>
+          <button class="delete" aria-label="close" @click="bulkActionModal = false"></button>
+        </header>
+        <section class="modal-card-body">
+          <!-- 在这里可以添加批量操作选项 -->
+          <div class="bulk-actions">
+            <button class="button is-primary" @click="bulkShare">
+              Share
+            </button>
+            <button class="button is-primary" @click="bulkAssign">
+              Assign
+            </button>
+            <button class="button is-primary" @click="bulkRunAI">
+              Run AI
+            </button>
+            <button class="button is-danger" @click="deleteSelectedProjects">
+              Delete
+            </button>
+          </div>
+        </section>
+        <footer class="modal-card-foot" style="justify-content: flex-end;">
+          <button class="button" @click="bulkActionModal = false">{{ $t('button-close') }}</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- AI Runner Selection Modal -->
+    <div v-if="aiRunnerSelectionModal" class="modal is-active">
+      <div class="modal-background" @click="aiRunnerSelectionModal = false"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Selet AI models</p>
+          <button class="delete" aria-label="close" @click="aiRunnerSelectionModal = false"></button>
+        </header>
+        <section class="modal-card-body">
+          <p>Please select an AI model to execute selected cases:</p>
+
+          <div class="field">
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select v-model="selectedAIRunner">
+                  <option value="">Please select</option>
+                  <option v-for="runner in aiRunners" :key="runner.id" :value="runner">
+                    {{ runner.name }} ({{ runner.runnerName }})
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot" style="justify-content: flex-end;">
+          <button class="button" @click="aiRunnerSelectionModal = false">{{ $t('button-cancel') }}</button>
+          <button class="button is-primary" :disabled="!selectedAIRunner" @click="confirmRunAI">
+            {{ $t('button-confirm') }}
+          </button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Single Project AI Runner Selection Modal -->
+    <div v-if="singleAIRunnerSelectionModal" class="modal is-active">
+      <div class="modal-background" @click="singleAIRunnerSelectionModal = false"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Selet AI models</p>
+          <button class="delete" aria-label="close" @click="singleAIRunnerSelectionModal = false"></button>
+        </header>
+        <section class="modal-card-body">
+          <p>Please select an AI model to execute this case:</p>
+
+          <div class="field">
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select v-model="selectedSingleAIRunner">
+                  <option value="">Please select</option>
+                  <option v-for="runner in aiRunners" :key="runner.id" :value="runner">
+                    {{ runner.name }} ({{ runner.runnerName }})
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot" style="justify-content: flex-end;">
+          <button class="button" @click="singleAIRunnerSelectionModal = false">{{ $t('button-cancel') }}</button>
+          <button class="button is-primary" :disabled="!selectedSingleAIRunner" @click="confirmSingleRunAI">
+            {{ $t('button-confirm') }}
+          </button>
+        </footer>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -259,7 +333,7 @@ import ShareProjectModal from './ShareProjectModal';
 
 import { get, sync, syncBoundsFilter, syncMultiselectFilter } from '@/utils/store-helpers';
 
-import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection } from '@/api';
+import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection, AIRunner } from '@/api';
 import IconProjectMemberRole from '@/components/icons/IconProjectMemberRole';
 import AddImageModal from '@/components/image/AddImageModal.vue';
 export default {
@@ -289,7 +363,18 @@ export default {
       creationModal: false,
       addImageModal: false,
       shareProjectModal: false,
+      bulkActionModal: false,
+      aiRunnerSelectionModal: false,
+      singleAIRunnerSelectionModal: false,
       selectedProject: null,
+      projectToRunAI: null,
+
+      checkedProjects: [],
+
+      // AI Runners
+      aiRunners: [],
+      selectedAIRunner: null,
+      selectedSingleAIRunner: null,
 
       excludedProperties: [
         'name',
@@ -530,6 +615,11 @@ export default {
     async fetchTags() {
       this.availableTags = [{ id: 'null', name: this.$t('no-tag') }, ...(await TagCollection.fetchAll()).array];
     },
+    async fetchAIRunners() {
+      // 导入AIRunner
+      this.aiRunners = await AIRunner.fetchAll();
+    },
+
     toggleFilterDisplay() {
       this.filtersOpened = !this.filtersOpened;
     },
@@ -636,6 +726,173 @@ export default {
 
       // 触发重新查询
       this.revision++;
+    },
+    deleteSelectedProjects() {
+      this.$buefy.dialog.confirm({
+        title: this.$t('delete-multiple-projects'),
+        message: this.$t('delete-multiple-projects-confirm-message', { count: this.checkedProjects.length }),
+        type: 'is-danger',
+        confirmText: this.$t('button-confirm'),
+        cancelText: this.$t('button-cancel'),
+        onConfirm: async () => {
+          try {
+            // 执行批量删除
+            const promises = this.checkedProjects.map(project => project.delete());
+            await Promise.all(promises);
+
+            // 清空选中项并刷新列表
+            this.checkedProjects = [];
+            this.bulkActionModal = false;
+            this.updateProject();
+
+            this.$notify({
+              type: 'success',
+              text: this.$t('notif-success-multiple-projects-deletion', { count: this.checkedProjects.length })
+            });
+          } catch (error) {
+            this.$notify({
+              type: 'error',
+              text: this.$t('notif-error-multiple-projects-deletion')
+            });
+          }
+        }
+      });
+    },
+
+    bulkShare() {
+      // 批量分享功能
+      this.$buefy.toast.open({
+        message: this.$t('bulk-share-not-implemented'),
+        type: 'is-info'
+      });
+      console.log('Bulk share projects:', this.checkedProjects);
+    },
+
+    bulkAssign() {
+      // 批量分配功能
+      this.$buefy.toast.open({
+        message: this.$t('bulk-assign-not-implemented'),
+        type: 'is-info'
+      });
+      console.log('Bulk assign projects:', this.checkedProjects);
+    },
+
+    bulkRunAI() {
+      // 批量运行AI功能
+      if (this.aiRunners.length === 0) {
+        this.$buefy.toast.open({
+          message: this.$t('no-ai-runners-available'),
+          type: 'is-danger'
+        });
+        return;
+      }
+
+      this.aiRunnerSelectionModal = true;
+    },
+
+    runAIOnProject(project) {
+      // 单个项目运行AI功能
+      if (this.aiRunners.length === 0) {
+        this.$buefy.toast.open({
+          message: this.$t('no-ai-runners-available'),
+          type: 'is-danger'
+        });
+        return;
+      }
+
+      this.projectToRunAI = project;
+      this.singleAIRunnerSelectionModal = true;
+    },
+
+    async confirmRunAI() {
+      if (!this.selectedAIRunner) {
+        this.$buefy.toast.open({
+          message: this.$t('please-select-an-ai-runner'),
+          type: 'is-danger'
+        });
+        return;
+      }
+
+      this.$buefy.dialog.confirm({
+        title: this.$t('confirm-bulk-ai-processing'),
+        message: this.$t('confirm-bulk-ai-processing-message', {
+          count: this.checkedProjects.length,
+          runnerName: this.selectedAIRunner.name
+        }),
+        type: 'is-primary',
+        confirmText: this.$t('button-confirm'),
+        cancelText: this.$t('button-cancel'),
+        onConfirm: async () => {
+          try {
+            // 关闭模态框
+            this.aiRunnerSelectionModal = false;
+            this.bulkActionModal = false;
+
+            // 这里应该实现实际的AI处理逻辑
+            this.$buefy.toast.open({
+              message: this.$t('bulk-ai-processing-started'),
+              type: 'is-success'
+            });
+
+            console.log('Running AI on projects:', this.checkedProjects, 'with runner:', this.selectedAIRunner);
+
+            // 清空选择
+            this.checkedProjects = [];
+            this.selectedAIRunner = null;
+          } catch (error) {
+            this.$buefy.toast.open({
+              message: this.$t('bulk-ai-processing-failed'),
+              type: 'is-danger'
+            });
+            console.error('AI processing failed:', error);
+          }
+        }
+      });
+    },
+
+    async confirmSingleRunAI() {
+      if (!this.selectedSingleAIRunner) {
+        this.$buefy.toast.open({
+          message: this.$t('please-select-an-ai-runner'),
+          type: 'is-danger'
+        });
+        return;
+      }
+
+      this.$buefy.dialog.confirm({
+        title: this.$t('confirm-single-ai-processing'),
+        message: this.$t('confirm-single-ai-processing-message', {
+          projectName: this.projectToRunAI.name,
+          runnerName: this.selectedSingleAIRunner.name
+        }),
+        type: 'is-primary',
+        confirmText: this.$t('button-confirm'),
+        cancelText: this.$t('button-cancel'),
+        onConfirm: async () => {
+          try {
+            // 关闭模态框
+            this.singleAIRunnerSelectionModal = false;
+
+            // 这里应该实现实际的AI处理逻辑
+            this.$buefy.toast.open({
+              message: this.$t('single-ai-processing-started'),
+              type: 'is-success'
+            });
+
+            console.log('Running AI on project:', this.projectToRunAI, 'with runner:', this.selectedSingleAIRunner);
+
+            // 清空选择
+            this.projectToRunAI = null;
+            this.selectedSingleAIRunner = null;
+          } catch (error) {
+            this.$buefy.toast.open({
+              message: this.$t('single-ai-processing-failed'),
+              type: 'is-danger'
+            });
+            console.error('AI processing failed:', error);
+          }
+        }
+      });
     }
   },
   async created() {
@@ -643,7 +900,8 @@ export default {
       await Promise.all([
         this.fetchOntologies(),
         this.fetchMaxFilters(),
-        this.fetchTags()
+        this.fetchTags(),
+        this.fetchAIRunners()
       ]);
     } catch (error) {
       console.log(error);
@@ -677,6 +935,12 @@ export default {
   background-color: $dark-bg-secondary;
   color: $dark-text-primary;
   border-color: $dark-border-color;
+}
+
+.panel-heading-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
 }
 
 .search-block {
@@ -967,6 +1231,86 @@ export default {
 .buttons {
   display: flex;
   gap: 0.5rem;
+}
+
+.bulk-actions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bulk-actions .button {
+  flex: 1;
+  min-width: 120px;
+}
+
+.bulk-action-button {
+  background-color: $dark-button-bg;
+  border-color: $dark-button-border;
+  color: $dark-text-primary;
+}
+
+.bulk-action-button:hover {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.modal-card {
+  max-width: 800px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.modal-card-head {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-bottom: 1px solid $dark-border-color;
+}
+
+.modal-card-body {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+  max-height: 70vh;
+}
+
+.modal-card-foot {
+  background-color: $dark-bg-secondary;
+  border-top: 1px solid $dark-border-color;
+}
+
+.modal-card-title {
+  color: $dark-text-primary;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.label {
+  color: $dark-text-primary;
+}
+
+.select select {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.select select:focus {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.select option {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+/* 模态框背景 */
+.modal-background {
+  background-color: rgba(30, 30, 30, 0.8);
 }
 </style>
 
