@@ -11,6 +11,14 @@
       <!-- Whole Image Body -->
       <div v-if="visible.whole" class="panel-body">
 
+        <!-- Run Algorithm Button -->
+        <button class="button is-primary is-fullwidth" @click="runAlgorithm">
+          <span class="icon is-small">
+            <i class="fas fa-play"></i>
+          </span>
+          <span>Run AI Algorithm</span>
+        </button>
+
         <!-- Switch -->
         <div class="switch-row">
           <label class="switch">
@@ -94,11 +102,52 @@
 
     </div>
   </div>
+  
+  <!-- AI Runner Selection Modal -->
+  <!-- <div v-if="showAIRunnerModal" class="modal is-active">
+    <div class="modal-background" @click="showAIRunnerModal = false"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Select AI Runner</p>
+        <button class="delete" aria-label="close" @click="showAIRunnerModal = false"></button>
+      </header>
+      <section class="modal-card-body">
+        <p>Select an AI Runner to process this image:</p>
+        
+        <div class="field">
+          <label class="label">AI Runner</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="selectedAIRunner">
+                <option value="">Please select</option>
+                <option v-for="runner in aiRunners" :key="runner.id" :value="runner">
+                  {{ runner.name }} ({{ runner.runnerName }})
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot" style="justify-content: flex-end;">
+        <button class="button" @click="showAIRunnerModal = false">Cancel</button>
+        <button class="button is-primary" 
+                :disabled="!selectedAIRunner" 
+                @click="confirmRunAlgorithm">
+          Confirm
+        </button>
+      </footer>
+    </div>
+  </div> -->
 </template>
 
 
 <script>
+import {AIRunner, AIAlgorithmJob } from '@/api';
 export default {
+  props: {
+    project: Object,
+    index: String,
+  },
   data() {
     return {
       visible: {
@@ -108,7 +157,12 @@ export default {
         report: false
       },
       showOnImage: false,
-
+      
+      // AI Runner相关数据
+      showAIRunnerModal: false,
+      aiRunners: [],
+      selectedAIRunner: null,
+      
       items: [
         { label: "Invasive carcinoma", count: 18.8, percent: 18.8, color: "#1E88E5", type: "checkbox", checked: true },
         { label: "DCIS", count: "<0.5", percent: 0.5, color: "#00ACC1", type: "checkbox", checked: true },
@@ -135,6 +189,12 @@ export default {
     };
   },
 
+  computed: {
+    // 计算Mitotic Rate
+    imageModule() {
+      return this.$store.getters['currentProject/imageModule'](this.index);
+    },
+  },
   methods: {
     toggle(key) {
       this.visible[key] = !this.visible[key];
@@ -144,7 +204,91 @@ export default {
       // 实现显示所有HPF结果的逻辑
       console.log("Showing all HPF results");
       alert("to be implemented");
+    },
+    
+    async fetchAIRunners() {
+      try {
+        // 导入AIRunner并获取所有可用的AI Runner
+        this.aiRunners = await AIRunner.fetchAll();
+        console.log("Fetched AI runners:", this.aiRunners);
+      } catch (error) {
+        console.error('Failed to fetch AI runners:', error);
+        this.$buefy.toast.open({
+          message: 'Failed to load AI runners',
+          type: 'is-danger'
+        });
+      }
+    },
+    
+    runAlgorithm() {
+      // 检查是否有可用的AI Runner
+      if (this.aiRunners.length === 0) {
+        this.$buefy.toast.open({
+          message: 'No AI runners available',
+          type: 'is-danger'
+        });
+        return;
+      }
+      
+      // 显示AI Runner选择模态框
+      this.showAIRunnerModal = true;
+    },
+    
+    async confirmRunAlgorithm() {
+      if (!this.selectedAIRunner) {
+        this.$buefy.toast.open({
+          message: 'Please select an AI runner',
+          type: 'is-danger'
+        });
+        return;
+      }
+      
+      this.$buefy.dialog.confirm({
+        title: 'Confirm AI Processing',
+        message: `Are you sure you want to run the AI algorithm "${this.selectedAIRunner.name}" on this image?`,
+        type: 'is-primary',
+        confirmText: 'Confirm',
+        cancelText: 'Cancel',
+        onConfirm: async () => {
+          try {
+            // 关闭模态框
+            this.showAIRunnerModal = false;
+            
+            // 构造请求数据
+            const requestData = {
+              airunnerId: this.selectedAIRunner.id,
+              projectId: parseInt(this.project.id),
+              imageId: parseInt(this.imageId),
+              // 注意：parameters字段需要根据实际情况填充
+            };
+            
+            // 调用API运行AI算法
+            await AIAlgorithmJob.runAlgorithm(requestData);
+            
+            this.$buefy.toast.open({
+              message: 'AI processing started successfully',
+              type: 'is-success'
+            });
+            
+            console.log('Started AI processing with runner:', this.selectedAIRunner);
+            
+            // 清空选择
+            this.selectedAIRunner = null;
+          } catch (error) {
+            this.$buefy.toast.open({
+              message: 'Failed to start AI processing',
+              type: 'is-danger'
+            });
+            console.error('AI processing failed:', error);
+          }
+        }
+      });
     }
+  },
+  
+  async mounted() {
+    // 组件挂载时获取AI Runner列表
+    await this.fetchAIRunners();
   }
 };
 </script>
@@ -299,5 +443,86 @@ input:checked+.slider:before {
   font-size: 14px;
   line-height: 1.4;
   color: $dark-text-primary;
+}
+
+/* Modal Styles */
+.modal-card {
+  max-width: 500px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.modal-card-head {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-bottom: 1px solid $dark-border-color;
+}
+
+.modal-card-body {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+.modal-card-foot {
+  background-color: $dark-bg-secondary;
+  border-top: 1px solid $dark-border-color;
+}
+
+.modal-card-title {
+  color: $dark-text-primary;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.label {
+  color: $dark-text-primary;
+}
+
+.select select {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.select select:focus {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.select option {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+/* Button Styles */
+.button {
+  background-color: $dark-button-bg;
+  border-color: $dark-button-border;
+  color: $dark-text-primary;
+}
+
+.button:hover {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.button.is-primary {
+  background-color: #4CAF50;
+  border-color: transparent;
+  color: white;
+}
+
+.button.is-primary:hover {
+  background-color: #45a049;
+  border-color: transparent;
+  color: white;
+}
+
+.button.is-primary:disabled {
+  background-color: $dark-button-bg;
+  border-color: $dark-button-border;
+  color: $dark-text-disabled;
 }
 </style>

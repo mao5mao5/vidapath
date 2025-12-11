@@ -198,7 +198,7 @@
                   <span class="icon is-small">
                     <i class="fas fa-eye"></i>
                   </span>
-                  <span>Open in viewer</span>
+                  <span>Open viewer</span>
                 </button>
                 <button class="button is-small is-info" @click="openShareModal(project)">
                   <span class="icon is-small">

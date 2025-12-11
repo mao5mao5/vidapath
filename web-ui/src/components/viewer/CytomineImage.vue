@@ -22,7 +22,7 @@
     <template v-if="!loading && zoom !== null">
       <!-- AI Analysis Panel -->
       <div v-if="showAIAnalysisPanel" class="ai-analysis-panel">
-        <pathology-viewer />
+        <pathology-viewer :project="project" :index="index"/>
       </div>
 
       <!-- Share Project Modal -->
