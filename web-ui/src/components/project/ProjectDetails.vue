@@ -30,11 +30,11 @@
         <tr>
           <td class="prop-label">{{ $t('actions') }}</td>
           <td class="prop-content">
-            <button class="button is-small" @click="showDetailModal = true">
+            <button class="button is-small" @click="showDetailModal = true" style="margin-right: 0.5rem;" >
               More details
             </button>
             <project-actions v-if="canManageProject" :project="project" @update="$emit('update', $event)"
-              @delete="$emit('delete')" />
+              @delete="$emit('delete')"/>
           </td>
         </tr>
       </tbody>
@@ -281,6 +281,7 @@ export default {
 td.prop-label {
   white-space: nowrap;
   font-weight: 600;
+  width: 5%;
 }
 
 td.prop-content {
