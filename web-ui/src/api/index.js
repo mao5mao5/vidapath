@@ -77,4 +77,5 @@ export {default as UploadedFileCollection} from './collections/uploaded-file-col
 export {default as UserCollection} from './collections/user-collection.js';
 export {default as UserPositionCollection} from './collections/user-position-collection.js';
 export {default as UserRoleCollection} from './collections/user-role-collection.js';
-export {default as AIRunner} from './models/airunner.js'
+export {default as AIRunner} from './models/airunner.js';
+export {default as AIAlgorithmJob} from './models/ai-algorithm-job.js';
