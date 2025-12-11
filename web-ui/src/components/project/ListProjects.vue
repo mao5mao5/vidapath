@@ -40,10 +40,13 @@
           </button>
           <button v-if="checkedProjects.length > 0" class="button is-info bulk-action-button"
             @click="bulkActionModal = true">
-            Bulk actions ({{ checkedProjects.length }})
+            Batch actions ({{ checkedProjects.length }})
           </button>
           <button class="button is-link" @click="creationModal = true">
-            {{ $t('new-case') }}
+            <span class="icon">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>{{ $t('new-case') }}</span>
           </button>
         </div>
 
@@ -132,20 +135,20 @@
           :sort.sync="sortField" :order.sync="sortOrder" :revision="revision" :checkable="true"
           :checked-rows.sync="checkedProjects">
           <template #default="{ row: project }">
-            <b-table-column field="currentUserRole" label="" centered width="1" sortable>
+            <!-- <b-table-column field="currentUserRole" label="" centered width="1" sortable>
               <icon-project-member-role :is-manager="project.currentUserRoles.admin"
                 :is-representative="project.currentUserRoles.representative" />
-            </b-table-column>
+            </b-table-column> -->
 
             <b-table-column field="patientId" :label="$t('patient-id')" centered sortable width="150">
               {{ project.patientId }}
             </b-table-column>
 
-            <b-table-column field="patientName" :label="$t('patient-name')" centered sortable width="150">
+            <b-table-column field="patientName" label="Name" centered sortable width="150">
               {{ project.patientName }}
             </b-table-column>
 
-            <b-table-column field="patientAge" :label="$t('patient-age')" centered sortable width="150">
+            <b-table-column field="patientAge" label="Age" centered sortable width="150">
               {{ project.patientAge }}
             </b-table-column>
 
@@ -167,8 +170,7 @@
               {{ project.accessDate | moment('ll') }}
             </b-table-column>
 
-            <b-table-column field="medicalRecordNumber" :label="$t('medical-record-number')" centered sortable
-              width="150">
+            <b-table-column field="medicalRecordNumber" label="MRN" centered sortable width="150">
               {{ project.medicalRecordNumber }}
             </b-table-column>
 
@@ -184,23 +186,31 @@
               {{ project.stain }}
             </b-table-column>
 
-            <!-- <b-table-column field="lastActivity" :label="$t('last-activity')" centered sortable width="180">
-            {{ Number(project.lastActivity) | moment('ll') }}
-          </b-table-column> -->
-
             <b-table-column label="Actions" centered width="150">
               <div class="buttons">
                 <button class="button is-small is-link" @click="openAddImageModal(project)">
-                  {{ $t('button-add-image') }}
+                  <span class="icon is-small">
+                    <i class="fas fa-plus"></i>
+                  </span>
+                  <span>{{ $t('button-add-image') }}</span>
                 </button>
                 <button class="button is-small is-link" @click="openProject(project)">
-                  Open in viewer
+                  <span class="icon is-small">
+                    <i class="fas fa-eye"></i>
+                  </span>
+                  <span>Open in viewer</span>
                 </button>
                 <button class="button is-small is-info" @click="openShareModal(project)">
-                  {{ $t('button-share') }}
+                  <span class="icon is-small">
+                    <i class="fas fa-share-alt"></i>
+                  </span>
+                  <span>{{ $t('button-share') }}</span>
                 </button>
                 <button class="button is-small is-primary" @click="runAIOnProject(project)">
-                  Run AI
+                  <span class="icon is-small">
+                    <i class="fas fa-robot"></i>
+                  </span>
+                  <span>Run AI</span>
                 </button>
               </div>
             </b-table-column>
@@ -229,23 +239,36 @@
       <div class="modal-background" @click="bulkActionModal = false"></div>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Bulk actions</p>
+          <p class="modal-card-title">Batch actions</p>
           <button class="delete" aria-label="close" @click="bulkActionModal = false"></button>
         </header>
         <section class="modal-card-body">
+          <p>Please use the following batch action</p>
           <!-- 在这里可以添加批量操作选项 -->
           <div class="bulk-actions">
-            <button class="button is-primary" @click="bulkShare">
-              Share
+            <button class="button is-info" @click="bulkShare">
+              <span class="icon is-small">
+                <i class="fas fa-share-alt"></i>
+              </span>
+              <span>Share</span>
             </button>
-            <button class="button is-primary" @click="bulkAssign">
-              Assign
+            <button class="button is-warning" @click="bulkAssign">
+              <span class="icon is-small">
+                <i class="fas fa-user-tag"></i>
+              </span>
+              <span>Assign</span>
             </button>
             <button class="button is-primary" @click="bulkRunAI">
-              Run AI
+              <span class="icon is-small">
+                <i class="fas fa-robot"></i>
+              </span>
+              <span>Run AI</span>
             </button>
             <button class="button is-danger" @click="deleteSelectedProjects">
-              Delete
+              <span class="icon is-small">
+                <i class="fas fa-trash"></i>
+              </span>
+              <span>Delete</span>
             </button>
           </div>
         </section>
