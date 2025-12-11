@@ -20,121 +20,134 @@
   <table v-else class="table">
     <b-loading :is-full-page="false" :active="loading" class="small" />
     <tbody v-if="!loading">
-      <!-- <tr v-if="isPropDisplayed('id') && currentAccount.isDeveloper">
-      <td class="prop-label">{{$t('id')}}</td>
-      <td class="prop-content">{{project.id}}</td>
-    </tr>
-    <tr v-if="isPropDisplayed('name')">
-      <td class="prop-label">{{$t('name')}}</td>
-      <td class="prop-content">
-        {{project.name}}
-      </td>
-    </tr>
-    <tr v-if="isPropDisplayed('numberOfImages')">
-      <td class="prop-label">{{$t('images')}}</td>
-      <td class="prop-content">
-        <router-link :to="`/project/${project.id}/images`">{{project.numberOfImages}}</router-link>
-      </td>
-    </tr>
-    <tr v-if="isPropDisplayed('membersCount')">
-      <td class="prop-label">{{$t('members')}}</td>
-      <td class="prop-content">
-        {{this.members.length}}
-      </td>
-    </tr>
-    <tr v-if="isPropDisplayed('numberOfAnnotations')">
-      <td class="prop-label">{{$t('user-annotations')}}</td>
-      <td class="prop-content">
-        <router-link :to="`/project/${project.id}/annotations?type=user`">
-          {{ project.numberOfAnnotations }}
-        </router-link>
-      </td>
-    </tr>
-    <tr v-if="isPropDisplayed('numberOfReviewedAnnotations')">
-      <td class="prop-label">{{$t('reviewed-annotations')}}</td>
-      <td class="prop-content">
-        <router-link :to="`/project/${project.id}/annotations?type=reviewed`">
-          {{project.numberOfReviewedAnnotations}}
-        </router-link>
-      </td>
-    </tr> -->
-      <tr v-if="isPropDisplayed('description')">
-        <td class="prop-label">{{ $t('description') }}</td>
-        <td class="prop-content">
-          <cytomine-description :object="project" :canEdit="canManageProject" />
-        </td>
-      </tr>
-      <tr v-if="isPropDisplayed('tags')">
-        <td class="prop-label">{{ $t('tags') }}</td>
-        <td class="prop-content">
-          <cytomine-tags :object="project" :canEdit="canManageProject" />
-        </td>
-      </tr>
-      <!--  <tr v-if="isPropDisplayed('properties')">
-      <td class="prop-label">{{$t('properties')}}</td>
-      <td class="prop-content">
-        <cytomine-properties :object="project" :canEdit="canManageProject" />
-      </td>
-    </tr> -->
-      <tr v-if="isPropDisplayed('attachedFiles')">
-        <td class="prop-label">{{ $t('attached-files') }}</td>
-        <td class="prop-content">
-          <attached-files :object="project" :canEdit="canManageProject" />
-        </td>
-      </tr>
-      <tr v-if="isPropDisplayed('ontology')">
-        <td class="prop-label">{{ $t('ontology') }}</td>
-        <td class="prop-content">
-          <router-link v-if="project.ontology" :to="`/ontology/${project.ontology}`">
-            {{ project.ontologyName }}
-          </router-link>
-          <em v-else>{{ $t('no-ontology') }}</em>
-        </td>
-      </tr>
-      <tr v-if="isPropDisplayed('created')">
-        <td class="prop-label">{{ $t('created-on') }}</td>
-        <td class="prop-content">
-          {{ Number(project.created) | moment('ll') }}
-        </td>
-      </tr>
-      <tr v-if="isPropDisplayed('creator')">
-        <td class="prop-label">{{ $t('creator') }}</td>
-        <td class="prop-content">
-          <list-usernames :users="[creator]" :onlines="onlines" />
-        </td>
-      </tr>
-      <!-- <tr v-if="isPropDisplayed('representatives')">
-      <td class="prop-label">{{$t('representatives')}} ({{representatives.length}})</td>
-      <td class="prop-content">
-        <list-usernames :users="representatives" :onlines="onlines" />
-      </td>
-    </tr> -->
-      <tr v-if="isPropDisplayed('managers')">
-        <td class="prop-label">{{ $t('managers') }} ({{ managers.length }})</td>
-        <td class="prop-content">
-          <list-usernames :users="managers" :onlines="onlines" />
-        </td>
-      </tr>
-      <tr v-if="isPropDisplayed('contributors')">
-        <td class="prop-label">{{ $t('contributors') }} ({{ contributors.length }})</td>
-        <td class="prop-content">
-          <list-usernames :users="contributors" :onlines="onlines" />
-        </td>
-      </tr>
       <tr v-if="isPropDisplayed('imagesPreview')">
         <td class="prop-label">{{ $t('images') }}</td>
         <td class="prop-content">
           <list-images-preview :project="project" />
         </td>
       </tr>
-      <tr v-if="canManageProject">
+      <tr>
         <td class="prop-label">{{ $t('actions') }}</td>
         <td class="prop-content">
-          <project-actions :project="project" @update="$emit('update', $event)" @delete="$emit('delete')" />
+          <button class="button is-small" @click="showDetailModal = true">
+            More details
+          </button>
+          <project-actions v-if="canManageProject" :project="project" @update="$emit('update', $event)"
+            @delete="$emit('delete')" />
         </td>
       </tr>
     </tbody>
   </table>
+  <!-- <cytomine-modal :active.sync="showDetailModal" :title="$t('project-details')" @close="showDetailModal = false">
+    <table class="table is-fullwidth">
+      <tbody>
+        <tr v-if="currentAccount.isDeveloper">
+          <td class="prop-label">{{ $t('id') }}</td>
+          <td class="prop-content">{{ project.id }}</td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('name') }}</td>
+          <td class="prop-content">
+            {{ project.name }}
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('images') }}</td>
+          <td class="prop-content">
+            <router-link :to="`/project/${project.id}/images`">{{ project.numberOfImages }}</router-link>
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('members') }}</td>
+          <td class="prop-content">
+            {{ this.members.length }}
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('user-annotations') }}</td>
+          <td class="prop-content">
+            <router-link :to="`/project/${project.id}/annotations?type=user`">
+              {{ project.numberOfAnnotations }}
+            </router-link>
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('reviewed-annotations') }}</td>
+          <td class="prop-content">
+            <router-link :to="`/project/${project.id}/annotations?type=reviewed`">
+              {{ project.numberOfReviewedAnnotations }}
+            </router-link>
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('description') }}</td>
+          <td class="prop-content">
+            <cytomine-description :object="project" :canEdit="canManageProject" />
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('tags') }}</td>
+          <td class="prop-content">
+            <cytomine-tags :object="project" :canEdit="canManageProject" />
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('properties') }}</td>
+          <td class="prop-content">
+            <cytomine-properties :object="project" :canEdit="canManageProject" />
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('attached-files') }}</td>
+          <td class="prop-content">
+            <attached-files :object="project" :canEdit="canManageProject" />
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('ontology') }}</td>
+          <td class="prop-content">
+            <router-link v-if="project.ontology" :to="`/ontology/${project.ontology}`">
+              {{ project.ontologyName }}
+            </router-link>
+            <em v-else>{{ $t('no-ontology') }}</em>
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('created-on') }}</td>
+          <td class="prop-content">
+            {{ Number(project.created) | moment('ll') }}
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('creator') }}</td>
+          <td class="prop-content">
+            <list-usernames :users="[creator]" :onlines="onlines" />
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('representatives') }} ({{ representatives.length }})</td>
+          <td class="prop-content">
+            <list-usernames :users="representatives" :onlines="onlines" />
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('managers') }} ({{ managers.length }})</td>
+          <td class="prop-content">
+            <list-usernames :users="managers" :onlines="onlines" />
+          </td>
+        </tr>
+        <tr>
+          <td class="prop-label">{{ $t('contributors') }} ({{ contributors.length }})</td>
+          <td class="prop-content">
+            <list-usernames :users="contributors" :onlines="onlines" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <template #footer>
+      <button class="button" @click="showDetailModal = false">{{ $t('button-close') }}</button>
+    </template>
+  </cytomine-modal> -->
 </template>
 
 <script>
@@ -147,6 +160,7 @@ import CytomineDescription from '@/components/description/CytomineDescription';
 import CytomineProperties from '@/components/property/CytomineProperties';
 import CytomineTags from '@/components/tag/CytomineTags';
 import AttachedFiles from '@/components/attached-file/AttachedFiles';
+import CytomineModal from '@/components/utils/CytomineModal';
 
 export default {
   name: 'project-details',
@@ -157,7 +171,8 @@ export default {
     CytomineDescription,
     CytomineProperties,
     CytomineTags,
-    AttachedFiles
+    AttachedFiles,
+    CytomineModal
   },
   props: {
     project: { type: Object },
@@ -168,6 +183,7 @@ export default {
     return {
       loading: true,
       error: false,
+      showDetailModal: true,
 
       creator: null,
       managers: [],
@@ -255,6 +271,11 @@ td.prop-label {
 }
 
 td.prop-content {
+  display: flex;
   width: 100%;
+}
+
+.prop-label {
+  font-weight: bold;
 }
 </style>

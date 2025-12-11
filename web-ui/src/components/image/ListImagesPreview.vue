@@ -17,9 +17,9 @@
   <div class="column" v-for="image in images" :key="image.image">
     <image-preview :image="image" :blindMode="project.blindMode" />
   </div>
-  <div class="column is-narrow vertical-center">
+  <!-- <div class="column is-narrow vertical-center">
     <router-link class="button" :to="`/project/${this.project.id}/images`">{{$t('button-view-all')}}</router-link>
-  </div>
+  </div> -->
 </div>
 <div v-else>
   {{$t('no-image-recently-opened')}}
