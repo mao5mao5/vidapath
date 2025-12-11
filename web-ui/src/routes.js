@@ -25,6 +25,7 @@ import MemberActivityDetails from './components/project/activity/MemberActivityD
 import AdminPanel from './components/admin/AdminPanel.vue';
 import UserActivity from './components/user/UserActivity.vue';
 import PageNotFound from './components/PageNotFound.vue';
+import AIRunnerManagement from './components/airunner/AIRunnerManagement.vue';
 
 const routes = [
   {
@@ -120,6 +121,10 @@ const routes = [
   {
     path: '/admin',
     component: AdminPanel
+  },
+  {
+    path: '/ai',
+    component: AIRunnerManagement,
   },
   {
     path: '/apps',

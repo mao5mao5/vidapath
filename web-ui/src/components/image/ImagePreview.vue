@@ -13,39 +13,47 @@
  limitations under the License.-->
 
 <template>
-<div class="card" :class="{'full-height-card': fullHeightCard}">
-  <router-link class="card-image recent-image" :to="`/project/${idProject}/image/${idImage}`">
-    <figure class="image is-5by3" :style="figureStyle">
-    </figure>
-  </router-link>
-  <div class="card-content">
-    <div class="content">
-      <p>
-        <router-link :to="`/project/${idProject}/image/${idImage}`">
-          <span v-if="isBlindMode" class="blind-indication">[{{this.$t('blinded-name-indication')}}]</span>
-          {{ image.blindedName || image.instanceFilename || image.imageName }}
-          <span v-if="showProject" class="in-project">({{$t('in-project', {projectName: image.projectName})}})</span>
-        </router-link>
-      </p>
-      <slot></slot>
+  <div class="card" :class="{ 'full-height-card': fullHeightCard }">
+    <router-link class="card-image recent-image" :to="`/project/${idProject}/image/${idImage}`">
+      <figure class="image is-5by3" :style="figureStyle">
+      </figure>
+    </router-link>
+    <div class="card-content">
+      <div class="content image-info">
+        <div class="image-name">{{ image.instanceFilename || image.imageName }}</div>
+        <div class="image-details">
+          <div class="info-item" v-if="tissue">
+            <span class="info-label">Tissue:</span>
+            <span class="info-value">{{ tissue }}</span>
+          </div>
+          <div class="info-item" v-if="specimen">
+            <span class="info-label">Specimen:</span>
+            <span class="info-value">{{ specimen }}</span>
+          </div>
+          <div class="info-item" v-if="stain">
+            <span class="info-label">Stain:</span>
+            <span class="info-value">{{ stain }}</span>
+          </div>
+        </div>
+        <slot></slot>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
-import {changeImageUrlFormat} from '@/utils/image-utils';
-import {get} from '@/utils/store-helpers';
-import {appendShortTermToken} from '@/utils/token-utils.js';
+import { changeImageUrlFormat } from '@/utils/image-utils';
+import { get } from '@/utils/store-helpers';
+import { appendShortTermToken } from '@/utils/token-utils.js';
 
 export default {
   name: 'image-preview',
   props: {
-    image: {type: Object},
-    project: {type: Object, default: null},
-    fullHeightCard: {type: Boolean, default: true},
-    showProject: {type: Boolean, default: false},
-    blindMode: {type: Boolean, default: false},
+    image: { type: Object },
+    project: { type: Object, default: null },
+    fullHeightCard: { type: Boolean, default: true },
+    showProject: { type: Boolean, default: true },
+    blindMode: { type: Boolean, default: false },
   },
   computed: {
     shortTermToken: get('currentUser/shortTermToken'),
@@ -65,7 +73,19 @@ export default {
       return changeImageUrlFormat(this.rawPreviewUrl);
     },
     figureStyle() {
-      return {backgroundImage: `url("${appendShortTermToken(this.previewUrl, this.shortTermToken)}")`};
+      return { backgroundImage: `url("${appendShortTermToken(this.previewUrl, this.shortTermToken)}")` };
+    },
+    tissue() {
+      // Return fixed value for now, can be made dynamic later
+      return 'Breast';
+    },
+    specimen() {
+      // Return fixed value for now, can be made dynamic later
+      return 'Biopsy';
+    },
+    stain() {
+      // Return fixed value for now, can be made dynamic later
+      return 'H&E';
     }
   },
 };
@@ -73,6 +93,7 @@ export default {
 
 <style scoped lang="scss">
 @import "../../assets/styles/dark-variables.scss";
+
 .image {
   background-repeat: no-repeat;
   background-position: center center;
@@ -98,5 +119,38 @@ export default {
 .blind-indication {
   font-size: 0.9em;
   text-transform: uppercase;
+}
+
+.image-info {
+  color: white;
+  font-size: 0.9rem;
+}
+
+.image-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.image-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-item {
+  display: flex;
+}
+
+.info-label {
+  font-weight: bold;
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+
+.info-value {
+  flex-grow: 1;
 }
 </style>

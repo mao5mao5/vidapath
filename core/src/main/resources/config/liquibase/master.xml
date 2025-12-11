@@ -53,5 +53,11 @@
     <include file="config/liquibase/changelog/00000000_15_add_patient_sex_stain_fields.xml" relativeToChangelogFile="false"/>
 
     <include file="config/liquibase/changelog/00000000_1_add_temporary_access_token.xml" relativeToChangelogFile="false"/>
+    
+    <include file="config/liquibase/changelog/00000000_16_add_image_instance_ontology_table.xml" relativeToChangelogFile="false"/>
+
+    <include file="config/liquibase/changelog/2025-12-10-ai-runner.xml" relativeToChangelogFile="false"/>
+
+    <include file="config/liquibase/changelog/2025-12-10-ai-algorithm-job.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

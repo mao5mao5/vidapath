@@ -304,6 +304,58 @@ export default class ImageInstance extends Model {
     return this._referenceSlice;
   }
 
+  /**
+   * Fetch ontologies associated with this image instance
+   *
+   * @returns {Array<Ontology>} Array of ontologies associated with this image instance
+   */
+  async fetchOntologies() {
+    if (this.isNew()) {
+      throw new Error('Cannot fetch ontologies for an image instance with no ID.');
+    }
+
+    try {
+      // 通过API获取图像实例关联的本体列表
+      let {data} = await Cytomine.instance.api.get(`${this.callbackIdentifier}/${this.id}/ontology.json`);
+      // 导入Ontology模型并创建本体实例
+      const { default: Ontology } = await import('./ontology.js');
+      return data.collection.map(ontologyData => new Ontology(ontologyData));
+    } catch (error) {
+      console.error('Error fetching image ontologies:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add an ontology to this image instance
+   *
+   * @param {number} ontologyId - The ID of the ontology to add
+   * @returns {Object} The command response
+   */
+  async addOntology(ontologyId) {
+    if (this.isNew()) {
+      throw new Error('Cannot add ontology to an image instance with no ID.');
+    }
+
+    let {data} = await Cytomine.instance.api.post(`${this.callbackIdentifier}/${this.id}/ontology/${ontologyId}.json`);
+    return data;
+  }
+
+  /**
+   * Remove an ontology from this image instance
+   *
+   * @param {number} ontologyId - The ID of the ontology to remove
+   * @returns {Object} The command response
+   */
+  async removeOntology(ontologyId) {
+    if (this.isNew()) {
+      throw new Error('Cannot remove ontology from an image instance with no ID.');
+    }
+
+    let {data} = await Cytomine.instance.api.delete(`${this.callbackIdentifier}/${this.id}/ontology/${ontologyId}.json`);
+    return data;
+  }
+
   async fetchHistogram({nBins} = {}) {
     if (this.isNew()) {
       throw new Error('Cannot get histogram for an image with no ID.');

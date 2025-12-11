@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="00000000-16" author="liquibase">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="image_instance_ontology"/>
+            </not>
+        </preConditions>
+        
+        <createTable tableName="image_instance_ontology">
+            <column name="image_instance_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ontology_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <addPrimaryKey columnNames="image_instance_id, ontology_id" 
+                       constraintName="pk_image_instance_ontology" 
+                       tableName="image_instance_ontology"/>
+                       
+        <addForeignKeyConstraint baseColumnNames="image_instance_id"
+                                 baseTableName="image_instance_ontology"
+                                 constraintName="fk_image_instance_ontology_image_instance"
+                                 referencedColumnNames="id"
+                                 referencedTableName="image_instance"/>
+                                 
+        <addForeignKeyConstraint baseColumnNames="ontology_id"
+                                 baseTableName="image_instance_ontology"
+                                 constraintName="fk_image_instance_ontology_ontology"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ontology"/>
+    </changeSet>
+</databaseChangeLog>

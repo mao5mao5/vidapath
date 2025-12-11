@@ -74,6 +74,7 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
+                                .requestMatchers(new AntPathRequestMatcher("/api/algorithm-result.json", HttpMethod.POST.name())).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/abstractimage/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/imageinstance/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/userannotation/**")).permitAll()
