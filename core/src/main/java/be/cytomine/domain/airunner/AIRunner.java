@@ -173,4 +173,39 @@ public class AIRunner extends CytomineDomain {
         json.put("updated", getUpdated());
         return json;
     }
+    
+    @Override
+    public CytomineDomain buildDomainFromJson(JsonObject json, EntityManager entityManager) {
+        AIRunner airunner = this;
+        airunner.id = json.getJSONAttrLong("id", null);
+        airunner.runnerName = json.getJSONAttrStr("runnerName", true);
+        airunner.name = json.getJSONAttrStr("name", true);
+        airunner.description = json.getJSONAttrStr("description", false);
+        airunner.runnerAddress = json.getJSONAttrStr("runnerAddress", true);
+        
+        // Handle list fields if present in JSON
+        if (json.containsKey("terms") && json.get("terms") instanceof List) {
+            airunner.setTermsList((List<String>) json.get("terms"));
+        }
+        
+        if (json.containsKey("supportedImageFormats") && json.get("supportedImageFormats") instanceof List) {
+            airunner.setSupportedImageFormatsList((List<String>) json.get("supportedImageFormats"));
+        }
+        
+        if (json.containsKey("supportedSourceTypes") && json.get("supportedSourceTypes") instanceof List) {
+            airunner.setSupportedSourceTypesList((List<String>) json.get("supportedSourceTypes"));
+        }
+        
+        if (json.containsKey("supportedScopes") && json.get("supportedScopes") instanceof List) {
+            airunner.setSupportedScopesList((List<String>) json.get("supportedScopes"));
+        }
+        
+        if (json.containsKey("supportedAlgorithmTypes") && json.get("supportedAlgorithmTypes") instanceof List) {
+            airunner.setSupportedAlgorithmTypesList((List<String>) json.get("supportedAlgorithmTypes"));
+        }
+        
+        airunner.created = json.getJSONAttrDate("created");
+        airunner.updated = json.getJSONAttrDate("updated");
+        return airunner;
+    }
 }

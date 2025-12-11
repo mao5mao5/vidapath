@@ -2,13 +2,23 @@ package be.cytomine.service.airunner;
 
 import be.cytomine.domain.airunner.AIRunner;
 import be.cytomine.domain.CytomineDomain;
+import be.cytomine.domain.command.AddCommand;
+import be.cytomine.domain.command.DeleteCommand;
+import be.cytomine.domain.command.Transaction;
+import be.cytomine.domain.security.User;
 import be.cytomine.exceptions.ObjectNotFoundException;
 import be.cytomine.repository.airunner.AIRunnerRepository;
+import be.cytomine.service.CurrentUserService;
 import be.cytomine.service.ModelService;
 import be.cytomine.service.airunner.dto.AIRunnerInfoResponse;
+import be.cytomine.service.security.SecurityACLService;
+import be.cytomine.utils.CommandResponse;
 import be.cytomine.utils.JsonObject;
+import be.cytomine.utils.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +35,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AIRunnerService extends ModelService {
 
+    @Autowired
+    private CurrentUserService currentUserService;
     private final AIRunnerRepository airunnerRepository;
 
     @Override
@@ -35,6 +47,18 @@ public class AIRunnerService extends ModelService {
     @Override
     public CytomineDomain createFromJSON(JsonObject json) {
         return new AIRunner().buildDomainFromJson(json, getEntityManager());
+    }
+
+    @Override
+    public CommandResponse add(JsonObject jsonObject) {
+        User currentUser = currentUserService.getCurrentUser();
+        return executeCommand(new AddCommand(currentUser), null, jsonObject);
+    }
+
+    @Override
+    public List<Object> getStringParamsI18n(CytomineDomain domain) {
+        AIRunner airunner = (AIRunner) domain;
+        return List.of(airunner.getId() != null ? airunner.getId().toString() : "null", airunner.getName());
     }
 
     public Optional<AIRunner> findById(Long id) {
@@ -51,6 +75,21 @@ public class AIRunnerService extends ModelService {
 
     public boolean existsByName(String name) {
         return airunnerRepository.existsByName(name);
+    }
+
+    /**
+     * Delete an AI Runner
+     * @param id The ID of the AI Runner to delete
+     */
+    public CommandResponse delete(Long id) {
+        Optional<AIRunner> airunnerOpt = airunnerRepository.findById(id);
+        if (airunnerOpt.isPresent()) {
+            User currentUser = currentUserService.getCurrentUser();
+            JsonObject json = airunnerOpt.get().toJsonObject();
+            return executeCommand(new DeleteCommand(currentUser, null), airunnerOpt.get(), json);
+        } else {
+            throw new ObjectNotFoundException("AI Runner not found with ID: " + id);
+        }
     }
 
     /**

@@ -43,6 +43,10 @@
           <i class="fas fa-upload"></i>
           Upload
         </router-link>
+        <router-link to="/ai" class="navbar-item">
+          <i class="fas fa-robot"></i>
+          AI
+        </router-link>
         <!-- <router-link v-if="appEngineEnabled" to="/apps" class="navbar-item">
         <i class="fas fa-code"></i>
         {{ $t('app-engine.applications') }}
