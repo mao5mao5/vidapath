@@ -289,7 +289,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .airunner-management {
   padding: 20px;
 }
@@ -302,17 +304,155 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: $dark-bg-secondary;
+  border: 1px solid $dark-border-color;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.airunner-card:hover {
+  border-color: #409eff;
+  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.2);
+}
+
+.card-header {
+  background-color: $dark-bg-secondary;
+  border-bottom: 1px solid $dark-border-color;
+}
+
+.card-header-title {
+  color: $dark-text-primary;
+  background-color: $dark-bg-secondary;
 }
 
 .card-content {
   flex-grow: 1;
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+.content {
+  color: $dark-text-primary;
+}
+
+.content strong {
+  color: $dark-text-primary;
+}
+
+.card-footer {
+  background-color: $dark-bg-secondary;
+  border-top: 1px solid $dark-border-color;
 }
 
 .card-footer-item {
+  color: $dark-text-primary;
+  background-color: $dark-bg-secondary;
+  border-color: $dark-border-color;
   cursor: pointer;
 }
 
+.card-footer-item:hover {
+  background-color: $dark-bg-hover;
+}
+
 .title {
-  color: #1e2939;
+  color: $dark-text-primary;
+}
+
+.box {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+  border: 1px solid $dark-border-color;
+}
+
+.level {
+  background-color: $dark-bg-primary;
+}
+
+.level-left .title {
+  color: $dark-text-primary;
+}
+
+.button {
+  background-color: $dark-button-bg;
+  border-color: $dark-button-border;
+  color: $dark-text-primary;
+}
+
+.button:hover {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.button.is-primary {
+  background-color: #409eff;
+  border-color: #409eff;
+  color: white;
+}
+
+.button.is-primary:hover {
+  background-color: #338fef;
+  border-color: #338fef;
+}
+
+.has-text-centered .subtitle {
+  color: $dark-text-primary;
+}
+
+.modal-card-head {
+  background-color: $dark-bg-secondary;
+  border-bottom: 1px solid $dark-border-color;
+}
+
+.modal-card-title {
+  color: $dark-text-primary;
+}
+
+.modal-card-body {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+.modal-card-foot {
+  background-color: $dark-bg-secondary;
+  border-top: 1px solid $dark-border-color;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.label {
+  color: $dark-text-primary;
+}
+
+.control .input {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.control .input:focus {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.control .textarea {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.control .textarea:focus {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.delete:before, .delete:after {
+  background-color: $dark-text-primary;
+}
+
+.delete:hover:before, .delete:hover:after {
+  background-color: #cccccc;
 }
 </style>

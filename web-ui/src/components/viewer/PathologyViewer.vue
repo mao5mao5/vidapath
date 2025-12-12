@@ -11,13 +11,24 @@
       <!-- Whole Image Body -->
       <div v-if="visible.whole" class="panel-body">
 
-        <!-- Run Algorithm Button -->
-        <button class="button is-primary is-fullwidth" @click="runAlgorithm">
-          <span class="icon is-small">
-            <i class="fas fa-play"></i>
-          </span>
-          <span>Run AI Algorithm</span>
-        </button>
+        <!-- Run Algorithm Controls -->
+        <div class="run-algorithm-controls">
+          <div class="select is-fullwidth">
+            <select v-model="selectedAIRunner" :disabled="loadingRunners">
+              <option value="">Select AI Runner</option>
+              <option v-for="runner in aiRunners" :key="runner.id" :value="runner">
+                {{ runner.name }}
+              </option>
+            </select>
+          </div>
+                
+          <button class="button is-primary" @click="runAlgorithm" :disabled="!selectedAIRunner || loadingRunners">
+            <span class="icon is-small">
+              <i class="fas fa-play"></i>
+            </span>
+            <span>Run AI Algorithm</span>
+          </button>
+        </div>
 
         <!-- Switch -->
         <div class="switch-row">
@@ -221,20 +232,6 @@ export default {
     },
     
     runAlgorithm() {
-      // 检查是否有可用的AI Runner
-      if (this.aiRunners.length === 0) {
-        this.$buefy.toast.open({
-          message: 'No AI runners available',
-          type: 'is-danger'
-        });
-        return;
-      }
-      
-      // 显示AI Runner选择模态框
-      this.showAIRunnerModal = true;
-    },
-    
-    async confirmRunAlgorithm() {
       if (!this.selectedAIRunner) {
         this.$buefy.toast.open({
           message: 'Please select an AI runner',
@@ -251,9 +248,6 @@ export default {
         cancelText: 'Cancel',
         onConfirm: async () => {
           try {
-            // 关闭模态框
-            this.showAIRunnerModal = false;
-            
             // 构造请求数据
             const requestData = {
               airunnerId: this.selectedAIRunner.id,
@@ -492,6 +486,34 @@ input:checked+.slider:before {
 }
 
 .select option {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+/* Run Algorithm Controls */
+.run-algorithm-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.run-algorithm-controls .select {
+  flex: 1;
+}
+
+.run-algorithm-controls .select select {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+  width: 100%;
+}
+
+.run-algorithm-controls .select select:focus {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.run-algorithm-controls .select option {
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
 }
