@@ -138,7 +138,7 @@ export default {
         adminByNow: false,
         guest: true,
         // 添加clone方法以保持与真实用户对象的一致性
-        clone: function() {
+        clone: function () {
           return Object.assign({}, this);
         }
       };
@@ -153,7 +153,7 @@ export default {
         email: 'temporary@example.com',
         locale: 'en',
         // 添加clone方法以保持与真实账户对象的一致性
-        clone: function() {
+        clone: function () {
           return Object.assign({}, this);
         }
       };
@@ -162,7 +162,7 @@ export default {
     setTemporaryUserAndAccount() {
       const tempUser = this.createTemporaryUser();
       const tempAccount = this.createTemporaryAccount();
-      
+
       this.$store.commit('currentUser/setUser', tempUser);
       this.$store.commit('currentUser/setAccount', tempAccount);
     }
@@ -191,6 +191,8 @@ export default {
           // 将临时令牌作为查询参数添加到URL中
           config.params = config.params || {};
           config.params.access_token = accessToken;
+
+          this.$store.commit('currentUser/setShortTermToken', accessToken);
         }
         return config;
       }

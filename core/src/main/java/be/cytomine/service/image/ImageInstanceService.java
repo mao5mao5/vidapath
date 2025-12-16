@@ -174,10 +174,14 @@ public class ImageInstanceService extends ModelService {
 
     public Optional<ImageInstance> find(Long id, String authHeader) {
         Optional<ImageInstance> ImageInstance = imageInstanceRepository.findById(id);
-        String token = authHeader.replace("Bearer ", "");
-        String username = TokenUtils.getUsernameFromToken(token);
-        User user = currentUserService.getCurrentUser(username);
-        ImageInstance.ifPresent(image -> securityACLService.check(image.container(),READ, user));
+        if (authHeader != null) {
+            String token = authHeader.replace("Bearer ", "");
+            String username = TokenUtils.getUsernameFromToken(token);
+            User user = currentUserService.getCurrentUser(username);
+            ImageInstance.ifPresent(image -> securityACLService.check(image.container(),READ, user));
+        } else {
+            ImageInstance.ifPresent(image -> securityACLService.check(image.container(),READ));
+        }
         return ImageInstance;
     }
 
