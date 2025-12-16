@@ -22,7 +22,7 @@
     <template v-if="!loading && zoom !== null">
       <!-- AI Analysis Panel -->
       <div v-if="showAIAnalysisPanel" class="ai-analysis-panel">
-        <pathology-viewer :project="project" :index="index"/>
+        <pathology-viewer :project="project" :index="index" />
       </div>
 
       <!-- Share Project Modal -->
@@ -48,13 +48,14 @@
             <rotation-selector class="panel-options" v-show="activePanel === 'rotation'" :index="index" />
           </li>
           <a-divider />
-          <!-- <li>
+
+          <li v-if="$keycloak.hasTemporaryToken">
             <a @click="togglePanel('layers')" :class="{ active: activePanel === 'layers' }">
               <i class="fas fa-copy"></i>
             </a>
-          </li> -->
-          <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
-            :layers-to-preload="layersToPreload" />
+            <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
+              :layers-to-preload="layersToPreload" />
+          </li>
 
           <li v-if="isPanelDisplayed('color-manipulation')">
             <a @click="togglePanel('colors')" :class="{ active: activePanel === 'colors' }">
@@ -493,13 +494,13 @@ export default {
       return (tile, src) => {
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
-        
+
         // 检查是否为临时访问令牌用户
         if (this.$keycloak && this.$keycloak.hasTemporaryToken) {
           // 从URL中提取access_token并添加到请求URL中
           const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
           const accessToken = urlParams.get('access_token');
-          
+
           if (accessToken) {
             const separator = src.includes('?') ? '&' : '?';
             const urlWithToken = `${src}${separator}access_token=${accessToken}`;
@@ -512,7 +513,7 @@ export default {
           xhr.open('GET', src);
           xhr.setRequestHeader('Authorization', 'Bearer ' + this.shortTermToken);
         }
-        
+
         xhr.addEventListener('load', () => {
           const url = URL.createObjectURL(xhr.response);
           const tileImage = tile.getImage();

@@ -24,6 +24,7 @@ function getQueryParam(param) {
 }
 
 const hasTemporaryToken = !!getQueryParam('access_token');
+const temporaryToken = getQueryParam('access_token');
 
 const initOptions = {
   url: `${window.location.origin}/iam`,
@@ -36,6 +37,7 @@ const _keycloak = new Keycloak(initOptions);
 
 // 为_keycloak对象添加一个属性，标记是否存在临时访问令牌
 _keycloak.hasTemporaryToken = hasTemporaryToken;
+_keycloak.temporaryToken = temporaryToken;
 
 const plugin = {
   install: Vue => {
