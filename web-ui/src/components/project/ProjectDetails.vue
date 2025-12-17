@@ -30,11 +30,14 @@
         <tr>
           <td class="prop-label">{{ $t('actions') }}</td>
           <td class="prop-content">
-            <button class="button is-small" @click="showDetailModal = true" style="margin-right: 0.5rem;" >
-              More details
+            <button class="button" @click="showDetailModal = true" style="margin-right: 0.5rem;" >
+              Case details
             </button>
-            <project-actions v-if="canManageProject" :project="project" @update="$emit('update', $event)"
-              @delete="$emit('delete')"/>
+            <button class="button" @click="showPatientInfoModal = true" style="margin-right: 0.5rem;">
+              Patient Info
+            </button>
+            <!-- <project-actions v-if="canManageProject" :project="project" @update="$emit('update', $event)"
+              @delete="$emit('delete')"/> -->
           </td>
         </tr>
       </tbody>
@@ -159,6 +162,45 @@
         </footer>
       </div>
     </div>
+
+    <div v-if="showPatientInfoModal" class="modal is-active">
+      <div class="modal-background" @click="showPatientInfoModal = false"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Patient Information</p>
+          <button class="delete" aria-label="close" @click="showPatientInfoModal = false"></button>
+        </header>
+        <section class="modal-card-body">
+          <table class="table is-fullwidth">
+            <tbody>
+              <tr>
+                <td class="prop-label">Patient ID</td>
+                <td class="prop-content">{{ project.patientId || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="prop-label">Patient Name</td>
+                <td class="prop-content">{{ project.patientName || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="prop-label">Patient Age</td>
+                <td class="prop-content">{{ project.patientAge || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="prop-label">Gender</td>
+                <td class="prop-content">{{ project.patientSex || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="prop-label">MRN</td>
+                <td class="prop-content">{{ project.medicalRecordNumber || 'N/A' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <footer class="modal-card-foot" style="justify-content: flex-end;">
+          <button class="button" @click="showPatientInfoModal = false">{{ $t('button-close') }}</button>
+        </footer>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -194,6 +236,7 @@ export default {
       loading: true,
       error: false,
       showDetailModal: false,
+      showPatientInfoModal: false,
 
       creator: null,
       managers: [],

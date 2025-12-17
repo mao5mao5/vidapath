@@ -144,20 +144,24 @@
               {{ project.patientId }}
             </b-table-column>
 
-            <b-table-column field="patientName" label="Name" centered sortable width="150">
+            <!-- <b-table-column field="patientName" label="Name" centered sortable width="150">
               {{ project.patientName }}
-            </b-table-column>
+            </b-table-column> -->
 
-            <b-table-column field="patientAge" label="Age" centered sortable width="150">
+            <!-- <b-table-column field="patientAge" label="Age" centered sortable width="150">
               {{ project.patientAge }}
             </b-table-column>
 
             <b-table-column field="patientSex" label="Gender" centered sortable width="150">
               {{ project.patientSex }}
-            </b-table-column>
+            </b-table-column> -->
 
             <b-table-column field="accessionId" :label="$t('accession-id')" centered sortable width="150">
               {{ project.accessionId }}
+            </b-table-column>
+
+            <b-table-column field="accessDate" :label="$t('access-date')" centered sortable width="180">
+              {{ project.accessDate | moment('ll') }}
             </b-table-column>
 
             <b-table-column field="status" :label="$t('status')" centered sortable width="150">
@@ -166,13 +170,9 @@
               </span>
             </b-table-column>
 
-            <b-table-column field="accessDate" :label="$t('access-date')" centered sortable width="180">
-              {{ project.accessDate | moment('ll') }}
-            </b-table-column>
-
-            <b-table-column field="medicalRecordNumber" label="MRN" centered sortable width="150">
+            <!-- <b-table-column field="medicalRecordNumber" label="MRN" centered sortable width="150">
               {{ project.medicalRecordNumber }}
-            </b-table-column>
+            </b-table-column> -->
 
             <b-table-column field="tissue" :label="$t('tissue')" centered sortable width="150">
               {{ project.tissue }}
@@ -188,29 +188,29 @@
 
             <b-table-column label="Actions" centered width="150">
               <div class="buttons">
-                <button class="button is-small is-link" @click="openAddImageModal(project)">
-                  <span class="icon is-small">
+                <button class="button" @click="openAddImageModal(project)">
+                  <span class="icon">
                     <i class="fas fa-plus"></i>
                   </span>
-                  <span>{{ $t('button-add-image') }}</span>
+                  <!-- <span>{{ $t('button-add-image') }}</span> -->
                 </button>
-                <button class="button is-small is-link" @click="openProject(project)">
-                  <span class="icon is-small">
+                <button class="button" @click="openProject(project)">
+                  <span class="icon">
                     <i class="fas fa-eye"></i>
                   </span>
-                  <span>Open viewer</span>
+                  <!-- <span>Open viewer</span> -->
                 </button>
-                <button class="button is-small is-info" @click="openShareModal(project)">
-                  <span class="icon is-small">
+                <button class="button" @click="openShareModal(project)">
+                  <span class="icon">
                     <i class="fas fa-share-alt"></i>
                   </span>
-                  <span>{{ $t('button-share') }}</span>
+                  <!-- <span>{{ $t('button-share') }}</span> -->
                 </button>
-                <button class="button is-small is-primary" @click="runAIOnProject(project)">
-                  <span class="icon is-small">
+                <button class="button" @click="runAIOnProject(project)">
+                  <span class="icon">
                     <i class="fas fa-robot"></i>
                   </span>
-                  <span>Run AI</span>
+                  <!-- <span>Run AI</span> -->
                 </button>
               </div>
             </b-table-column>
@@ -640,7 +640,7 @@ export default {
     },
     async fetchAIRunners() {
       // 导入AIRunner
-       this.aiRunners = await AIRunner.fetchAll();
+      this.aiRunners = await AIRunner.fetchAll();
     },
 
     toggleFilterDisplay() {
@@ -835,7 +835,7 @@ export default {
         });
         return;
       }
-      
+
       this.$buefy.dialog.confirm({
         title: `Confirm whether to run the ${this.selectedAIRunner.name} algorithm`,
         message: 'This run will be in the background, so don\'t need to wait for.',
@@ -847,28 +847,28 @@ export default {
             // 关闭模态框
             this.aiRunnerSelectionModal = false;
             this.bulkActionModal = false;
-            
+
             // 为每个选中的项目运行AI算法
             const runPromises = this.checkedProjects.map(async (project) => {
               const requestData = {
                 airunnerId: this.selectedAIRunner.id,
                 projectId: project.id
               };
-              
+
               // 调用API运行AI算法
               await AIAlgorithmJob.runAlgorithm(requestData);
             });
-            
+
             // 等待所有项目开始运行AI算法
             await Promise.all(runPromises);
-            
+
             this.$buefy.toast.open({
               message: this.$t('bulk-ai-processing-started'),
               type: 'is-success'
             });
-            
+
             console.log('Started AI processing on projects:', this.checkedProjects, 'with runner:', this.selectedAIRunner);
-            
+
             // 清空选择
             this.checkedProjects = [];
             this.selectedAIRunner = null;
@@ -891,7 +891,7 @@ export default {
         });
         return;
       }
-      
+
       this.$buefy.dialog.confirm({
         title: `Confirm whether to run the ${this.selectedSingleAIRunner.name} algorithm`,
         message: 'This run will be in the background, so don\'t need to wait for.',
@@ -902,23 +902,23 @@ export default {
           try {
             // 关闭模态框
             this.singleAIRunnerSelectionModal = false;
-            
+
             // 为单个项目运行AI算法
             const requestData = {
               airunnerId: this.selectedSingleAIRunner.id,
               projectId: this.projectToRunAI.id
             };
-            
+
             // 调用API运行AI算法
             await AIAlgorithmJob.runAlgorithm(requestData);
-            
+
             this.$buefy.toast.open({
               message: this.$t('single-ai-processing-started'),
               type: 'is-success'
             });
-            
+
             console.log('Started AI processing on project:', this.projectToRunAI, 'with runner:', this.selectedSingleAIRunner);
-            
+
             // 清空选择
             this.projectToRunAI = null;
             this.selectedSingleAIRunner = null;
