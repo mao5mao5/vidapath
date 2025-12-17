@@ -49,12 +49,12 @@
           </li>
           <a-divider />
 
-          <li v-if="$keycloak.hasTemporaryToken">
+          <li>
             <a @click="togglePanel('layers')" :class="{ active: activePanel === 'layers' }">
               <i class="fas fa-copy"></i>
             </a>
             <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
-              :layers-to-preload="layersToPreload" />
+              />
           </li>
 
           <li v-if="isPanelDisplayed('color-manipulation')">
@@ -104,7 +104,7 @@
               <i :class="isFullscreen ? 'fas fa-compress' : 'fas fa-expand'"></i>
             </a>
           </li>
-          <li>
+          <li v-if="!$keycloak.hasTemporaryToken">
             <a @click="ShareByLink()">
               <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -524,17 +524,17 @@ export default {
       };
     },
 
-    layersToPreload() {
-      let layers = [];
-      let annot = this.selectedAnnotation || this.routedAnnotation;
-      if (annot) {
-        layers.push(annot.type === AnnotationType.REVIEWED ? -1 : (annot.username));
-      }
-      if (this.routedAction === 'review' && !layers.includes(-1)) {
-        layers.push(-1);
-      }
-      return layers;
-    },
+    // layersToPreload() {
+    //   let layers = [];
+    //   let annot = this.selectedAnnotation || this.routedAnnotation;
+    //   if (annot) {
+    //     layers.push(annot.type === AnnotationType.REVIEWED ? -1 : (annot.username));
+    //   }
+    //   if (this.routedAction === 'review' && !layers.includes(-1)) {
+    //     layers.push(-1);
+    //   }
+    //   return layers;
+    // },
 
     overviewCollapsed() {
       return this.overview ? this.overview.getCollapsed() : this.imageWrapper.view.overviewCollapsed;
