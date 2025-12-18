@@ -16,9 +16,9 @@
   <cytomine-modal :active="active" :title="'Share Case'" @close="$emit('update:active', false)">
     <b-loading :is-full-page="false" :active="loading" />
     <div v-if="!loading" class="share-project-modal">
-      <b-message type="is-info" has-icon size="is-small" class="element-spacing">
+      <!-- <b-message type="is-info" has-icon size="is-small" class="element-spacing">
         Share the case with specific users or make it publicly accessible.
-      </b-message>
+      </b-message> -->
 
       <!-- <div class="form-section element-spacing">
         <b-field :label="'Share with'" class="field-spacing">
@@ -32,9 +32,9 @@
       </div> -->
 
       <div v-if="shareType === 'public'" class="form-section element-spacing">
-        <b-message type="is-warning" has-icon size="is-small" class="element-spacing">
+        <!-- <b-message type="is-warning" has-icon size="is-small" class="element-spacing">
           Warning: Making the case public will grant access to all users in the system.
-        </b-message>
+        </b-message> -->
 
 
 
