@@ -419,6 +419,24 @@ public class ProjectService extends ModelService {
             from += "LEFT OUTER JOIN description d ON d.domain_ident = p.id ";
         }
         if(projectSearchExtension.isWithCurrentUserRoles()) {
+            // 将原来的布尔值查询改为实际的用户列表查询
+            select += ", admins.admins_list, representatives.representatives_list ";
+            from += "LEFT OUTER JOIN ( " +
+                    "  SELECT pa.id, " +
+                    "  STRING_AGG(CONCAT(u.id, ':', u.name), ',') as admins_list " +
+                    "  FROM admin_project pa " +
+                    "  JOIN sec_user u ON pa.user_id = u.id " +
+                    "  GROUP BY pa.id " +
+                    ") admins ON admins.id = p.id " +
+                    "LEFT OUTER JOIN ( " +
+                    "  SELECT pru.project_id, " +
+                    "  STRING_AGG(CONCAT(u.id, ':', u.name), ',') as representatives_list " +
+                    "  FROM project_representative_user pru " +
+                    "  JOIN sec_user u ON pru.user_id = u.id " +
+                    "  GROUP BY pru.project_id " +
+                    ") representatives ON representatives.project_id = p.id ";
+
+            /* 原来的代码:
             User currentUser = currentUserService.getCurrentUser(); // cannot use user param because it is set to null if user connected as admin
             select += ", (admin_project.id IS NOT NULL) AS is_admin, (repr.id IS NOT NULL) AS is_representative ";
             from += "LEFT OUTER JOIN admin_project " +
@@ -437,7 +455,7 @@ public class ProjectService extends ModelService {
                     search += " AND admin_project.id IS NULL  ";
                 }
             }
-
+            */
         }
 
 
@@ -556,7 +574,36 @@ public class ProjectService extends ModelService {
                 object.put("description", result.get("description")==null ? "" : result.get("description"));
             }
             if(projectSearchExtension.isWithCurrentUserRoles()) {
-                object.put("currentUserRoles", JsonObject.of("admin", result.get("isAdmin"), "representative", result.get("isRepresentative")));
+                // 解析管理员列表
+                String adminsList = (String)result.get("adminsList");
+                List<JsonObject> adminUsers = new ArrayList<>();
+                if (adminsList != null && !adminsList.isEmpty()) {
+                    String[] admins = adminsList.split(",");
+                    for (String admin : admins) {
+                        String[] parts = admin.split(":");
+                        if (parts.length == 2) {
+                            adminUsers.add(JsonObject.of("id", Long.valueOf(parts[0]), "name", parts[1]));
+                        }
+                    }
+                }
+
+                // 解析代表用户列表
+                String representativesList = (String)result.get("representativesList");
+                List<JsonObject> representativeUsers = new ArrayList<>();
+                if (representativesList != null && !representativesList.isEmpty()) {
+                    String[] representatives = representativesList.split(",");
+                    for (String representative : representatives) {
+                        String[] parts = representative.split(":");
+                        if (parts.length == 2) {
+                            representativeUsers.add(JsonObject.of("id", Long.valueOf(parts[0]), "name", parts[1]));
+                        }
+                    }
+                }
+
+                object.put("currentUserRoles", JsonObject.of(
+                    "admins", adminUsers,
+                    "representatives", representativeUsers
+                ));
             }
             results.add(object);
         }

@@ -211,16 +211,41 @@
             </b-table-column>
 
             <b-table-column field="currentUserRoles" label="Assign To" centered sortable width="150">
-              {{ project?.currentUserRoles?.representative ? currentUser.name : '' }}
-              <button class="button is-small" @click="openAssignToModal(project)">
-                <span class="icon is-small">
-                  <i class="fas fa-user-plus"></i>
+              <div v-if="editingProjectId === project.id" class="field">
+                <b-dropdown v-model="projectRepresentatives[project.id]" multiple append-to-body>
+                  <template #trigger="{ active }">
+                    <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'" style="color:royalblue;">
+                      Select users
+                    </b-button>
+                  </template>
+
+                  <b-dropdown-item v-for="user in allUsers" :key="user.id" :value="user.id">
+                    <span>{{ user.name }}</span>
+                  </b-dropdown-item>
+                </b-dropdown>
+
+                <div class="mt-2">
+                  <button class="button is-small is-success mr-1" @click="saveRepresentatives(project)">Save</button>
+                  <button class="button is-small" @click="cancelEditing(project)">Cancel</button>
+                </div>
+              </div>
+
+              <div v-else>
+                <span v-if="project.currentUserRoles && project.currentUserRoles.representatives">
+                  {{project.currentUserRoles.representatives.map(rep => rep.name).join(', ')}}
                 </span>
-              </button>
+                <span v-else class="has-text-grey">No representatives</span>
+
+                <button class="button is-small ml-2" @click="startEditing(project)">
+                  <span class="icon is-small">
+                    <i class="fas fa-edit"></i>
+                  </span>
+                </button>
+              </div>
             </b-table-column>
 
 
-            <b-table-column label="Actions" centered width="150">
+            <b-table-column label="Actions" centered width="200">
               <div class="buttons">
                 <button class="button" @click="openAddImageModal(project)">
                   <span class="icon">
@@ -390,7 +415,7 @@ import ShareProjectModal from './ShareProjectModal';
 
 import { get, sync, syncBoundsFilter, syncMultiselectFilter } from '@/utils/store-helpers';
 
-import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection, AIRunner, AIAlgorithmJob, Project } from '@/api';
+import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection, AIRunner, AIAlgorithmJob, UserCollection, Project, ProjectRepresentative, ProjectRepresentativeCollection } from '@/api';
 import IconProjectMemberRole from '@/components/icons/IconProjectMemberRole';
 import AddImageModal from '@/components/image/AddImageModal.vue';
 export default {
@@ -413,6 +438,7 @@ export default {
       projects: [],
       ontologies: [],
       availableTags: [],
+      allUsers: [],
 
       contributorLabel: this.$t('contributor'),
       managerLabel: this.$t('manager'),
@@ -420,6 +446,7 @@ export default {
       creationModal: false,
       addImageModal: false,
       shareProjectModal: false,
+      assignToModal: false,
       bulkActionModal: false,
       aiRunnerSelectionModal: false,
       singleAIRunnerSelectionModal: false,
@@ -427,6 +454,10 @@ export default {
       projectToRunAI: null,
 
       checkedProjects: [],
+
+      // 编辑代表用户的属性
+      editingProjectId: null,
+      projectRepresentatives: {}, // 存储每个项目的代表用户
 
       // AI Runners
       aiRunners: [],
@@ -678,9 +709,110 @@ export default {
       this.aiRunners = await AIRunner.fetchAll();
     },
 
+    async fetchAllUsers() {
+      try {
+        this.allUsers = (await UserCollection.fetchAll()).array;
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        this.$notify({ type: 'error', text: 'Failed to fetch users.' });
+      }
+    },
+
     toggleFilterDisplay() {
       this.filtersOpened = !this.filtersOpened;
     },
+
+    async startEditing(project) {
+      // 开始编辑项目代表用户
+      this.editingProjectId = project.id;
+
+      // 初始化该项目的代表用户列表
+      if (project.currentUserRoles && project.currentUserRoles.representatives) {
+
+        // 获取当前项目的所有代表用户
+        const currentRepresentatives = await ProjectRepresentativeCollection.fetchAll({
+          filterKey: 'project',
+          filterValue: project.id
+        });
+
+        const currentRepresentativeUsers = currentRepresentatives.array || [];
+        const currentRepresentativeIds = currentRepresentativeUsers.map(rep => rep.user);
+        this.$set(this.projectRepresentatives, project.id, currentRepresentativeIds);
+      } else {
+        this.$set(this.projectRepresentatives, project.id, []);
+      }
+
+      console.log('projectRepresentatives:', this.projectRepresentatives);
+    },
+
+    cancelEditing(project) {
+      // 取消编辑
+      this.editingProjectId = null;
+      // this.$delete(this.projectRepresentatives, project.id);
+    },
+
+    async saveRepresentatives(project) {
+      // 保存项目代表用户
+      try {
+        // 获取当前项目的所有代表用户
+        const currentRepresentatives = await ProjectRepresentativeCollection.fetchAll({
+          filterKey: 'project',
+          filterValue: project.id
+        });
+
+        const currentRepresentativeUsers = currentRepresentatives.array || [];
+        const currentRepresentativeIds = currentRepresentativeUsers.map(rep => rep.user);
+
+        // 获取用户选择的代表用户
+        const selectedRepresentatives = this.projectRepresentatives[project.id] || [];
+
+        // 找出需要删除的代表用户（在current中但不在selected中的）
+        const toRemove = currentRepresentativeIds.filter(
+          id => !selectedRepresentatives.includes(id)
+        );
+
+        console.log('toRemove:', toRemove);
+
+        // 找出需要添加的代表用户（在selected中但不在current中的）
+        const toAdd = selectedRepresentatives.filter(
+          id => !currentRepresentativeIds.includes(id)
+        );
+
+        console.log('toAdd:', toAdd);
+
+        // 添加新的代表用户
+        for (const id of toAdd) {
+          const newRep = new ProjectRepresentative({
+            project: project.id,
+            user: id
+          });
+          await newRep.save();
+        }
+
+        // 删除不再需要的代表用户
+        for (const id of toRemove) {
+          await ProjectRepresentative.delete(0, project.id, id);
+        }
+
+        // 更新本地数据
+        this.revision++;
+
+        // 结束编辑状态
+        this.editingProjectId = null;
+
+        this.$notify({
+          type: 'success',
+          text: 'Representatives updated successfully.'
+        });
+      } catch (error) {
+        console.error('Error updating representatives:', error);
+        this.$notify({
+          type: 'error',
+          text: 'Failed to update representatives.'
+        });
+      }
+    },
+
     updateProject() {
       this.revision++;
     },
@@ -967,32 +1099,6 @@ export default {
         }
       });
     },
-
-    async openAssignToModal(project) {
-      try {
-        // 获取项目代表用户列表
-        const representatives = await Project.fetchRepresentatives(project.id);
-        // 显示代表用户信息
-        this.$buefy.dialog.alert({
-          title: 'Project Representative',
-          message: `
-            <div>
-              ${representatives.array && representatives.array.length > 0 
-                ? representatives.array.map(rep => `<p>${rep.fullName || rep.username}</p>`).join('')
-                : '<p>No representative assigned</p>'
-              }
-            </div>
-          `,
-          confirmText: 'OK'
-        });
-      } catch (error) {
-        console.error('Error fetching project representatives:', error);
-        this.$buefy.toast.open({
-          message: 'Failed to fetch project representatives',
-          type: 'is-danger'
-        });
-      }
-    }
   },
   async created() {
     try {
@@ -1000,7 +1106,8 @@ export default {
         this.fetchOntologies(),
         this.fetchMaxFilters(),
         this.fetchTags(),
-        this.fetchAIRunners()
+        this.fetchAIRunners(),
+        this.fetchAllUsers()
       ]);
     } catch (error) {
       console.log(error);
