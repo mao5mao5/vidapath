@@ -361,10 +361,8 @@ public class ProjectService extends ModelService {
         if (user!=null) {
             select = "SELECT DISTINCT p.* ";
             from = "FROM project p " +
-                    "JOIN acl_object_identity as aclObjectId ON aclObjectId.object_id_identity = p.id " +
-                    "JOIN acl_entry as aclEntry ON aclEntry.acl_object_identity = aclObjectId.id " +
-                    "JOIN acl_sid as aclSid ON aclEntry.sid = aclSid.id ";
-            where = "WHERE aclSid.sid like '"+user.getUsername()+"' ";
+                    "JOIN project_representative_user pru ON pru.project_id = p.id ";
+            where = "WHERE pru.user_id = "+user.getId()+" ";
         }
         else {
             select = "SELECT DISTINCT(p.id) as distinctId, p.* ";
