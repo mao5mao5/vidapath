@@ -825,6 +825,8 @@ export default {
 
         console.log('toAdd:', toAdd);
 
+        await project.addUsers(toAdd);
+
         // 添加新的代表用户
         for (const id of toAdd) {
           const newRep = new ProjectRepresentative({
@@ -1060,6 +1062,7 @@ export default {
             id => !currentRepresentativeIds.includes(id)
           );
 
+          await project.addUsers(toAdd);
           // 添加新的代表用户
           for (const id of toAdd) {
             const newRep = new ProjectRepresentative({
