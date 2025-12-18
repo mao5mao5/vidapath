@@ -38,16 +38,40 @@
               {{ nbActiveFilters }}
             </span>
           </button>
-          <button v-if="checkedProjects.length > 0" class="button is-info bulk-action-button"
+          <!-- <button v-if="checkedProjects.length > 0" class="button is-info bulk-action-button"
             @click="bulkActionModal = true">
             Batch actions ({{ checkedProjects.length }})
-          </button>
+          </button> -->
           <button class="button is-link" @click="creationModal = true">
             <span class="icon">
               <i class="fas fa-plus"></i>
             </span>
             <span>{{ $t('new-case') }}</span>
           </button>
+          <button v-if="checkedProjects.length > 0" class="button is-info" @click="bulkShare">
+            <span class="icon is-small">
+              <i class="fas fa-share-alt"></i>
+            </span>
+            <span>Bulk share</span>
+          </button>
+          <button v-if="checkedProjects.length > 0" class="button is-warning" @click="bulkAssign">
+            <span class="icon is-small">
+              <i class="fas fa-user-tag"></i>
+            </span>
+            <span>Bulk assign</span>
+          </button>
+          <button v-if="checkedProjects.length > 0" class="button is-primary" @click="bulkRunAI">
+            <span class="icon is-small">
+              <i class="fas fa-robot"></i>
+            </span>
+            <span>Run AI</span>
+          </button>
+          <!-- <button v-if="checkedProjects.length > 0" class="button is-danger" @click="deleteSelectedProjects">
+            <span class="icon is-small">
+              <i class="fas fa-trash"></i>
+            </span>
+            <span>Delete</span>
+          </button> -->
         </div>
 
         <b-collapse :open="filtersOpened">
