@@ -22,7 +22,7 @@
       <b-loading :is-full-page="false" :active="loading" class="small" />
       <tbody v-if="!loading">
         <tr v-if="isPropDisplayed('imagesPreview')">
-          <td class="prop-label">{{ $t('images') }}</td>
+          <td class="prop-label">Slides</td>
           <td class="prop-content">
             <list-images-preview :project="project" />
           </td>
@@ -31,10 +31,10 @@
           <td class="prop-label">{{ $t('actions') }}</td>
           <td class="prop-content">
             <button class="button" @click="showDetailModal = true" style="margin-right: 0.5rem;" >
-              Case details
+              Case detail
             </button>
             <button class="button" @click="showPatientInfoModal = true" style="margin-right: 0.5rem;">
-              Patient Info
+              Patient information
             </button>
             <!-- <project-actions v-if="canManageProject" :project="project" @update="$emit('update', $event)"
               @delete="$emit('delete')"/> -->
@@ -64,7 +64,7 @@
                 </td>
               </tr> -->
               <tr>
-                <td class="prop-label">{{ $t('images') }}</td>
+                <td class="prop-label">Slides</td>
                 <td class="prop-content">
                   <router-link :to="`/project/${project.id}/images`">{{ project.numberOfImages }}</router-link>
                 </td>

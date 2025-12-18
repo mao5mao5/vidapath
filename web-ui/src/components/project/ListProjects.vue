@@ -168,21 +168,17 @@
                 :is-representative="project.currentUserRoles.representative" />
             </b-table-column> -->
 
-            <b-table-column field="patientId" :label="$t('patient-id')" centered sortable width="150">
-              {{ project.patientId }}
-            </b-table-column>
-
             <!-- <b-table-column field="patientName" label="Name" centered sortable width="150">
               {{ project.patientName }}
             </b-table-column> -->
 
-            <b-table-column field="patientAge" label="Age" centered sortable width="50">
+            <!-- <b-table-column field="patientAge" label="Age" centered sortable width="50">
               {{ project.patientAge }}
             </b-table-column>
 
             <b-table-column field="patientSex" label="Gender" centered sortable width="50">
               {{ project.patientSex }}
-            </b-table-column>
+            </b-table-column> -->
 
             <b-table-column field="accessionId" :label="$t('accession-id')" centered sortable width="150">
               {{ project.accessionId }}
@@ -198,9 +194,17 @@
               </span>
             </b-table-column>
 
+            <b-table-column field="patientId" :label="$t('patient-id')" centered sortable width="150">
+              {{ project.patientId }}
+            </b-table-column>
+
             <!-- <b-table-column field="medicalRecordNumber" label="MRN" centered sortable width="150">
               {{ project.medicalRecordNumber }}
             </b-table-column> -->
+
+            <b-table-column field="numberOfImages" label="Slides" centered sortable width="50">
+              {{ project.numberOfImages }}
+            </b-table-column>
 
             <b-table-column field="tissue" :label="$t('tissue')" centered sortable width="120">
               {{ project.tissue }}
