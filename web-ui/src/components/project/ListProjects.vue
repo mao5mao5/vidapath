@@ -337,6 +337,50 @@
       </div>
     </div>
 
+    <!-- Bulk Assign Modal -->
+    <div v-if="assignToModal" class="modal is-active">
+      <div class="modal-background" @click="assignToModal = false"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Assign users</p>
+          <button class="delete" aria-label="close" @click="assignToModal = false"></button>
+        </header>
+        <section class="modal-card-body">
+          <p>Assign users to {{ checkedProjects.length }} selected project(s)</p>
+          
+          <div class="field mt-4">
+            <div class="control">
+              <b-dropdown v-model="bulkRepresentatives" multiple>
+                <template #trigger="{ active }">
+                  <b-button 
+                    type="is-text"
+                    :icon-right="active ? 'angle-up' : 'angle-down'"
+                    style="color:royalblue;"
+                    expanded>
+                    {{ bulkRepresentatives.length > 0 ? `${bulkRepresentatives.length} selected` : 'Select users...' }}
+                  </b-button>
+                </template>
+                
+                <b-dropdown-item 
+                  style="color: black;"
+                  v-for="user in allUsers" 
+                  :key="user.id" 
+                  :value="user.id">
+                  <span>{{ user.name }}</span>
+                </b-dropdown-item>
+              </b-dropdown>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot" style="justify-content: flex-end;">
+          <button class="button" @click="assignToModal = false">{{ $t('button-cancel') }}</button>
+          <button class="button is-primary" @click="confirmBulkAssign" :disabled="bulkRepresentatives.length === 0">
+            {{ $t('button-confirm') }}
+          </button>
+        </footer>
+      </div>
+    </div>
+
     <!-- AI Runner Selection Modal -->
     <div v-if="aiRunnerSelectionModal" class="modal is-active">
       <div class="modal-background" @click="aiRunnerSelectionModal = false"></div>
@@ -458,6 +502,9 @@ export default {
       // 编辑代表用户的属性
       editingProjectId: null,
       projectRepresentatives: {}, // 存储每个项目的代表用户
+      
+      // 批量分配代表用户属性
+      bulkRepresentatives: [],
 
       // AI Runners
       aiRunners: [],
@@ -802,13 +849,13 @@ export default {
 
         this.$notify({
           type: 'success',
-          text: 'Representatives updated successfully.'
+          text: 'Users assigned successfully.'
         });
       } catch (error) {
-        console.error('Error updating representatives:', error);
+        console.error('Error updating users:', error);
         this.$notify({
           type: 'error',
-          text: 'Failed to update representatives.'
+          text: 'Failed to update users.'
         });
       }
     },
@@ -960,11 +1007,9 @@ export default {
 
     bulkAssign() {
       // 批量分配功能
-      this.$buefy.toast.open({
-        message: this.$t('bulk-assign-not-implemented'),
-        type: 'is-info'
-      });
-      console.log('Bulk assign projects:', this.checkedProjects);
+      this.assignToModal = true;
+      // 默认清空之前的选择
+      this.bulkRepresentatives = [];
     },
 
     bulkRunAI() {
@@ -992,6 +1037,70 @@ export default {
 
       this.projectToRunAI = project;
       this.singleAIRunnerSelectionModal = true;
+    },
+
+    async confirmBulkAssign() {
+      try {
+        // 为每个选中的项目设置代表用户
+        const assignPromises = this.checkedProjects.map(async (project) => {
+          // 获取当前项目的所有代表用户
+          const currentRepresentatives = await ProjectRepresentativeCollection.fetchAll({
+            filterKey: 'project',
+            filterValue: project.id
+          });
+
+          const currentRepresentativeUsers = currentRepresentatives.array || [];
+          const currentRepresentativeIds = currentRepresentativeUsers.map(rep => rep.user);
+
+          // 找出需要删除的代表用户（在current中但不在bulk中的）
+          const toRemove = currentRepresentativeIds.filter(
+            id => !this.bulkRepresentatives.includes(id)
+          );
+
+          // 找出需要添加的代表用户（在bulk中但不在current中的）
+          const toAdd = this.bulkRepresentatives.filter(
+            id => !currentRepresentativeIds.includes(id)
+          );
+
+          // 添加新的代表用户
+          for (const id of toAdd) {
+            const newRep = new ProjectRepresentative({
+              project: project.id,
+              user: id
+            });
+            await newRep.save();
+          }
+
+          // 删除不再需要的代表用户
+          for (const id of toRemove) {
+            await ProjectRepresentative.delete(0, project.id, id);
+          }
+        });
+
+        // 等待所有项目完成代表用户设置
+        await Promise.all(assignPromises);
+
+        // 关闭模态框
+        this.assignToModal = false;
+
+        this.$notify({
+          type: 'success',
+          text: `Successfully assigned users to ${this.checkedProjects.length} project(s).`
+        });
+
+        // 刷新项目列表
+        this.revision++;
+        
+        // 清空选择
+        this.checkedProjects = [];
+        this.bulkRepresentatives = [];
+      } catch (error) {
+        console.error('Error assigning users:', error);
+        this.$notify({
+          type: 'error',
+          text: 'Failed to assign users.'
+        });
+      }
     },
 
     async confirmRunAI() {
@@ -1465,6 +1574,7 @@ export default {
 
 .modal-card {
   max-width: 800px;
+  min-height: 40%;
   width: auto;
   margin: 0 auto;
 }
