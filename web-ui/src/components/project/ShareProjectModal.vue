@@ -20,7 +20,7 @@
         Share the case with specific users or make it publicly accessible.
       </b-message>
 
-      <div class="form-section element-spacing">
+      <!-- <div class="form-section element-spacing">
         <b-field :label="'Share with'" class="field-spacing">
           <b-radio v-model="shareType" name="share-type" native-value="public" class="radio-spacing">
             Public
@@ -29,7 +29,7 @@
             Assign to users
           </b-radio>
         </b-field>
-      </div>
+      </div> -->
 
       <div v-if="shareType === 'public'" class="form-section element-spacing">
         <b-message type="is-warning" has-icon size="is-small" class="element-spacing">
@@ -52,12 +52,12 @@
         </div>
       </div>
 
-      <div v-if="shareType === 'users'" class="form-section element-spacing">
+      <!-- <div v-if="shareType === 'users'" class="form-section element-spacing">
         <b-field :label="'Select users'" class="field-spacing">
           <domain-tag-input v-model="selectedUsers" :domains="allUsers" :placeholder="'Search users...'"
             searchedProperty="fullName" displayedProperty="fullName" />
         </b-field>
-      </div>
+      </div> -->
 
       <div class="share-link element-spacing" v-if="generatedLink">
         <b-field :label="'Share link'" class="field-spacing">
