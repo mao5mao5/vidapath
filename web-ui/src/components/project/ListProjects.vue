@@ -480,6 +480,7 @@ export default {
       ontologies: [],
       availableTags: [],
       allUsers: [],
+      all: true,
 
       contributorLabel: this.$t('contributor'),
       managerLabel: this.$t('manager'),

@@ -69,12 +69,12 @@
                   <router-link :to="`/project/${project.id}/images`">{{ project.numberOfImages }}</router-link>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="prop-label">{{ $t('members') }}</td>
                 <td class="prop-content">
                   {{ members.length }}
                 </td>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="prop-label">{{ $t('user-annotations') }}</td>
                 <td class="prop-content">
@@ -130,19 +130,19 @@
                   {{ Number(project.created) | moment('ll') }}
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="prop-label">{{ $t('creator') }}</td>
                 <td class="prop-content">
                   <list-usernames :users="[creator]" :onlines="onlines" />
                 </td>
-              </tr>
+              </tr> -->
               <tr>
-                <td class="prop-label">{{ $t('representatives') }} ({{ representatives.length }})</td>
+                <td class="prop-label">Assigned users ({{ representatives.length }})</td>
                 <td class="prop-content">
                   <list-usernames :users="representatives" :onlines="onlines" />
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="prop-label">{{ $t('managers') }} ({{ managers.length }})</td>
                 <td class="prop-content">
                   <list-usernames :users="managers" :onlines="onlines" />
@@ -153,7 +153,7 @@
                 <td class="prop-content">
                   <list-usernames :users="contributors" :onlines="onlines" />
                 </td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </section>
