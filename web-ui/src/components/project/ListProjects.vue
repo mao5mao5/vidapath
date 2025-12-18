@@ -25,28 +25,32 @@
       </p>
       <div class="panel-block">
         <div class="panel-heading-buttons">
-          <b-input class="search-projects" v-model="searchString" :placeholder="$t('search-placeholder')" type="search"
+          <div class="buttons has-addons">
+            <button class="button" :class="{ 'is-primary': all }" @click="all = true; revision++">
+              All cases
+            </button>
+            <button class="button" :class="{ 'is-primary': !all }" @click="all = false; revision++">
+              My cases
+            </button>
+          </div>
+          <b-input class="search-projects" v-model="searchString" placeholder="Search cases..." type="search"
             icon="search" />
           <button class="button" @click="toggleFilterDisplay()">
             <span class="icon">
               <i class="fas fa-filter"></i>
             </span>
             <span>
-              {{ filtersOpened ? $t('button-hide-filters') : $t('button-show-filters') }}
+              {{ filtersOpened ? 'Hide filters' : 'Show filters' }}
             </span>
             <span v-if="nbActiveFilters" class="nb-active-filters">
               {{ nbActiveFilters }}
             </span>
           </button>
-          <!-- <button v-if="checkedProjects.length > 0" class="button is-info bulk-action-button"
-            @click="bulkActionModal = true">
-            Batch actions ({{ checkedProjects.length }})
-          </button> -->
           <button class="button is-link" @click="creationModal = true">
             <span class="icon">
               <i class="fas fa-plus"></i>
             </span>
-            <span>{{ $t('new-case') }}</span>
+            <span>New case</span>
           </button>
           <button v-if="checkedProjects.length > 0" class="button is-info" @click="bulkShare">
             <span class="icon is-small">
@@ -77,7 +81,7 @@
         <b-collapse :open="filtersOpened">
           <div class="filters">
             <div class="columns">
-              <div class="column filter">
+              <!-- <div class="column filter">
                 <div class="filter-label">
                   {{ $t('my-role') }}
                 </div>
@@ -85,7 +89,7 @@
                   <cytomine-multiselect v-model="selectedRoles" :options="availableRoles" multiple
                     :searchable="false" />
                 </div>
-              </div>
+              </div> -->
               <div class="column filter">
                 <div class="filter-label">
                   Patient ID
@@ -172,23 +176,23 @@
               {{ project.patientName }}
             </b-table-column> -->
 
-            <!-- <b-table-column field="patientAge" label="Age" centered sortable width="150">
+            <b-table-column field="patientAge" label="Age" centered sortable width="50">
               {{ project.patientAge }}
             </b-table-column>
 
-            <b-table-column field="patientSex" label="Gender" centered sortable width="150">
+            <b-table-column field="patientSex" label="Gender" centered sortable width="50">
               {{ project.patientSex }}
-            </b-table-column> -->
+            </b-table-column>
 
             <b-table-column field="accessionId" :label="$t('accession-id')" centered sortable width="150">
               {{ project.accessionId }}
             </b-table-column>
 
-            <b-table-column field="accessDate" :label="$t('access-date')" centered sortable width="180">
+            <b-table-column field="accessDate" :label="$t('access-date')" centered sortable width="120">
               {{ project.accessDate | moment('ll') }}
             </b-table-column>
 
-            <b-table-column field="status" :label="$t('status')" centered sortable width="150">
+            <b-table-column field="status" :label="$t('status')" centered sortable width="120">
               <span :class="`status-${project.status?.toLowerCase().replace('_', '-')}`">
                 {{ formatStatus(project.status) }}
               </span>
@@ -198,19 +202,19 @@
               {{ project.medicalRecordNumber }}
             </b-table-column> -->
 
-            <b-table-column field="tissue" :label="$t('tissue')" centered sortable width="150">
+            <b-table-column field="tissue" :label="$t('tissue')" centered sortable width="120">
               {{ project.tissue }}
             </b-table-column>
 
-            <b-table-column field="specimen" :label="$t('specimen')" centered sortable width="150">
+            <b-table-column field="specimen" :label="$t('specimen')" centered sortable width="120">
               {{ project.specimen }}
             </b-table-column>
 
-            <b-table-column field="stain" label="Stain" centered sortable width="150">
+            <b-table-column field="stain" label="Stain" centered sortable width="120">
               {{ project.stain }}
             </b-table-column>
 
-            <b-table-column field="currentUserRoles" label="Assign To" centered sortable width="150">
+            <b-table-column field="currentUserRoles" label="Assign" centered width="120">
               <div v-if="editingProjectId === project.id" class="field">
                 <b-dropdown v-model="projectRepresentatives[project.id]" multiple append-to-body>
                   <template #trigger="{ active }">
@@ -225,7 +229,7 @@
                 </b-dropdown>
 
                 <div class="mt-2">
-                  <button class="button is-small is-success mr-1" @click="saveRepresentatives(project)">Save</button>
+                  <button class="button is-primary is-small mr-1" @click="saveRepresentatives(project)">Save</button>
                   <button class="button is-small" @click="cancelEditing(project)">Cancel</button>
                 </div>
               </div>
@@ -347,25 +351,18 @@
         </header>
         <section class="modal-card-body">
           <p>Assign users to {{ checkedProjects.length }} selected project(s)</p>
-          
+
           <div class="field mt-4">
             <div class="control">
               <b-dropdown v-model="bulkRepresentatives" multiple>
                 <template #trigger="{ active }">
-                  <b-button 
-                    type="is-text"
-                    :icon-right="active ? 'angle-up' : 'angle-down'"
-                    style="color:royalblue;"
+                  <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'" style="color:royalblue;"
                     expanded>
-                    {{ bulkRepresentatives.length > 0 ? `${bulkRepresentatives.length} selected` : 'Select users...' }}
+                    {{ bulkRepresentatives.length > 0 ? `${bulkRepresentatives.length} selected` : 'Select users' }}
                   </b-button>
                 </template>
-                
-                <b-dropdown-item 
-                  style="color: black;"
-                  v-for="user in allUsers" 
-                  :key="user.id" 
-                  :value="user.id">
+
+                <b-dropdown-item style="color: black;" v-for="user in allUsers" :key="user.id" :value="user.id">
                   <span>{{ user.name }}</span>
                 </b-dropdown-item>
               </b-dropdown>
@@ -502,7 +499,7 @@ export default {
       // 编辑代表用户的属性
       editingProjectId: null,
       projectRepresentatives: {}, // 存储每个项目的代表用户
-      
+
       // 批量分配代表用户属性
       bulkRepresentatives: [],
 
@@ -613,7 +610,7 @@ export default {
         withMedicalRecordNumber: true,
         withTissue: true,
         withSpecimen: true,
-        all: true
+        all: this.all
       });
       if (this.selectedOntologiesIds.length > 0 && this.selectedOntologiesIds.length < this.availableOntologies.length) {
         collection['ontology'] = {
@@ -1090,7 +1087,7 @@ export default {
 
         // 刷新项目列表
         this.revision++;
-        
+
         // 清空选择
         this.checkedProjects = [];
         this.bulkRepresentatives = [];
@@ -1627,6 +1624,15 @@ export default {
 /* 模态框背景 */
 .modal-background {
   background-color: rgba(30, 30, 30, 0.8);
+}
+
+/* Toggle switch styles */
+.buttons.has-addons .switch {
+  margin-bottom: 0;
+}
+
+.buttons.has-addons .switch+.switch {
+  border-left: none;
 }
 </style>
 
