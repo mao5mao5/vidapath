@@ -130,7 +130,7 @@
                   {{ Number(project.created) | moment('ll') }}
                 </td>
               </tr>
-              <!-- <tr>
+              <tr>
                 <td class="prop-label">{{ $t('creator') }}</td>
                 <td class="prop-content">
                   <list-usernames :users="[creator]" :onlines="onlines" />
@@ -141,7 +141,7 @@
                 <td class="prop-content">
                   <list-usernames :users="representatives" :onlines="onlines" />
                 </td>
-              </tr> -->
+              </tr>
               <tr>
                 <td class="prop-label">{{ $t('managers') }} ({{ managers.length }})</td>
                 <td class="prop-content">

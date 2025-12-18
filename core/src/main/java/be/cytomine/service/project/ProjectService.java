@@ -236,11 +236,6 @@ public class ProjectService extends ModelService {
     }
 
     public Page<JsonObject> list(User user, ProjectSearchExtension projectSearchExtension, List<SearchParameterEntry> searchParameters, String sortColumn, String sortDirection, Long max, Long offset) {
-        if (user==null) {
-            securityACLService.checkAdmin(currentUserService.getCurrentUser());
-        } else {
-            securityACLService.checkGuest(user);
-        }
 
         for (SearchParameterEntry parameter : searchParameters){
             if(parameter.getProperty().equals("numberOfImages")){

@@ -210,6 +210,16 @@
               {{ project.stain }}
             </b-table-column>
 
+            <b-table-column field="currentUserRoles" label="Assign To" centered sortable width="150">
+              {{ project?.currentUserRoles?.representative ? currentUser.name : '' }}
+              <button class="button is-small" @click="openAssignToModal(project)">
+                <span class="icon is-small">
+                  <i class="fas fa-user-plus"></i>
+                </span>
+              </button>
+            </b-table-column>
+
+
             <b-table-column label="Actions" centered width="150">
               <div class="buttons">
                 <button class="button" @click="openAddImageModal(project)">
@@ -380,7 +390,7 @@ import ShareProjectModal from './ShareProjectModal';
 
 import { get, sync, syncBoundsFilter, syncMultiselectFilter } from '@/utils/store-helpers';
 
-import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection, AIRunner, AIAlgorithmJob } from '@/api';
+import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection, AIRunner, AIAlgorithmJob, Project } from '@/api';
 import IconProjectMemberRole from '@/components/icons/IconProjectMemberRole';
 import AddImageModal from '@/components/image/AddImageModal.vue';
 export default {
@@ -524,7 +534,8 @@ export default {
         withAccessDate: true,
         withMedicalRecordNumber: true,
         withTissue: true,
-        withSpecimen: true
+        withSpecimen: true,
+        all: true
       });
       if (this.selectedOntologiesIds.length > 0 && this.selectedOntologiesIds.length < this.availableOntologies.length) {
         collection['ontology'] = {
@@ -955,6 +966,32 @@ export default {
           }
         }
       });
+    },
+
+    async openAssignToModal(project) {
+      try {
+        // 获取项目代表用户列表
+        const representatives = await Project.fetchRepresentatives(project.id);
+        // 显示代表用户信息
+        this.$buefy.dialog.alert({
+          title: 'Project Representative',
+          message: `
+            <div>
+              ${representatives.array && representatives.array.length > 0 
+                ? representatives.array.map(rep => `<p>${rep.fullName || rep.username}</p>`).join('')
+                : '<p>No representative assigned</p>'
+              }
+            </div>
+          `,
+          confirmText: 'OK'
+        });
+      } catch (error) {
+        console.error('Error fetching project representatives:', error);
+        this.$buefy.toast.open({
+          message: 'Failed to fetch project representatives',
+          type: 'is-danger'
+        });
+      }
     }
   },
   async created() {
