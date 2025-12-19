@@ -17,4 +17,4 @@ class ImportSummary(BaseModel):
 
 class ImportResponse(BaseModel):
     image_summary: ImportSummary
-    annotation_summary: dict[str, ImportSummary]
+    # annotation_summary: dict[str, ImportSummary]
