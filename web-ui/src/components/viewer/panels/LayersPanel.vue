@@ -13,66 +13,66 @@
  limitations under the License.-->
 
 <template>
-<div class="layers">
-  <h1>{{ $t('annotation-layers') }}</h1>
-  <b-message v-if="error" type="is-danger" has-icon icon-size="is-small" size="is-small">
-    <p> {{ $t('unexpected-error-info-message') }} </p>
-  </b-message>
-  <template v-else>
-    <b-field>
+  <div class="layers">
+    <h1>{{ $t('annotation-layers') }}</h1>
+    <b-message v-if="error" type="is-danger" has-icon icon-size="is-small" size="is-small">
+      <p> {{ $t('unexpected-error-info-message') }} </p>
+    </b-message>
+    <template v-else>
+      <!-- <b-field>
       <b-select :placeholder="$t('select-layer')" size="is-small" v-model="selectedLayer">
         <option v-for="layer in unselectedLayers" :value="layer" :key="layer.id">
           {{ layerName(layer) }}
         </option>
       </b-select>
       <button class="button is-small" @click="addLayer()" :disabled="!selectedLayer">{{ $t('button-add') }}</button>
-    </b-field>
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="checkbox-column"><span class="far fa-eye"></span></th>
-          <th v-if="!reviewMode" class="checkbox-column"><span class="fas fa-pencil-alt"></span></th>
-          <th class="name-column"></th>
-          <th class="checkbox-column"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(layer, idx) in selectedLayers" :key="layer.id">
-          <td class="checkbox-column">
-            <b-checkbox size="is-small" :value="layer.visible" @input="toggleLayerVisibility(idx)" />
-          </td>
-          <td v-if="!reviewMode" class="checkbox-column">
-            <b-checkbox size="is-small" :value="layer.drawOn" :disabled="!canDraw(layer)" @input="toggleLayerDrawOn(idx)" />
-          </td>
+    </b-field> -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="checkbox-column"><span class="far fa-eye"></span></th>
+            <th class="checkbox-column"><span class="fas fa-pencil-alt"></span></th>
+            <th class="name-column"></th>
+            <th class="checkbox-column"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(layer, idx) in selectedLayers" :key="layer.id">
+            <td class="checkbox-column">
+              <b-checkbox size="is-small" :value="layer.visible" @input="toggleLayerVisibility(idx)" />
+            </td>
+            <td class="checkbox-column">
+              <b-checkbox size="is-small" :value="layer.drawOn" :disabled="!canDraw(layer)" @input="toggleLayerDrawOn(idx)" />
+            </td>
 
-          <td class="name-column">
-            {{ layerName(layer) }}
-          </td>
-          <td class="checkbox-column">
+            <td class="name-column">
+              {{ layerName(layer) }}
+            </td>
+            <!-- <td class="checkbox-column">
             <button v-if="!reviewMode || !layer.isReview" class="button is-small" @click="removeLayer(idx)">
               <span class="fas fa-times"></span>
             </button>
-          </td>
-        </tr>
-        <tr v-if="selectedLayers.length === 0">
-          <td colspan="4" class="has-text-grey is-italic">{{$t('no-selected-layers')}}</td>
-        </tr>
-      </tbody>
-    </table>
+          </td> -->
+          </tr>
+          <tr v-if="selectedLayers.length === 0">
+            <td colspan="4" class="has-text-grey is-italic">{{ $t('no-selected-layers') }}</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <div class="opacity">
-      <label>{{ $t('layers-opacity') }}</label>
-      <input class="slider is-fullwidth is-small" v-model="layersOpacity" step="0.05" min="0" max="1" type="range">
-    </div>
-  </template>
-</div>
+      <div class="opacity">
+        <label>{{ $t('layers-opacity') }}</label>
+        <input class="slider is-fullwidth is-small" v-model="layersOpacity" step="0.05" min="0" max="1" type="range">
+      </div>
+    </template>
+  </div>
 </template>
 
 <script>
 import _ from 'lodash';
-import {get} from '@/utils/store-helpers';
+import { get } from '@/utils/store-helpers';
 
-import {Cytomine, ProjectDefaultLayerCollection} from '@/api';
+import { Cytomine, ProjectDefaultLayerCollection } from '@/api';
 
 export default {
   name: 'layers-panel',
@@ -134,15 +134,15 @@ export default {
     nbReviewedAnnotations() {
       return this.indexLayers.reduce((cnt, layer) => cnt + layer.countReviewedAnnotation, 0);
     },
-    hasReviewLayer() {
-      return this.image.inReview || this.image.reviewed;
-    },
-    reviewLayer() {
-      return {id: -1, isReview: true};
-    },
-    reviewMode() {
-      return this.imageWrapper.review.reviewMode;
-    },
+    // hasReviewLayer() {
+    //   return this.image.inReview || this.image.reviewed;
+    // },
+    // reviewLayer() {
+    //   return {id: -1, isReview: true};
+    // },
+    // reviewMode() {
+    //   return this.imageWrapper.review.reviewMode;
+    // },
     isActiveImage() {
       return this.viewerWrapper.activeImage === this.index;
     }
@@ -151,68 +151,68 @@ export default {
     activePanel() {
       this.fetchIndexLayers();
     },
-    reviewMode() {
-      if (this.reviewMode) {
-        if (!this.layers.includes(this.reviewLayer)) {
-          this.layers.push(this.reviewLayer);
-        }
-        this.addLayer(this.reviewLayer);
-      } else {
-        if (!this.hasReviewLayer) {
-          let index = this.selectedLayersIds.findIndex(id => id === this.reviewLayer.id);
-          if (index !== -1) {
-            this.removeLayer(index);
-          }
+    // reviewMode() {
+    //   if (this.reviewMode) {
+    //     if (!this.layers.includes(this.reviewLayer)) {
+    //       this.layers.push(this.reviewLayer);
+    //     }
+    //     this.addLayer(this.reviewLayer);
+    //   } else {
+    //     if (!this.hasReviewLayer) {
+    //       let index = this.selectedLayersIds.findIndex(id => id === this.reviewLayer.id);
+    //       if (index !== -1) {
+    //         this.removeLayer(index);
+    //       }
 
-          this.layers = this.layers.filter(layer => !layer.isReview);
-        }
-      }
-    },
-    layersToPreload: {
-      deep: true,
-      handler: function (layersToPreload) {
-        layersToPreload.forEach(layerId => {
-          let index = this.selectedLayersIds.findIndex(id => id === this.reviewLayer.id);
-          if (index !== -1) {
-            if (!this.selectedLayers[index].visible) {
-              this.toggleLayerVisibility(index);
-            }
-            return;
-          }
+    //       this.layers = this.layers.filter(layer => !layer.isReview);
+    //     }
+    //   }
+    // },
+    // layersToPreload: {
+    //   deep: true,
+    //   handler: function (layersToPreload) {
+    //     layersToPreload.forEach(layerId => {
+    //       // let index = this.selectedLayersIds.findIndex(id => id === this.reviewLayer.id);
+    //       // if (index !== -1) {
+    //       //   if (!this.selectedLayers[index].visible) {
+    //       //     this.toggleLayerVisibility(index);
+    //       //   }
+    //       //   return;
+    //       // }
 
-          this.addLayerById(layerId, true);
-        });
-      }
-    }
+    //       // this.addLayerById(layerId, true);
+    //     });
+    //   }
+    // }
   },
   methods: {
-    addAnnotationEventHandler(annot, saved = true) {
-      this.annotationEventHandler(annot);
-      let updatedProject = this.$store.state.currentProject.project.clone();
+    // addAnnotationEventHandler(annot, saved = true) {
+    //   this.annotationEventHandler(annot);
+    //   let updatedProject = this.$store.state.currentProject.project.clone();
 
-      if (annot.type === 'UserAnnotation') {
-        if (saved) {
-          updatedProject.numberOfAnnotations++;
-        }
-      } else {
-        updatedProject.numberOfReviewedAnnotations++;
-      }
+    //   if (annot.type === 'UserAnnotation') {
+    //     if (saved) {
+    //       updatedProject.numberOfAnnotations++;
+    //     }
+    //   } else {
+    //     updatedProject.numberOfReviewedAnnotations++;
+    //   }
 
-      this.$store.dispatch('currentProject/updateProject', updatedProject);
-    },
-    deleteAnnotationEventHandler(annot) {
-      this.annotationEventHandler(annot);
-    },
-    annotationEventHandler(annot) {
-      if (annot.image === this.image.id) {
-        this.fetchIndexLayers();
-      }
-    },
-    reloadAnnotationsHandler({idImage} = {}) {
-      if (!idImage || idImage === this.image.id) {
-        this.fetchIndexLayers();
-      }
-    },
+    //   this.$store.dispatch('currentProject/updateProject', updatedProject);
+    // },
+    // deleteAnnotationEventHandler(annot) {
+    //   this.annotationEventHandler(annot);
+    // },
+    // annotationEventHandler(annot) {
+    //   if (annot.image === this.image.id) {
+    //     this.fetchIndexLayers();
+    //   }
+    // },
+    // reloadAnnotationsHandler({idImage} = {}) {
+    //   if (!idImage || idImage === this.image.id) {
+    //     this.fetchIndexLayers();
+    //   }
+    // },
 
     layerName(layer) {
       if (!Object.prototype.hasOwnProperty.call(layer, 'username')) {
@@ -230,7 +230,7 @@ export default {
     },
 
     canDraw(layer) {
-      return !layer.isReview && this.$store.getters['currentProject/canEditLayer'](layer.id);
+      return this.$store.getters['currentProject/canEditLayer'](layer.id);
     },
 
     addLayerById(id, visible) {
@@ -252,9 +252,9 @@ export default {
       this.selectedLayer = null;
     },
 
-    removeLayer(index) {
-      this.$store.dispatch(this.imageModule + 'removeLayer', index);
-    },
+    // removeLayer(index) {
+    //   this.$store.dispatch(this.imageModule + 'removeLayer', index);
+    // },
 
     toggleLayerVisibility(index) {
       this.$store.dispatch(this.imageModule + 'toggleLayerVisibility', index);
@@ -266,9 +266,9 @@ export default {
 
     async fetchLayers() {
       this.layers = (await this.project.fetchUserLayers(this.image.id)).array;
-      if (this.hasReviewLayer) {
-        this.layers.push(this.reviewLayer);
-      }
+      // if (this.hasReviewLayer) {
+      //   this.layers.push(this.reviewLayer);
+      // }
 
       let layers = (await Cytomine.instance.api.get(`image-instances/${this.image.id}/annotation-layers`)).data;
       this.layers.push(...layers);
@@ -277,6 +277,8 @@ export default {
       // may not be relevant for the current image => filter them
       let idLayers = this.layers.map(layer => layer.id);
       this.$store.commit(this.imageModule + 'filterSelectedLayers', idLayers);
+
+      console.log('layers', this.layers);
     },
 
     async fetchIndexLayers(force = false) {
@@ -292,30 +294,30 @@ export default {
           countAnnotation: a.countAnnotation + b.countAnnotation,
           countReviewedAnnotation: a.countReviewedAnnotation + b.countReviewedAnnotation
         };
-      }, {user: userIndexLayers[0].user, countAnnotation: 0, countReviewedAnnotation: 0}));
+      }, { user: userIndexLayers[0].user, countAnnotation: 0, countReviewedAnnotation: 0 }));
       // ----
     },
 
-    shortkeyHandler(key) {
-      if (!key.startsWith('toggle-all-') && !this.isActiveImage) { // shortkey should only be applied to active map
-        return;
-      }
+    // shortkeyHandler(key) {
+    //   if (!key.startsWith('toggle-all-') && !this.isActiveImage) { // shortkey should only be applied to active map
+    //     return;
+    //   }
 
-      key = key.replace('toggle-all-', 'toggle-');
-      if (key === 'toggle-selected-layers') {
-        this.selectedLayers.forEach((layer, index) => this.toggleLayerVisibility(index));
-      } else if (key === 'toggle-review-layer') {
-        let index = this.selectedLayersIds.findIndex(id => id === this.reviewLayer.id);
-        if (index !== -1) {
-          this.toggleLayerVisibility(index);
-          return;
-        }
+    //   key = key.replace('toggle-all-', 'toggle-');
+    //   if (key === 'toggle-selected-layers') {
+    //     this.selectedLayers.forEach((layer, index) => this.toggleLayerVisibility(index));
+    //   } else if (key === 'toggle-review-layer') {
+    //     let index = this.selectedLayersIds.findIndex(id => id === this.reviewLayer.id);
+    //     if (index !== -1) {
+    //       this.toggleLayerVisibility(index);
+    //       return;
+    //     }
 
-        if (this.layers.includes(this.reviewLayer)) {
-          this.addLayer(this.reviewLayer);
-        }
-      }
-    }
+    //     if (this.layers.includes(this.reviewLayer)) {
+    //       this.addLayer(this.reviewLayer);
+    //     }
+    //   }
+    // }
   },
   async created() {
     try {
@@ -326,50 +328,55 @@ export default {
     } catch (error) {
       console.log(error);
       this.error = true;
-      this.$notify({type: 'error', text: this.$t('notif-error-loading-annotation-layers')});
+      this.$notify({ type: 'error', text: this.$t('notif-error-loading-annotation-layers') });
       return;
     }
 
-    let layersToAdd = this.layersToPreload.map(id => ({id, visible: true}));
+    let layersToAdd = [];
+    layersToAdd.push({ id: this.currentUser.id, visible: true });
+    // layersToAdd.push({id: 52063, visible: true});
 
-    if (!this.imageWrapper.layers.selectedLayers) { // we do not use computed property selectedLayers because we don't want the replacement by [] if the store array is null
-      if (!this.layersToPreload.includes(this.currentUser.id)) {
-        layersToAdd.push({id: this.currentUser.id, visible: true});
-      }
+    // let layersToAdd = this.layersToPreload.map(id => ({id, visible: true}));
+    // layersToAdd.push({id: this.currentUser.id, visible: true});
 
-      try {
-        let defaultLayers = await ProjectDefaultLayerCollection.fetchAll({
-          filterKey: 'project',
-          filterValue: this.project.id
-        });
+    // if (!this.imageWrapper.layers.selectedLayers) { // we do not use computed property selectedLayers because we don't want the replacement by [] if the store array is null
+    //   if (!this.layersToPreload.includes(this.currentUser.id)) {
+    //     layersToAdd.push({id: this.currentUser.id, visible: true});
+    //   }
 
-        let addedIds = layersToAdd.map(layer => layer.id);
+    //   try {
+    //     let defaultLayers = await ProjectDefaultLayerCollection.fetchAll({
+    //       filterKey: 'project',
+    //       filterValue: this.project.id
+    //     });
 
-        defaultLayers.array.forEach(({user, hideByDefault}) => {
-          if (!addedIds.includes(user)) {
-            layersToAdd.push({id: user, visible: !hideByDefault});
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    //     let addedIds = layersToAdd.map(layer => layer.id);
+
+    //     defaultLayers.array.forEach(({user, hideByDefault}) => {
+    //       if (!addedIds.includes(user)) {
+    //         layersToAdd.push({id: user, visible: !hideByDefault});
+    //       }
+    //     });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
     layersToAdd.map(layer => this.addLayerById(layer.id, layer.visible));
   },
-  mounted() {
-    this.$eventBus.$on('addAnnotation', this.addAnnotationEventHandler);
-    this.$eventBus.$on('deleteAnnotation', this.deleteAnnotationEventHandler);
-    this.$eventBus.$on('reloadAnnotations', this.reloadAnnotationsHandler);
-    this.$eventBus.$on('shortkeyEvent', this.shortkeyHandler);
-    this.$eventBus.$on('annotation-layers:refresh', this.fetchLayers);
-  },
-  beforeDestroy() {
-    this.$eventBus.$off('addAnnotation', this.addAnnotationEventHandler);
-    this.$eventBus.$off('deleteAnnotation', this.deleteAnnotationEventHandler);
-    this.$eventBus.$off('reloadAnnotations', this.reloadAnnotationsHandler);
-    this.$eventBus.$off('shortkeyEvent', this.shortkeyHandler);
-    this.$eventBus.$off('annotation-layers:refresh', this.fetchLayers);
-  }
+  // mounted() {
+  //   this.$eventBus.$on('addAnnotation', this.addAnnotationEventHandler);
+  //   this.$eventBus.$on('deleteAnnotation', this.deleteAnnotationEventHandler);
+  //   this.$eventBus.$on('reloadAnnotations', this.reloadAnnotationsHandler);
+  //   this.$eventBus.$on('shortkeyEvent', this.shortkeyHandler);
+  //   this.$eventBus.$on('annotation-layers:refresh', this.fetchLayers);
+  // },
+  // beforeDestroy() {
+  //   this.$eventBus.$off('addAnnotation', this.addAnnotationEventHandler);
+  //   this.$eventBus.$off('deleteAnnotation', this.deleteAnnotationEventHandler);
+  //   this.$eventBus.$off('reloadAnnotations', this.reloadAnnotationsHandler);
+  //   this.$eventBus.$off('shortkeyEvent', this.shortkeyHandler);
+  //   this.$eventBus.$off('annotation-layers:refresh', this.fetchLayers);
+  // }
 };
 </script>
 

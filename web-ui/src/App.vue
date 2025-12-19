@@ -101,9 +101,12 @@ export default {
       try {
         // 对于临时访问令牌用户，跳过ping操作
         if (this.$keycloak.hasTemporaryToken) {
-          this.setTemporaryUserAndAccount();
+          if (!this.currentUser) {
+            await this.fetchUser();
+          }
+          this.setTemporaryAccount();
           this.loading = false;
-          return;
+          // return;
         }
 
         // TODO IAM - still needed ?
@@ -111,10 +114,13 @@ export default {
         if (!this.currentUser) {
           await this.fetchUser();
         }
+        if (!this.currentAccount) {
+          await this.fetchAccount();
+        }
         this.communicationError = false;
       } catch (error) {
         console.log(error);
-        // this.communicationError = error.toString().indexOf('401') === -1;
+        this.communicationError = error.toString().indexOf('401') === -1;
       }
 
       clearTimeout(this.timeout);
@@ -122,28 +128,15 @@ export default {
     },
     async fetchUser() {
       await this.$store.dispatch('currentUser/fetchUser');
+    },
+
+    async fetchAccount() {
+      await this.$store.dispatch('currentUser/fetchAccount');
       if (this.currentAccount) {
         this.changeLanguage(this.currentAccount.locale);
       }
     },
-    // 创建临时用户对象
-    createTemporaryUser() {
-      return {
-        id: 0,
-        username: 'temporary_user',
-        firstname: 'Temporary',
-        lastname: 'User',
-        email: 'temporary@example.com',
-        admin: false,
-        adminByNow: false,
-        guest: true,
-        // 添加clone方法以保持与真实用户对象的一致性
-        clone: function() {
-          return Object.assign({}, this);
-        }
-      };
-    },
-    // 创建临时账户对象
+
     createTemporaryAccount() {
       return {
         id: 0,
@@ -152,18 +145,14 @@ export default {
         lastname: 'User',
         email: 'temporary@example.com',
         locale: 'en',
-        // 添加clone方法以保持与真实账户对象的一致性
-        clone: function() {
+        clone: function () {
           return Object.assign({}, this);
         }
       };
     },
-    // 设置临时用户和账户
-    setTemporaryUserAndAccount() {
-      const tempUser = this.createTemporaryUser();
+
+    setTemporaryAccount() {
       const tempAccount = this.createTemporaryAccount();
-      
-      this.$store.commit('currentUser/setUser', tempUser);
       this.$store.commit('currentUser/setAccount', tempAccount);
     }
   },
@@ -191,6 +180,8 @@ export default {
           // 将临时令牌作为查询参数添加到URL中
           config.params = config.params || {};
           config.params.access_token = accessToken;
+
+          this.$store.commit('currentUser/setShortTermToken', accessToken);
         }
         return config;
       }

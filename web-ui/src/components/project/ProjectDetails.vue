@@ -22,7 +22,7 @@
       <b-loading :is-full-page="false" :active="loading" class="small" />
       <tbody v-if="!loading">
         <tr v-if="isPropDisplayed('imagesPreview')">
-          <td class="prop-label">{{ $t('images') }}</td>
+          <td class="prop-label">Slides</td>
           <td class="prop-content">
             <list-images-preview :project="project" />
           </td>
@@ -30,11 +30,14 @@
         <tr>
           <td class="prop-label">{{ $t('actions') }}</td>
           <td class="prop-content">
-            <button class="button is-small" @click="showDetailModal = true" style="margin-right: 0.5rem;" >
-              More details
+            <button class="button" @click="showDetailModal = true" style="margin-right: 0.5rem;" >
+              Case detail
             </button>
-            <project-actions v-if="canManageProject" :project="project" @update="$emit('update', $event)"
-              @delete="$emit('delete')"/>
+            <button class="button" @click="showPatientInfoModal = true" style="margin-right: 0.5rem;">
+              Patient information
+            </button>
+            <!-- <project-actions v-if="canManageProject" :project="project" @update="$emit('update', $event)"
+              @delete="$emit('delete')"/> -->
           </td>
         </tr>
       </tbody>
@@ -61,17 +64,17 @@
                 </td>
               </tr> -->
               <tr>
-                <td class="prop-label">{{ $t('images') }}</td>
+                <td class="prop-label">Slides</td>
                 <td class="prop-content">
                   <router-link :to="`/project/${project.id}/images`">{{ project.numberOfImages }}</router-link>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="prop-label">{{ $t('members') }}</td>
                 <td class="prop-content">
                   {{ members.length }}
                 </td>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="prop-label">{{ $t('user-annotations') }}</td>
                 <td class="prop-content">
@@ -132,14 +135,14 @@
                 <td class="prop-content">
                   <list-usernames :users="[creator]" :onlines="onlines" />
                 </td>
-              </tr>
+              </tr> -->
               <tr>
-                <td class="prop-label">{{ $t('representatives') }} ({{ representatives.length }})</td>
+                <td class="prop-label">Assigned users ({{ representatives.length }})</td>
                 <td class="prop-content">
                   <list-usernames :users="representatives" :onlines="onlines" />
                 </td>
-              </tr> -->
-              <tr>
+              </tr>
+              <!-- <tr>
                 <td class="prop-label">{{ $t('managers') }} ({{ managers.length }})</td>
                 <td class="prop-content">
                   <list-usernames :users="managers" :onlines="onlines" />
@@ -150,12 +153,51 @@
                 <td class="prop-content">
                   <list-usernames :users="contributors" :onlines="onlines" />
                 </td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </section>
         <footer class="modal-card-foot" style="justify-content: flex-end;">
           <button class="button" @click="showDetailModal = false">{{ $t('button-close') }}</button>
+        </footer>
+      </div>
+    </div>
+
+    <div v-if="showPatientInfoModal" class="modal is-active">
+      <div class="modal-background" @click="showPatientInfoModal = false"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Patient Information</p>
+          <button class="delete" aria-label="close" @click="showPatientInfoModal = false"></button>
+        </header>
+        <section class="modal-card-body">
+          <table class="table is-fullwidth">
+            <tbody>
+              <tr>
+                <td class="prop-label">Patient ID</td>
+                <td class="prop-content">{{ project.patientId || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="prop-label">Patient Name</td>
+                <td class="prop-content">{{ project.patientName || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="prop-label">Patient Age</td>
+                <td class="prop-content">{{ project.patientAge || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="prop-label">Gender</td>
+                <td class="prop-content">{{ project.patientSex || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="prop-label">MRN</td>
+                <td class="prop-content">{{ project.medicalRecordNumber || 'N/A' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <footer class="modal-card-foot" style="justify-content: flex-end;">
+          <button class="button" @click="showPatientInfoModal = false">{{ $t('button-close') }}</button>
         </footer>
       </div>
     </div>
@@ -194,6 +236,7 @@ export default {
       loading: true,
       error: false,
       showDetailModal: false,
+      showPatientInfoModal: false,
 
       creator: null,
       managers: [],

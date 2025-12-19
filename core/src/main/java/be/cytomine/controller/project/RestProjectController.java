@@ -66,14 +66,14 @@ public class RestProjectController extends RestCytomineController {
             @RequestParam(value = "sort", defaultValue = "created", required = false) String sort,
             @RequestParam(value = "order", defaultValue = "desc", required = false) String order,
             @RequestParam(value = "offset", defaultValue = "0", required = false) Long offset,
-            @RequestParam(value = "max", defaultValue = "0", required = false) Long max
+            @RequestParam(value = "max", defaultValue = "0", required = false) Long max,
+            @RequestParam(value = "all", defaultValue = "false", required = false) Boolean all
 
     ) {
         log.debug("REST request to list projects");
         User user = currentUserService.getCurrentUser();
 
-        if(currentRoleService.isAdminByNow(user)) {
-            //if user is admin, we print all available project
+        if(all) {
             user = null;
         }
 

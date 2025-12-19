@@ -20,6 +20,15 @@ export function appendShortTermToken(url, shortTermToken) {
   if (url === null || shortTermToken === null) {
     return url;
   }
+
+  if (Vue.$keycloak.hasTemporaryToken) {
+    if (url.indexOf('?') === -1) {
+      return url + '?access_token=' + shortTermToken;
+    } else {
+      return url + '&access_token=' + shortTermToken;
+    }
+  }
+
   if (url.indexOf('?') === -1) {
     return url + '?Authorization=Bearer ' + shortTermToken;
   } else {

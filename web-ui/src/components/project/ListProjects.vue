@@ -25,35 +25,63 @@
       </p>
       <div class="panel-block">
         <div class="panel-heading-buttons">
-          <b-input class="search-projects" v-model="searchString" :placeholder="$t('search-placeholder')" type="search"
+          <div class="buttons has-addons">
+            <button class="button" :class="{ 'is-primary': all }" @click="all = true; revision++">
+              All cases
+            </button>
+            <button class="button" :class="{ 'is-primary': !all }" @click="all = false; revision++">
+              My cases
+            </button>
+          </div>
+          <b-input class="search-projects" v-model="searchString" placeholder="Search cases..." type="search"
             icon="search" />
           <button class="button" @click="toggleFilterDisplay()">
             <span class="icon">
               <i class="fas fa-filter"></i>
             </span>
             <span>
-              {{ filtersOpened ? $t('button-hide-filters') : $t('button-show-filters') }}
+              {{ filtersOpened ? 'Hide filters' : 'Show filters' }}
             </span>
             <span v-if="nbActiveFilters" class="nb-active-filters">
               {{ nbActiveFilters }}
             </span>
           </button>
-          <button v-if="checkedProjects.length > 0" class="button is-info bulk-action-button"
-            @click="bulkActionModal = true">
-            Batch actions ({{ checkedProjects.length }})
-          </button>
           <button class="button is-link" @click="creationModal = true">
             <span class="icon">
               <i class="fas fa-plus"></i>
             </span>
-            <span>{{ $t('new-case') }}</span>
+            <span>New case</span>
           </button>
+          <button v-if="checkedProjects.length > 0" class="button is-info" @click="bulkShare">
+            <span class="icon is-small">
+              <i class="fas fa-share-alt"></i>
+            </span>
+            <span>Bulk share</span>
+          </button>
+          <button v-if="checkedProjects.length > 0" class="button is-warning" @click="bulkAssign">
+            <span class="icon is-small">
+              <i class="fas fa-user-tag"></i>
+            </span>
+            <span>Bulk assign</span>
+          </button>
+          <button v-if="checkedProjects.length > 0" class="button is-primary" @click="bulkRunAI">
+            <span class="icon is-small">
+              <i class="fas fa-robot"></i>
+            </span>
+            <span>Run AI</span>
+          </button>
+          <!-- <button v-if="checkedProjects.length > 0" class="button is-danger" @click="deleteSelectedProjects">
+            <span class="icon is-small">
+              <i class="fas fa-trash"></i>
+            </span>
+            <span>Delete</span>
+          </button> -->
         </div>
 
         <b-collapse :open="filtersOpened">
           <div class="filters">
             <div class="columns">
-              <div class="column filter">
+              <!-- <div class="column filter">
                 <div class="filter-label">
                   {{ $t('my-role') }}
                 </div>
@@ -61,7 +89,7 @@
                   <cytomine-multiselect v-model="selectedRoles" :options="availableRoles" multiple
                     :searchable="false" />
                 </div>
-              </div>
+              </div> -->
               <div class="column filter">
                 <div class="filter-label">
                   Patient ID
@@ -140,77 +168,116 @@
                 :is-representative="project.currentUserRoles.representative" />
             </b-table-column> -->
 
-            <b-table-column field="patientId" :label="$t('patient-id')" centered sortable width="150">
-              {{ project.patientId }}
-            </b-table-column>
-
-            <b-table-column field="patientName" label="Name" centered sortable width="150">
+            <!-- <b-table-column field="patientName" label="Name" centered sortable width="150">
               {{ project.patientName }}
-            </b-table-column>
+            </b-table-column> -->
 
-            <b-table-column field="patientAge" label="Age" centered sortable width="150">
+            <!-- <b-table-column field="patientAge" label="Age" centered sortable width="50">
               {{ project.patientAge }}
             </b-table-column>
 
-            <b-table-column field="patientSex" label="Gender" centered sortable width="150">
+            <b-table-column field="patientSex" label="Gender" centered sortable width="50">
               {{ project.patientSex }}
-            </b-table-column>
+            </b-table-column> -->
 
             <b-table-column field="accessionId" :label="$t('accession-id')" centered sortable width="150">
               {{ project.accessionId }}
             </b-table-column>
 
-            <b-table-column field="status" :label="$t('status')" centered sortable width="150">
+            <b-table-column field="accessDate" :label="$t('access-date')" centered sortable width="120">
+              {{ project.accessDate | moment('ll') }}
+            </b-table-column>
+
+            <b-table-column field="status" :label="$t('status')" centered sortable width="120">
               <span :class="`status-${project.status?.toLowerCase().replace('_', '-')}`">
                 {{ formatStatus(project.status) }}
               </span>
             </b-table-column>
 
-            <b-table-column field="accessDate" :label="$t('access-date')" centered sortable width="180">
-              {{ project.accessDate | moment('ll') }}
+            <b-table-column field="patientId" :label="$t('patient-id')" centered sortable width="150">
+              {{ project.patientId }}
             </b-table-column>
 
-            <b-table-column field="medicalRecordNumber" label="MRN" centered sortable width="150">
+            <!-- <b-table-column field="medicalRecordNumber" label="MRN" centered sortable width="150">
               {{ project.medicalRecordNumber }}
+            </b-table-column> -->
+
+            <b-table-column field="numberOfImages" label="Slides" centered sortable width="50">
+              {{ project.numberOfImages }}
             </b-table-column>
 
-            <b-table-column field="tissue" :label="$t('tissue')" centered sortable width="150">
+            <b-table-column field="tissue" :label="$t('tissue')" centered sortable width="120">
               {{ project.tissue }}
             </b-table-column>
 
-            <b-table-column field="specimen" :label="$t('specimen')" centered sortable width="150">
+            <b-table-column field="specimen" :label="$t('specimen')" centered sortable width="120">
               {{ project.specimen }}
             </b-table-column>
 
-            <b-table-column field="stain" label="Stain" centered sortable width="150">
+            <b-table-column field="stain" label="Stain" centered sortable width="120">
               {{ project.stain }}
             </b-table-column>
 
-            <b-table-column label="Actions" centered width="150">
-              <div class="buttons">
-                <button class="button is-small is-link" @click="openAddImageModal(project)">
+            <b-table-column field="currentUserRoles" label="Assign" centered width="120">
+              <div v-if="editingProjectId === project.id" class="field">
+                <b-dropdown v-model="projectRepresentatives[project.id]" multiple append-to-body>
+                  <template #trigger="{ active }">
+                    <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'" style="color:royalblue;">
+                      Select users
+                    </b-button>
+                  </template>
+
+                  <b-dropdown-item v-for="user in allUsers" :key="user.id" :value="user.id">
+                    <span>{{ user.name }}</span>
+                  </b-dropdown-item>
+                </b-dropdown>
+
+                <div class="mt-2">
+                  <button class="button is-primary is-small mr-1" @click="saveRepresentatives(project)">Save</button>
+                  <button class="button is-small" @click="cancelEditing(project)">Cancel</button>
+                </div>
+              </div>
+
+              <div v-else>
+                <span v-if="project.currentUserRoles && project.currentUserRoles.representatives">
+                  {{project.currentUserRoles.representatives.map(rep => rep.name).join(', ')}}
+                </span>
+                <span v-else class="has-text-grey">No representatives</span>
+
+                <button class="button is-small ml-2" @click="startEditing(project)">
                   <span class="icon is-small">
+                    <i class="fas fa-edit"></i>
+                  </span>
+                </button>
+              </div>
+            </b-table-column>
+
+
+            <b-table-column label="Actions" centered width="200">
+              <div class="buttons">
+                <button class="button" @click="openAddImageModal(project)">
+                  <span class="icon">
                     <i class="fas fa-plus"></i>
                   </span>
-                  <span>{{ $t('button-add-image') }}</span>
+                  <!-- <span>{{ $t('button-add-image') }}</span> -->
                 </button>
-                <button class="button is-small is-link" @click="openProject(project)">
-                  <span class="icon is-small">
+                <button class="button" @click="openProject(project)">
+                  <span class="icon">
                     <i class="fas fa-eye"></i>
                   </span>
-                  <span>Open viewer</span>
+                  <!-- <span>Open viewer</span> -->
                 </button>
-                <button class="button is-small is-info" @click="openShareModal(project)">
-                  <span class="icon is-small">
+                <button class="button" @click="openShareModal(project)">
+                  <span class="icon">
                     <i class="fas fa-share-alt"></i>
                   </span>
-                  <span>{{ $t('button-share') }}</span>
+                  <!-- <span>{{ $t('button-share') }}</span> -->
                 </button>
-                <button class="button is-small is-primary" @click="runAIOnProject(project)">
-                  <span class="icon is-small">
+                <button class="button" @click="runAIOnProject(project)">
+                  <span class="icon">
                     <i class="fas fa-robot"></i>
                   </span>
-                  <span>Run AI</span>
+                  <!-- <span>Run AI</span> -->
                 </button>
               </div>
             </b-table-column>
@@ -274,6 +341,43 @@
         </section>
         <footer class="modal-card-foot" style="justify-content: flex-end;">
           <button class="button" @click="bulkActionModal = false">{{ $t('button-close') }}</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Bulk Assign Modal -->
+    <div v-if="assignToModal" class="modal is-active">
+      <div class="modal-background" @click="assignToModal = false"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Assign users</p>
+          <button class="delete" aria-label="close" @click="assignToModal = false"></button>
+        </header>
+        <section class="modal-card-body">
+          <p>Assign users to {{ checkedProjects.length }} selected project(s)</p>
+
+          <div class="field mt-4">
+            <div class="control">
+              <b-dropdown v-model="bulkRepresentatives" multiple>
+                <template #trigger="{ active }">
+                  <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'" style="color:royalblue;"
+                    expanded>
+                    {{ bulkRepresentatives.length > 0 ? `${bulkRepresentatives.length} selected` : 'Select users' }}
+                  </b-button>
+                </template>
+
+                <b-dropdown-item style="color: black;" v-for="user in allUsers" :key="user.id" :value="user.id">
+                  <span>{{ user.name }}</span>
+                </b-dropdown-item>
+              </b-dropdown>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot" style="justify-content: flex-end;">
+          <button class="button" @click="assignToModal = false">{{ $t('button-cancel') }}</button>
+          <button class="button is-primary" @click="confirmBulkAssign" :disabled="bulkRepresentatives.length === 0">
+            {{ $t('button-confirm') }}
+          </button>
         </footer>
       </div>
     </div>
@@ -356,7 +460,7 @@ import ShareProjectModal from './ShareProjectModal';
 
 import { get, sync, syncBoundsFilter, syncMultiselectFilter } from '@/utils/store-helpers';
 
-import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection, AIRunner, AIAlgorithmJob } from '@/api';
+import { ImageInstanceCollection, ProjectCollection, OntologyCollection, TagCollection, AIRunner, AIAlgorithmJob, UserCollection, Project, ProjectRepresentative, ProjectRepresentativeCollection } from '@/api';
 import IconProjectMemberRole from '@/components/icons/IconProjectMemberRole';
 import AddImageModal from '@/components/image/AddImageModal.vue';
 export default {
@@ -379,6 +483,8 @@ export default {
       projects: [],
       ontologies: [],
       availableTags: [],
+      allUsers: [],
+      all: true,
 
       contributorLabel: this.$t('contributor'),
       managerLabel: this.$t('manager'),
@@ -386,6 +492,7 @@ export default {
       creationModal: false,
       addImageModal: false,
       shareProjectModal: false,
+      assignToModal: false,
       bulkActionModal: false,
       aiRunnerSelectionModal: false,
       singleAIRunnerSelectionModal: false,
@@ -393,6 +500,13 @@ export default {
       projectToRunAI: null,
 
       checkedProjects: [],
+
+      // 编辑代表用户的属性
+      editingProjectId: null,
+      projectRepresentatives: {}, // 存储每个项目的代表用户
+
+      // 批量分配代表用户属性
+      bulkRepresentatives: [],
 
       // AI Runners
       aiRunners: [],
@@ -500,7 +614,8 @@ export default {
         withAccessDate: true,
         withMedicalRecordNumber: true,
         withTissue: true,
-        withSpecimen: true
+        withSpecimen: true,
+        all: this.all
       });
       if (this.selectedOntologiesIds.length > 0 && this.selectedOntologiesIds.length < this.availableOntologies.length) {
         collection['ontology'] = {
@@ -640,12 +755,115 @@ export default {
     },
     async fetchAIRunners() {
       // 导入AIRunner
-       this.aiRunners = await AIRunner.fetchAll();
+      this.aiRunners = await AIRunner.fetchAll();
+    },
+
+    async fetchAllUsers() {
+      try {
+        this.allUsers = (await UserCollection.fetchAll()).array;
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        this.$notify({ type: 'error', text: 'Failed to fetch users.' });
+      }
     },
 
     toggleFilterDisplay() {
       this.filtersOpened = !this.filtersOpened;
     },
+
+    async startEditing(project) {
+      // 开始编辑项目代表用户
+      this.editingProjectId = project.id;
+
+      // 初始化该项目的代表用户列表
+      if (project.currentUserRoles && project.currentUserRoles.representatives) {
+
+        // 获取当前项目的所有代表用户
+        const currentRepresentatives = await ProjectRepresentativeCollection.fetchAll({
+          filterKey: 'project',
+          filterValue: project.id
+        });
+
+        const currentRepresentativeUsers = currentRepresentatives.array || [];
+        const currentRepresentativeIds = currentRepresentativeUsers.map(rep => rep.user);
+        this.$set(this.projectRepresentatives, project.id, currentRepresentativeIds);
+      } else {
+        this.$set(this.projectRepresentatives, project.id, []);
+      }
+
+      console.log('projectRepresentatives:', this.projectRepresentatives);
+    },
+
+    cancelEditing(project) {
+      // 取消编辑
+      this.editingProjectId = null;
+      // this.$delete(this.projectRepresentatives, project.id);
+    },
+
+    async saveRepresentatives(project) {
+      // 保存项目代表用户
+      try {
+        // 获取当前项目的所有代表用户
+        const currentRepresentatives = await ProjectRepresentativeCollection.fetchAll({
+          filterKey: 'project',
+          filterValue: project.id
+        });
+
+        const currentRepresentativeUsers = currentRepresentatives.array || [];
+        const currentRepresentativeIds = currentRepresentativeUsers.map(rep => rep.user);
+
+        // 获取用户选择的代表用户
+        const selectedRepresentatives = this.projectRepresentatives[project.id] || [];
+
+        // 找出需要删除的代表用户（在current中但不在selected中的）
+        const toRemove = currentRepresentativeIds.filter(
+          id => !selectedRepresentatives.includes(id)
+        );
+
+        console.log('toRemove:', toRemove);
+
+        // 找出需要添加的代表用户（在selected中但不在current中的）
+        const toAdd = selectedRepresentatives.filter(
+          id => !currentRepresentativeIds.includes(id)
+        );
+
+        console.log('toAdd:', toAdd);
+
+        await project.addUsers(toAdd);
+
+        // 添加新的代表用户
+        for (const id of toAdd) {
+          const newRep = new ProjectRepresentative({
+            project: project.id,
+            user: id
+          });
+          await newRep.save();
+        }
+
+        // 删除不再需要的代表用户
+        for (const id of toRemove) {
+          await ProjectRepresentative.delete(0, project.id, id);
+        }
+
+        // 更新本地数据
+        this.revision++;
+
+        // 结束编辑状态
+        this.editingProjectId = null;
+
+        this.$notify({
+          type: 'success',
+          text: 'Users assigned successfully.'
+        });
+      } catch (error) {
+        console.error('Error updating users:', error);
+        this.$notify({
+          type: 'error',
+          text: 'Failed to update users.'
+        });
+      }
+    },
+
     updateProject() {
       this.revision++;
     },
@@ -793,11 +1011,9 @@ export default {
 
     bulkAssign() {
       // 批量分配功能
-      this.$buefy.toast.open({
-        message: this.$t('bulk-assign-not-implemented'),
-        type: 'is-info'
-      });
-      console.log('Bulk assign projects:', this.checkedProjects);
+      this.assignToModal = true;
+      // 默认清空之前的选择
+      this.bulkRepresentatives = [];
     },
 
     bulkRunAI() {
@@ -827,6 +1043,71 @@ export default {
       this.singleAIRunnerSelectionModal = true;
     },
 
+    async confirmBulkAssign() {
+      try {
+        // 为每个选中的项目设置代表用户
+        const assignPromises = this.checkedProjects.map(async (project) => {
+          // 获取当前项目的所有代表用户
+          const currentRepresentatives = await ProjectRepresentativeCollection.fetchAll({
+            filterKey: 'project',
+            filterValue: project.id
+          });
+
+          const currentRepresentativeUsers = currentRepresentatives.array || [];
+          const currentRepresentativeIds = currentRepresentativeUsers.map(rep => rep.user);
+
+          // 找出需要删除的代表用户（在current中但不在bulk中的）
+          const toRemove = currentRepresentativeIds.filter(
+            id => !this.bulkRepresentatives.includes(id)
+          );
+
+          // 找出需要添加的代表用户（在bulk中但不在current中的）
+          const toAdd = this.bulkRepresentatives.filter(
+            id => !currentRepresentativeIds.includes(id)
+          );
+
+          await project.addUsers(toAdd);
+          // 添加新的代表用户
+          for (const id of toAdd) {
+            const newRep = new ProjectRepresentative({
+              project: project.id,
+              user: id
+            });
+            await newRep.save();
+          }
+
+          // 删除不再需要的代表用户
+          for (const id of toRemove) {
+            await ProjectRepresentative.delete(0, project.id, id);
+          }
+        });
+
+        // 等待所有项目完成代表用户设置
+        await Promise.all(assignPromises);
+
+        // 关闭模态框
+        this.assignToModal = false;
+
+        this.$notify({
+          type: 'success',
+          text: `Successfully assigned users to ${this.checkedProjects.length} project(s).`
+        });
+
+        // 刷新项目列表
+        this.revision++;
+
+        // 清空选择
+        this.checkedProjects = [];
+        this.bulkRepresentatives = [];
+      } catch (error) {
+        console.error('Error assigning users:', error);
+        this.$notify({
+          type: 'error',
+          text: 'Failed to assign users.'
+        });
+      }
+    },
+
     async confirmRunAI() {
       if (!this.selectedAIRunner) {
         this.$buefy.toast.open({
@@ -835,7 +1116,7 @@ export default {
         });
         return;
       }
-      
+
       this.$buefy.dialog.confirm({
         title: `Confirm whether to run the ${this.selectedAIRunner.name} algorithm`,
         message: 'This run will be in the background, so don\'t need to wait for.',
@@ -847,28 +1128,28 @@ export default {
             // 关闭模态框
             this.aiRunnerSelectionModal = false;
             this.bulkActionModal = false;
-            
+
             // 为每个选中的项目运行AI算法
             const runPromises = this.checkedProjects.map(async (project) => {
               const requestData = {
                 airunnerId: this.selectedAIRunner.id,
                 projectId: project.id
               };
-              
+
               // 调用API运行AI算法
               await AIAlgorithmJob.runAlgorithm(requestData);
             });
-            
+
             // 等待所有项目开始运行AI算法
             await Promise.all(runPromises);
-            
+
             this.$buefy.toast.open({
               message: this.$t('bulk-ai-processing-started'),
               type: 'is-success'
             });
-            
+
             console.log('Started AI processing on projects:', this.checkedProjects, 'with runner:', this.selectedAIRunner);
-            
+
             // 清空选择
             this.checkedProjects = [];
             this.selectedAIRunner = null;
@@ -891,7 +1172,7 @@ export default {
         });
         return;
       }
-      
+
       this.$buefy.dialog.confirm({
         title: `Confirm whether to run the ${this.selectedSingleAIRunner.name} algorithm`,
         message: 'This run will be in the background, so don\'t need to wait for.',
@@ -902,23 +1183,23 @@ export default {
           try {
             // 关闭模态框
             this.singleAIRunnerSelectionModal = false;
-            
+
             // 为单个项目运行AI算法
             const requestData = {
               airunnerId: this.selectedSingleAIRunner.id,
               projectId: this.projectToRunAI.id
             };
-            
+
             // 调用API运行AI算法
             await AIAlgorithmJob.runAlgorithm(requestData);
-            
+
             this.$buefy.toast.open({
               message: this.$t('single-ai-processing-started'),
               type: 'is-success'
             });
-            
+
             console.log('Started AI processing on project:', this.projectToRunAI, 'with runner:', this.selectedSingleAIRunner);
-            
+
             // 清空选择
             this.projectToRunAI = null;
             this.selectedSingleAIRunner = null;
@@ -931,7 +1212,7 @@ export default {
           }
         }
       });
-    }
+    },
   },
   async created() {
     try {
@@ -939,7 +1220,8 @@ export default {
         this.fetchOntologies(),
         this.fetchMaxFilters(),
         this.fetchTags(),
-        this.fetchAIRunners()
+        this.fetchAIRunners(),
+        this.fetchAllUsers()
       ]);
     } catch (error) {
       console.log(error);
@@ -1297,6 +1579,7 @@ export default {
 
 .modal-card {
   max-width: 800px;
+  min-height: 40%;
   width: auto;
   margin: 0 auto;
 }
@@ -1349,6 +1632,15 @@ export default {
 /* 模态框背景 */
 .modal-background {
   background-color: rgba(30, 30, 30, 0.8);
+}
+
+/* Toggle switch styles */
+.buttons.has-addons .switch {
+  margin-bottom: 0;
+}
+
+.buttons.has-addons .switch+.switch {
+  border-left: none;
 }
 </style>
 

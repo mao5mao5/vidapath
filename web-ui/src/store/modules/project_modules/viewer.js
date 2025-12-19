@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+import Vue from 'vue';
 import router from '@/routes';
 import {getModuleNamespace} from '@/store/store';
 import imageModule from './viewer_modules/image';
@@ -244,7 +245,8 @@ export default {
       });
       let annot = idAnnotation ? `/annotation/${idAnnotation}` : '';
       let actionStr = action ? '&action=' + action : '';
-      return `/project/${idProject}/image/${imagesIds.join('-')}/slice/${slicesIds.join('-')}${annot}?viewer=${idViewer}${actionStr}`;
+      let access_token = Vue.$keycloak.hasTemporaryToken ? '&access_token=' + Vue.$keycloak.temporaryToken : '';
+      return `/project/${idProject}/image/${imagesIds.join('-')}/slice/${slicesIds.join('-')}${annot}?viewer=${idViewer}${actionStr}${access_token}`;
     },
 
     getLinkedIndexes: state => index => { // find all indexes linked to provided index (if image is not linked, return only its index)

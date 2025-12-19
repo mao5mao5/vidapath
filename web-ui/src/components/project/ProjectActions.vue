@@ -70,12 +70,12 @@
   </form>
 
   <div class="buttons">
-    <!-- <button class="button" :class="size" @click="isRenameModalActive = true">
+    <button class="button" :class="size" @click="isRenameModalActive = true">
       {{$t('button-rename')}}
-    </button> -->
-    <!-- <button class="button" :class="size" @click="isOntologyModalActive = true" :disabled="cannotDeleteOntology">
+    </button>
+    <button class="button" :class="size" @click="isOntologyModalActive = true" :disabled="cannotDeleteOntology">
       {{$t('button-change-ontology')}}
-    </button> -->
+    </button>
     <button class="button is-danger" :class="size" @click="deleteProject()">
       {{$t('button-delete')}}
     </button>
