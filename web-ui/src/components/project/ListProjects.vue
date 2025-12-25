@@ -24,7 +24,7 @@
         {{ $t('case-management') }}
       </p>
       <div class="panel-block">
-        <div class="panel-heading-buttons">
+        <div class="panel-heading-buttons" v-if="!$keycloak.hasTemporaryToken">
           <div class="buttons has-addons">
             <button class="button" :class="{ 'is-primary': all }" @click="all = true; revision++">
               All cases
@@ -234,7 +234,7 @@
 
                 <div class="mt-2">
                   <button class="button is-primary is-small mr-1" @click="saveRepresentatives(project)">Save</button>
-                  <button class="button is-small" @click="cancelEditing(project)">Cancel</button>
+                  <button class="button is-small" @click="cancelEditing()">Cancel</button>
                 </div>
               </div>
 
@@ -244,7 +244,7 @@
                 </span>
                 <span v-else class="has-text-grey">No representatives</span>
 
-                <button class="button is-small ml-2" @click="startEditing(project)">
+                <button class="button is-small ml-2" v-if="!$keycloak.hasTemporaryToken" @click="startEditing(project)">
                   <span class="icon is-small">
                     <i class="fas fa-edit"></i>
                   </span>
@@ -255,7 +255,7 @@
 
             <b-table-column label="Actions" centered width="200">
               <div class="buttons">
-                <button class="button" @click="openAddImageModal(project)">
+                <button v-if="!$keycloak.hasTemporaryToken" class="button" @click="openAddImageModal(project)">
                   <span class="icon">
                     <i class="fas fa-plus"></i>
                   </span>
@@ -267,13 +267,13 @@
                   </span>
                   <!-- <span>Open viewer</span> -->
                 </button>
-                <button class="button" @click="openShareModal(project)">
+                <button v-if="!$keycloak.hasTemporaryToken" class="button" @click="openShareModal(project)">
                   <span class="icon">
                     <i class="fas fa-share-alt"></i>
                   </span>
                   <!-- <span>{{ $t('button-share') }}</span> -->
                 </button>
-                <button class="button" @click="runAIOnProject(project)">
+                <button v-if="!$keycloak.hasTemporaryToken" class="button" @click="runAIOnProject(project)">
                   <span class="icon">
                     <i class="fas fa-robot"></i>
                   </span>
@@ -299,7 +299,7 @@
 
     <add-project-modal :active.sync="creationModal" :ontologies="ontologies" />
     <add-image-modal :active.sync="addImageModal" :project="selectedProject" @addImage="updateProject()" />
-    <share-project-modal :active.sync="shareProjectModal" :project="selectedProject" />
+    <share-project-modal :active.sync="shareProjectModal" :project="selectedProject" :projects="selectedProjects" />
 
     <!-- Bulk Action Modal -->
     <div v-if="bulkActionModal" class="modal is-active">
@@ -497,6 +497,7 @@ export default {
       aiRunnerSelectionModal: false,
       singleAIRunnerSelectionModal: false,
       selectedProject: null,
+      selectedProjects: [], // 用于批量操作的项目数组
       projectToRunAI: null,
 
       checkedProjects: [],
@@ -794,7 +795,7 @@ export default {
       console.log('projectRepresentatives:', this.projectRepresentatives);
     },
 
-    cancelEditing(project) {
+    cancelEditing() {
       // 取消编辑
       this.editingProjectId = null;
       // this.$delete(this.projectRepresentatives, project.id);
@@ -902,16 +903,19 @@ export default {
         const images = await imageCollection.fetchPage(0);
         if (images.array.length > 0) {
           const firstImage = images.array[0];
-          // 跳转到Viewer并显示第一张图片
-          this.$router.push(`/project/${project.id}/image/${firstImage.id}`);
+          if (this.$keycloak.hasTemporaryToken) {
+            this.$router.push(`/project/${project.id}/image/${firstImage.id}?access_token=${this.$keycloak.temporaryToken}`);
+          }
+          else {
+            this.$router.push(`/project/${project.id}/image/${firstImage.id}`);
+          }
+
         } else {
-          // 如果项目中没有图片，则只跳转到项目页面
-          this.$router.push(`/project/${project.id}`);
+          this.$notify({ type: 'error', text: 'The case does not have any images. Please add images before opening.' });
         }
       } catch (error) {
+        å
         console.error('Error fetching first image:', error);
-        // 出错时仍然跳转到项目页面
-        this.$router.push(`/project/${project.id}`);
       }
     },
     formatStatus(status) {
@@ -1002,15 +1006,29 @@ export default {
 
     bulkShare() {
       // 批量分享功能
-      this.$buefy.toast.open({
-        message: this.$t('bulk-share-not-implemented'),
-        type: 'is-info'
-      });
-      console.log('Bulk share projects:', this.checkedProjects);
+      if (this.checkedProjects.length === 0) {
+        this.$buefy.toast.open({
+          message: 'Please select at least one project to share.',
+          type: 'is-warning'
+        });
+        return;
+      }
+
+      // 设置要批量分享的项目
+      this.selectedProjects = this.checkedProjects;
+      this.shareProjectModal = true;
     },
 
     bulkAssign() {
       // 批量分配功能
+      if (this.checkedProjects.length === 0) {
+        this.$buefy.toast.open({
+          message: 'Please select at least one project to assign.',
+          type: 'is-warning'
+        });
+        return;
+      }
+
       this.assignToModal = true;
       // 默认清空之前的选择
       this.bulkRepresentatives = [];
@@ -1550,6 +1568,7 @@ export default {
 
 .buttons {
   display: flex;
+  justify-content: center;
   gap: 0.5rem;
 }
 

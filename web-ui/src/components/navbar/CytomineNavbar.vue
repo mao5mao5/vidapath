@@ -15,14 +15,14 @@
 <template>
   <nav class="navbar is-light" role="navigation">
     <div class="navbar-brand">
-      <router-link to="/projects" exact class="navbar-item">
+      <router-link :to="projects" exact class="navbar-item">
         <div class="logo-container">
           <img src="@/assets/icon.svg" id="logo" alt="VidaPath">
           <h1 class="brand">VidaPath</h1>
         </div>
       </router-link>
     </div>
-    <div id="topMenu"  class="navbar-menu" :class="{ 'is-active': openedTopMenu }">
+    <div id="topMenu" class="navbar-menu" :class="{ 'is-active': openedTopMenu }">
       <div v-if="!$keycloak.hasTemporaryToken" class="navbar-start">
         <!-- <navbar-dropdown
       icon="fa-folder-open"
@@ -57,7 +57,7 @@
       </router-link> -->
       </div>
 
-      <div  v-if="showPatientInfo" class="patient-info">
+      <div v-if="showPatientInfo" class="patient-info">
         <div class="patient-details">
           <span v-if="currentProject.patientName" class="patient-field">PATIENT: {{ currentProject.patientName }}</span>
           <span v-if="currentProject.patientId" class="patient-field">ID: {{ currentProject.patientId }}</span>
@@ -152,7 +152,10 @@ export default {
       return this.$route.path.includes('/image/') && this.currentProject &&
         (this.currentProject.patientName || this.currentProject.patientId || this.currentProject.patientAge) &&
         !this.$keycloak.hasTemporaryToken;
-    }
+    },
+    projects() {
+      return this.$keycloak.hasTemporaryToken ? `/projects?access_token=${this.$keycloak.temporaryToken}` : '/projects';
+    },
   },
   watch: {
     $route() {

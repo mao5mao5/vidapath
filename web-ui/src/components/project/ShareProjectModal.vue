@@ -13,31 +13,10 @@
  limitations under the License.-->
 
 <template>
-  <cytomine-modal :active="active" :title="'Share Case'" @close="$emit('update:active', false)">
+  <cytomine-modal :active="active" :title="modalTitle" @close="$emit('update:active', false)">
     <b-loading :is-full-page="false" :active="loading" />
     <div v-if="!loading" class="share-project-modal">
-      <!-- <b-message type="is-info" has-icon size="is-small" class="element-spacing">
-        Share the case with specific users or make it publicly accessible.
-      </b-message> -->
-
-      <!-- <div class="form-section element-spacing">
-        <b-field :label="'Share with'" class="field-spacing">
-          <b-radio v-model="shareType" name="share-type" native-value="public" class="radio-spacing">
-            Public
-          </b-radio>
-          <b-radio v-model="shareType" name="share-type" native-value="users" class="radio-spacing">
-            Assign to users
-          </b-radio>
-        </b-field>
-      </div> -->
-
       <div v-if="shareType === 'public'" class="form-section element-spacing">
-        <!-- <b-message type="is-warning" has-icon size="is-small" class="element-spacing">
-          Warning: Making the case public will grant access to all users in the system.
-        </b-message> -->
-
-
-
         <!-- 添加过期时间选项 -->
         <div class="form-section element-spacing">
           <b-field :label="'Expiration time'" class="field-spacing">
@@ -52,13 +31,6 @@
         </div>
       </div>
 
-      <!-- <div v-if="shareType === 'users'" class="form-section element-spacing">
-        <b-field :label="'Select users'" class="field-spacing">
-          <domain-tag-input v-model="selectedUsers" :domains="allUsers" :placeholder="'Search users...'"
-            searchedProperty="fullName" displayedProperty="fullName" />
-        </b-field>
-      </div> -->
-
       <div class="share-link element-spacing" v-if="generatedLink">
         <b-field :label="'Share link'" class="field-spacing">
           <b-input v-model="generatedLink" readonly expanded class="share-link-input" />
@@ -67,13 +39,19 @@
           </p>
         </b-field>
       </div>
+
+      <div class="bulk-share-info element-spacing" v-if="isBulkShare">
+        <b-message type="is-info" has-icon>
+          Sharing {{ projects.length }} case(s) with the same link.
+        </b-message>
+      </div>
     </div>
 
     <template #footer>
       <button class="button" @click="$emit('update:active', false)">
         Close
       </button>
-      <button class="button is-link" @click="shareProject" :disabled="loading || !canShare">
+      <button class="button is-link" @click="shareProject" :disabled="loading">
         Share
       </button>
     </template>
@@ -82,150 +60,124 @@
 
 <script>
 import CytomineModal from '@/components/utils/CytomineModal';
-import DomainTagInput from '@/components/utils/DomainTagInput';
 import { UserCollection, Project, Cytomine, ImageInstanceCollection } from '@/api';
 
 export default {
   name: 'share-project-modal',
   props: {
     active: Boolean,
-    project: Object
+    project: Object, // 单个项目分享时使用
+    projects: Array  // 批量项目分享时使用
   },
   components: {
-    CytomineModal,
-    DomainTagInput
+    CytomineModal
   },
   data() {
     return {
       loading: false,
       shareType: 'public', // 'public' or 'users'
       expirationTime: '24', // 过期时间选项
-      selectedUsers: [],
-      allUsers: [],
       generatedLink: ''
     };
   },
   computed: {
-    canShare() {
-      // Check if there are any images in the project (requires imageInstances to be populated)
-      // Since we can't make API calls in computed properties, we'll rely on the shareProject method
-      // to check for images when the button is clicked.
-      if (this.shareType === 'users') {
-        return this.selectedUsers.length > 0;
-      }
-      return true;
+    isBulkShare() {
+      return this.projects && this.projects.length > 0;
+    },
+    modalTitle() {
+      return this.isBulkShare ? 'Bulk Share Projects' : 'Share Project';
     }
   },
   watch: {
     active(val) {
       if (val) {
         this.resetForm();
-        this.loadUsers();
       } else {
         this.generatedLink = '';
-      }
-    },
-    shareType(newVal) {
-      // Reset permission level when changing share type
-      // For public sharing, only READ permission is allowed
-      if (newVal === 'public') {
-        this.expirationTime = '24'; // 重置过期时间选项
       }
     }
   },
   methods: {
     resetForm() {
       this.shareType = 'public';
-      this.expirationTime = '24'; // 重置过期时间选项
-      this.selectedUsers = [];
+      this.expirationTime = '24';
       this.generatedLink = '';
-    },
-
-    async loadUsers() {
-      this.loading = true;
-      try {
-        this.allUsers = (await UserCollection.fetchAll()).array;
-      } catch (error) {
-        console.error(error);
-        this.$notify({ type: 'error', text: 'Failed to fetch users.' });
-      } finally {
-        this.loading = false;
-      }
     },
 
     async shareProject() {
       this.loading = true;
       try {
-        // 首先获取项目的第一张图像
-        let firstImage = null;
-        try {
-          const imageCollection = new ImageInstanceCollection({
-            filterKey: 'project',
-            filterValue: this.project.id,
-            sort: 'id',
-            order: 'asc',
-            max: 1
-          });
-
-          const images = await imageCollection.fetchPage(0);
-          if (images.array.length > 0) {
-            firstImage = images.array[0];
-          } else {
-            this.$notify({ type: 'error', text: 'No images found in this project. Cannot generate share link.' });
-            return;
-          }
-        } catch (error) {
-          console.error('Error fetching images:', error);
-          this.$notify({ type: 'error', text: 'Failed to fetch project images.' });
-          return;
-        }
-
-        if (this.shareType === 'public') {
-          // For public sharing, add all users to the project as regular members
-          try {
-            // 调用后端API生成临时访问令牌
-            const response = await Cytomine.instance.api.post(`/project/${this.project.id}/temporary_access_token.json`, {
-              expirationHours: parseInt(this.expirationTime)
-            });
-
-            const token = response.data.tokenKey;
-            this.generatedLink = `${window.location.origin}/#/project/${this.project.id}/image/${firstImage.id}`
-          } catch (error) {
-            console.error('Error generating temporary access token:', error);
-            this.$notify({ type: 'error', text: 'Failed to generate temporary access token.' });
-          }
-          this.$notify({ type: 'success', text: 'Case shared publicly successfully.' });
+        if (this.isBulkShare) {
+          await this.shareMultipleProjects();
         } else {
-          // Share with specific users
-          const userIds = this.selectedUsers.map(user => user.id);
+          await this.shareSingleProject();
+        }
+      } catch (error) {
+        console.error('Error sharing project(s):', error);
+        this.$notify({ type: 'error', text: 'Failed to share project(s).' });
+      } finally {
+        this.loading = false;
+      }
+    },
 
-          // WRITE permission means manager role
-          await this.project.addUsers(userIds);
-          // Then promote them to managers
-          for (const userId of userIds) {
-            await this.project.addAdmin(userId);
-          }
+    async shareSingleProject() {
+      // 获取项目的第一张图像
+      const firstImage = await this.getFirstImage(this.project.id);
+      if (!firstImage) {
+        this.$notify({ type: 'error', text: 'No images found in this project. Cannot generate share link.' });
+        return;
+      }
 
-          this.generatedLink = `${window.location.origin}/#/project/${this.project.id}/image/${firstImage.id}`;
-          this.$notify({ type: 'success', text: 'Case shared with selected users successfully.' });
+      // 生成临时访问令牌
+      await this.generateTokenAndLink([this.project.id]);
+    },
+
+    async shareMultipleProjects() {
+      // 获取所有项目中第一张图像
+      const projectIds = this.projects.map(p => p.id);
+
+      // 生成临时访问令牌，包含所有项目ID
+      await this.generateTokenAndLink(projectIds);
+    },
+
+    async getFirstImage(projectId) {
+      try {
+        const imageCollection = new ImageInstanceCollection({
+          filterKey: 'project',
+          filterValue: projectId,
+          sort: 'id',
+          order: 'asc',
+          max: 1
+        });
+
+        const images = await imageCollection.fetchPage(0);
+        return images.array.length > 0 ? images.array[0] : null;
+      } catch (error) {
+        console.error('Error fetching images:', error);
+        return null;
+      }
+    },
+
+    async generateTokenAndLink(projectIds) {
+      try {
+        // 调用后端API生成临时访问令牌，支持多个项目ID
+        const response = await Cytomine.instance.api.post('/temporary_access_token.json', {
+          expirationHours: parseInt(this.expirationTime),
+          projectId: projectIds
+        });
+        const token = response.data.tokenKey;
+
+
+        if (this.isBulkShare) {
+          this.generatedLink = `${window.location.origin}/#/projects?access_token=${token}`;
+        } else {
+          // 使用项目的ID和第一张图像生成链接
+          const firstProjectId = projectIds[0];
+          const firstImage = await this.getFirstImage(firstProjectId);
+          this.generatedLink = `${window.location.origin}/#/project/${firstProjectId}/image/${firstImage.id}?access_token=${token}`;
         }
 
-        // 如果设置了过期时间，则生成临时访问令牌
-        if (this.expirationTime !== 'never') {
-          try {
-            // 调用后端API生成临时访问令牌
-            const response = await Cytomine.instance.api.post(`/project/${this.project.id}/temporary_access_token.json`, {
-              expirationHours: parseInt(this.expirationTime)
-            });
-
-            const token = response.data.tokenKey;
-            this.generatedLink += `?access_token=${token}`;
-          } catch (error) {
-            console.error('Error generating temporary access token:', error);
-            this.$notify({ type: 'error', text: 'Failed to generate temporary access token.' });
-          }
-        }
-
+        // 自动复制链接到剪贴板
         navigator.clipboard.writeText(this.generatedLink).then(() => {
           this.$notify({ type: 'success', text: 'Link copied to clipboard.' });
         }).catch(err => {
@@ -233,10 +185,8 @@ export default {
           this.$notify({ type: 'error', text: 'Failed to copy link.' });
         });
       } catch (error) {
-        console.error(error);
-        this.$notify({ type: 'error', text: 'Failed to share project.' });
-      } finally {
-        this.loading = false;
+        console.error('Error generating temporary access token:', error);
+        this.$notify({ type: 'error', text: 'Failed to generate temporary access token.' });
       }
     },
 
