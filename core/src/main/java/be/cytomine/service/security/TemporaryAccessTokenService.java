@@ -3,12 +3,9 @@ package be.cytomine.service.security;
 import be.cytomine.domain.CytomineDomain;
 import be.cytomine.domain.security.TemporaryAccessToken;
 import be.cytomine.domain.security.User;
-import be.cytomine.exceptions.ObjectNotFoundException;
 import be.cytomine.repository.security.TemporaryAccessTokenRepository;
 import be.cytomine.service.CurrentUserService;
 import be.cytomine.service.ModelService;
-import be.cytomine.service.security.SecurityACLService;
-import be.cytomine.utils.CommandResponse;
 import be.cytomine.utils.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,13 +35,15 @@ public class TemporaryAccessTokenService extends ModelService {
         return new TemporaryAccessToken().buildDomainFromJson(json, getEntityManager());
     }
 
-    public TemporaryAccessToken createToken(Long projectId, int hours) {
+    public TemporaryAccessToken createToken(List<Long> projectIds, int hours) {
         User currentUser = currentUserService.getCurrentUser();
         
         TemporaryAccessToken token = new TemporaryAccessToken();
         token.setTokenKey(UUID.randomUUID().toString());
         token.setUser(currentUser);
-        token.setProjectId(projectId);
+        token.setProjectIds(String.join(",", projectIds.stream()
+                .map(String::valueOf)
+                .toArray(String[]::new)));
         
         Date expiryDate = new Date(System.currentTimeMillis() + (hours * 60 * 60 * 1000L));
         token.setExpiryDate(expiryDate);
@@ -60,7 +59,21 @@ public class TemporaryAccessTokenService extends ModelService {
         TemporaryAccessToken token = new TemporaryAccessToken();
         token.setTokenKey(UUID.randomUUID().toString());
         token.setUser(currentUser);
-        token.setProjectId(json.getJSONAttrLong("projectId"));
+        
+        // 支持单个项目ID或项目ID列表
+        Object projectIdObj = json.get("projectId");
+        if (projectIdObj instanceof Long) {
+            token.setProjectIds(projectIdObj.toString());
+        } else if (projectIdObj instanceof String) {
+            token.setProjectIds((String) projectIdObj);
+        } else if (projectIdObj instanceof List) {
+            List<?> projectIdList = (List<?>) projectIdObj;
+            token.setProjectIds(String.join(",", projectIdList.stream()
+                    .map(Object::toString)
+                    .toArray(String[]::new)));
+        } else {
+            throw new IllegalArgumentException("Invalid projectId format in request");
+        }
         
         Date expiryDate = new Date(System.currentTimeMillis() + (expirationHours * 60 * 60 * 1000L));
         token.setExpiryDate(expiryDate);
@@ -83,7 +96,7 @@ public class TemporaryAccessTokenService extends ModelService {
             return false;
         }
         
-        Optional<TemporaryAccessToken> tokenOptional = findByTokenKeyAndProjectId(tokenKey, projectId);
+        Optional<TemporaryAccessToken> tokenOptional = findByTokenKey(tokenKey);
         if (tokenOptional.isEmpty()) {
             return false;
         }
@@ -94,8 +107,8 @@ public class TemporaryAccessTokenService extends ModelService {
             return false;
         }
         
-        // 检查项目ID是否匹配
-        return token.getProjectId().equals(projectId);
+        // 检查项目ID是否在令牌允许的列表中
+        return token.containsProjectId(projectId);
     }
     
     /**
@@ -117,6 +130,17 @@ public class TemporaryAccessTokenService extends ModelService {
 
     public List<TemporaryAccessToken> listByProject(Long projectId) {
         return temporaryAccessTokenRepository.findAllByProjectId(projectId);
+    }
+
+    /**
+     * 根据令牌获取支持的项目ID列表
+     */
+    public List<Long> getProjectIdsByToken(String tokenKey) {
+        Optional<TemporaryAccessToken> tokenOptional = findByTokenKey(tokenKey);
+        if (tokenOptional.isPresent()) {
+            return tokenOptional.get().getProjectIdList();
+        }
+        return List.of(); // 返回空列表如果令牌不存在
     }
 
     public TemporaryAccessToken delete(TemporaryAccessToken token) {

@@ -4,7 +4,6 @@ import be.cytomine.domain.security.TemporaryAccessToken;
 import be.cytomine.domain.security.User;
 import be.cytomine.service.CurrentUserService;
 import be.cytomine.service.security.TemporaryAccessTokenService;
-import be.cytomine.service.security.SecurityACLService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,14 +22,10 @@ public class TemporaryTokenFilter extends OncePerRequestFilter {
 
     private final TemporaryAccessTokenService temporaryAccessTokenService;
     private final CurrentUserService currentUserService;
-    private final SecurityACLService securityACLService;
-
     public TemporaryTokenFilter(TemporaryAccessTokenService temporaryAccessTokenService, 
-                               CurrentUserService currentUserService,
-                               SecurityACLService securityACLService) {
+                               CurrentUserService currentUserService) {
         this.temporaryAccessTokenService = temporaryAccessTokenService;
         this.currentUserService = currentUserService;
-        this.securityACLService = securityACLService;
     }
 
     @Override
@@ -62,11 +57,10 @@ public class TemporaryTokenFilter extends OncePerRequestFilter {
                 Long projectId = extractProjectIdFromUri(request.getRequestURI());
                 log.info("Extracted project ID from URI: {}", projectId);
 
-                // 如果能从URI提取到项目ID，则验证特定项目的令牌
+                // 如果能从URI提取到项目ID，则验证令牌是否包含此项目ID
                 if (projectId != null) {
                     log.info("Checking token for project ID: {}", projectId);
-                    Optional<TemporaryAccessToken> tokenOpt = temporaryAccessTokenService.findByTokenKeyAndProjectId(accessToken, projectId);
-                    log.info("Token lookup result present: {}", tokenOpt.isPresent());
+                    Optional<TemporaryAccessToken> tokenOpt = temporaryAccessTokenService.findByTokenKey(accessToken);
                     
                     if (tokenOpt.isPresent() && temporaryAccessTokenService.isValidToken(accessToken, projectId)) {
                         log.info("Token is valid for project ID: {}", projectId);

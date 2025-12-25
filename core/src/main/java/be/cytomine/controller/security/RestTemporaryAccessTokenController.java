@@ -7,6 +7,9 @@ import be.cytomine.service.security.TemporaryAccessTokenService;
 import be.cytomine.utils.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,15 +27,13 @@ public class RestTemporaryAccessTokenController extends RestCytomineController {
     }
 
     /**
-     * 创建临时访问令牌
+     * 创建临时访问令牌（支持单个项目ID或多个项目ID）
      */
-    @PostMapping("/project/{projectId}/temporary_access_token.json")
+    @PostMapping("/temporary_access_token.json")
     public ResponseEntity<String> add(
-            @PathVariable Long projectId,
             @RequestBody JsonObject json
     ) {
-        log.debug("REST request to save TemporaryAccessToken for project {}: {}", projectId, json);
-        json.put("projectId", projectId);
+        log.debug("REST request to save TemporaryAccessToken: {}", json);
         TemporaryAccessToken token = temporaryAccessTokenService.createToken(json);
         return responseSuccess(token);
     }
@@ -57,5 +58,18 @@ public class RestTemporaryAccessTokenController extends RestCytomineController {
     ) {
         log.debug("REST request to list TemporaryAccessTokens for project {}", projectId);
         return responseSuccess(temporaryAccessTokenService.listByProject(projectId));
+    }
+
+    /**
+     * 获取指定令牌支持的所有项目ID
+     */
+    @GetMapping("/temporary_access_token/{tokenKey}/project_ids.json")
+    public ResponseEntity<String> getProjectIdsByToken(
+            @PathVariable String tokenKey
+    ) {
+        log.debug("REST request to get project IDs for token: {}", tokenKey);
+        List<Long> projectIds = temporaryAccessTokenService.getProjectIdsByToken(tokenKey);
+        JsonObject response = JsonObject.of("projectIds", projectIds);
+        return responseSuccess(response);
     }
 }
