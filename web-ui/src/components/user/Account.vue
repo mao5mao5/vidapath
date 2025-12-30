@@ -62,7 +62,7 @@
           <b-input v-model="updatedAccount.email" name="email" v-validate="'required|email'" />
         </b-field>
 
-        <b-field :label="$t('language')" horizontal>
+        <!-- <b-field :label="$t('language')" horizontal>
           <b-select v-model="updatedAccount.locale">
             <option v-for="{value, name} in languages" :key="value" :value="value">
               {{name}}
@@ -75,7 +75,7 @@
             <template v-if="updatedAccount.isDeveloper">{{$t('yes')}}</template>
             <template v-else>{{$t('no')}}</template>
           </b-switch>
-        </b-field>
+        </b-field> -->
 
         <b-field grouped position="is-right">
           <div class="control">
@@ -116,7 +116,7 @@
     </div>
   </div>
 
-  <div class="panel">
+  <!-- <div class="panel">
     <p class="panel-heading">
       <i class="fas fa-exchange-alt" aria-hidden="true"></i>
       {{ $t('api-keys') }}
@@ -157,7 +157,7 @@
         </b-field>
       </template>
     </div>
-  </div>
+  </div> -->
   </template>
 </div>
 </template>
@@ -264,18 +264,121 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .panel {
   max-width: 80em;
   margin-left: auto;
   margin-right: auto;
+  background-color: $dark-bg-primary;
+  border: 1px solid $dark-border-color;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.panel:hover {
+  border-color: #409eff;
+  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.2);
+}
+
+.panel-heading {
+  background-color: $dark-bg-secondary;
+  border-bottom: 1px solid $dark-border-color;
+  color: $dark-text-primary;
+  border-radius: 8px 8px 0 0;
+}
+
+.panel-block {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+  border-radius: 0 0 8px 8px;
 }
 
 .fas {
   margin-right: 0.3em;
+  color: $dark-text-primary;
 }
 
 input.hidden {
   display: none;
+}
+
+.field-label {
+  color: $dark-text-primary;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.label {
+  color: $dark-text-primary;
+}
+
+.control .input {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.control .input:focus {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.control .select select {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.control .select select:focus {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.button {
+  background-color: $dark-button-bg;
+  border-color: $dark-button-border;
+  color: $dark-text-primary;
+}
+
+.button:hover {
+  background-color: $dark-button-hover-bg;
+  border-color: $dark-button-hover-border;
+}
+
+.button.is-link {
+  background-color: #409eff;
+  border-color: #409eff;
+  color: white;
+}
+
+.button.is-link:hover {
+  background-color: #338fef;
+  border-color: #338fef;
+}
+
+.tag {
+  background-color: $dark-tag-bg;
+  color: $dark-text-primary;
+}
+
+.message {
+  background-color: $dark-bg-secondary;
+  border: 1px solid $dark-border-color;
+  border-radius: 4px;
+}
+
+.message.is-danger {
+  background-color: $dark-button-danger-bg;
+  color: $dark-text-primary;
+}
+
+.message-body {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
 }
 </style>

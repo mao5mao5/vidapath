@@ -17,7 +17,7 @@
   <span class="navbar-link" :class="{'is-active': isActive, ...linkClasses}" tabindex="0">
     <i v-if="icon" :class="[iconPack, icon]"></i>
     {{title}}
-    <b-tag v-if="tag" :type="tag.type">{{tag.text}}</b-tag>
+    <!-- <b-tag v-if="tag" :type="tag.type">{{tag.text}}</b-tag> -->
   </span>
   <div class="navbar-dropdown" :class="classes">
     <slot></slot>
@@ -61,6 +61,37 @@ export default {
 .navbar-item .tag {
   margin-left: 0.5rem;
 }
+
+.navbar-item.has-dropdown .navbar-link {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+.navbar-item.has-dropdown .navbar-link::after {
+  border-color: white !important;
+}
+
+.navbar-item.has-dropdown .navbar-link:hover {
+  background-color: #28364d !important;
+  color: white !important;
+}
+
+.navbar-dropdown {
+  background-color: #1e2939 !important;
+  color: white !important;
+  border-top: none !important;
+}
+
+.navbar-dropdown .navbar-item {
+  background-color: #1e2939 !important;
+  color: white !important;
+}
+
+.navbar-dropdown .navbar-item:hover {
+  background-color: #28364d !important;
+  color: white !important;
+}
+
 @media screen and (min-width: 1024px) {
   .navbar-item.is-hoverable:hover .navbar-dropdown {
     display: block;
