@@ -16,7 +16,7 @@
 
 // return all terms from an ontology object
 export function getAllTerms(ontology) {
-  return processNodes(ontology.children.array);
+  return processNodes(ontology.children);
 }
 
 function processNodes(nodes) {
