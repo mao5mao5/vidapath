@@ -178,7 +178,7 @@ export default {
         }
 
         // 自动复制链接到剪贴板
-        navigator.clipboard.writeText(this.generatedLink).then(() => {
+        this.copyToClipboard(this.generatedLink).then(() => {
           this.$notify({ type: 'success', text: 'Link copied to clipboard.' });
         }).catch(err => {
           console.error('Failed to copy: ', err);
@@ -191,11 +191,62 @@ export default {
     },
 
     copyLink() {
-      navigator.clipboard.writeText(this.generatedLink).then(() => {
+      this.copyToClipboard(this.generatedLink).then(() => {
         this.$notify({ type: 'success', text: 'Link copied to clipboard.' });
       }).catch(err => {
         console.error('Failed to copy: ', err);
         this.$notify({ type: 'error', text: 'Failed to copy link.' });
+      });
+    },
+    
+    copyToClipboard(text) {
+      // 检查浏览器是否支持 navigator.clipboard
+      if (!navigator.clipboard && window.isSecureContext) {
+        // 使用现代 Clipboard API
+        return navigator.clipboard.writeText(text);
+      } else {
+        // 回退到传统的 document.execCommand 方法
+        return this.fallbackCopyTextToClipboard(text);
+      }
+    },
+    
+    fallbackCopyTextToClipboard(text) {
+      // 创建一个 textarea 元素用于复制文本
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      
+      // 避免滚动到底部
+      textArea.setAttribute("readonly", "");
+      textArea.style.cssText = `
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        opacity: 0;
+        height: 0;
+        width: 0;
+        overflow: hidden;
+      `;
+      
+      document.body.appendChild(textArea);
+      textArea.select();
+      
+      return new Promise((resolve, reject) => {
+        let success = false;
+        try {
+          // 执行复制命令
+          success = document.execCommand('copy');
+        } catch (err) {
+          console.error('Fallback: Could not copy text: ', err);
+        }
+        
+        document.body.removeChild(textArea);
+        
+        if (success) {
+          resolve();
+        } else {
+          // 如果复制失败，提供错误信息
+          reject(new Error('Could not copy text'));
+        }
       });
     }
   }
