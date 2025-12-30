@@ -28,7 +28,7 @@
       </button>
     </template>
   </cytomine-modal>
-</form>xw
+</form>
 </template>
 
 <script>

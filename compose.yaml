@@ -79,6 +79,8 @@ services:
     restart: unless-stopped
     depends_on:
       - pims-cache
+    ports:
+      - "5001:5000"
     volumes:
       - ${IMPORT_PATH:-./data/dataset}:/dataset
       - ${DATA_PATH:-./data}/images:/data/images
@@ -176,6 +178,8 @@ services:
       - iam
       - mongo
       - postgis
+    ports:
+      - "8080:8080"
     volumes:
       - /etc/localtime:/etc/localtime
     environment:

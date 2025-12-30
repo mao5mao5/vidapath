@@ -46,8 +46,6 @@ public class SecurityConfiguration {
     private final UserRepository userRepository;
     private final TemporaryAccessTokenService temporaryAccessTokenService;
     private final CurrentUserService currentUserService;
-    private final SecurityACLService securityACLService;
-
     public SecurityConfiguration(UserRepository userRepository, 
                                JwtAuthConverter customJwtAuthConverter,
                                TemporaryAccessTokenService temporaryAccessTokenService,
@@ -57,7 +55,6 @@ public class SecurityConfiguration {
         this.customJwtAuthConverter = customJwtAuthConverter;
         this.temporaryAccessTokenService = temporaryAccessTokenService;
         this.currentUserService = currentUserService;
-        this.securityACLService = securityACLService;
     }
 
 
@@ -66,7 +63,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new ApiKeyFilter(userRepository), BasicAuthenticationFilter.class) // Deprecated. Kept as transitional in 2024.2
-                .addFilterBefore(new TemporaryTokenFilter(temporaryAccessTokenService, currentUserService, securityACLService), BasicAuthenticationFilter.class)
+                .addFilterBefore(new TemporaryTokenFilter(temporaryAccessTokenService, currentUserService), BasicAuthenticationFilter.class)
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling
                                 .authenticationEntryPoint(
@@ -97,8 +94,7 @@ public class SecurityConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = "temporaryTokenFilter")
     public TemporaryTokenFilter temporaryTokenFilter(TemporaryAccessTokenService temporaryAccessTokenService,
-                                                    CurrentUserService currentUserService,
-                                                    SecurityACLService securityACLService) {
-        return new TemporaryTokenFilter(temporaryAccessTokenService, currentUserService, securityACLService);
+                                                    CurrentUserService currentUserService) {
+        return new TemporaryTokenFilter(temporaryAccessTokenService, currentUserService);
     }
 }

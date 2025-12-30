@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,8 +27,8 @@ public class TemporaryAccessToken extends CytomineDomain {
     private User user;
 
     @NotNull
-    @Column(name = "project_id", nullable = false)
-    private Long projectId;
+    @Column(name = "project_ids", nullable = false, length = 1000)
+    private String projectIds; // 存储逗号分隔的项目ID列表
 
     @NotNull
     @Column(name = "expiry_date", nullable = false)
@@ -44,10 +46,37 @@ public class TemporaryAccessToken extends CytomineDomain {
         json.put("id", token.getId());
         json.put("tokenKey", token.getTokenKey());
         json.put("userId", token.getUser().getId());
-        json.put("projectId", token.getProjectId());
+        json.put("projectIds", token.getProjectIds());
         json.put("expiryDate", token.getExpiryDate().getTime());
         json.put("created", token.getCreated().getTime());
         return json;
+    }
+
+    public List<Long> getProjectIdList() {
+        if (projectIds == null || projectIds.isEmpty()) {
+            return List.of();
+        }
+        return Arrays.stream(projectIds.split(","))
+                .map(String::trim)
+                .map(Long::valueOf)
+                .toList();
+    }
+
+    /**
+     * 检查给定的项目ID是否在令牌允许的项目ID列表中
+     */
+    public boolean containsProjectId(Long projectId) {
+        if (projectIds == null || projectIds.isEmpty() || projectId == null) {
+            return false;
+        }
+        
+        String[] ids = projectIds.split(",");
+        for (String id : ids) {
+            if (id.trim().equals(projectId.toString())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -55,7 +84,20 @@ public class TemporaryAccessToken extends CytomineDomain {
         super.buildDomainFromJson(json, entityManager);
         this.tokenKey = json.getJSONAttrStr("tokenKey");
         this.user = (User) json.getJSONAttrDomain(entityManager, "user", new User(), true);
-        this.projectId = json.getJSONAttrLong("projectId");
+        
+        // 处理单个项目ID或项目ID列表
+        Object projectIdObj = json.get("projectId");
+        if (projectIdObj instanceof Long) {
+            this.projectIds = projectIdObj.toString();
+        } else if (projectIdObj instanceof String) {
+            this.projectIds = (String) projectIdObj;
+        } else if (projectIdObj instanceof List) {
+            List<?> projectIdList = (List<?>) projectIdObj;
+            this.projectIds = String.join(",", projectIdList.stream()
+                    .map(Object::toString)
+                    .toArray(String[]::new));
+        }
+        
         this.expiryDate = json.getJSONAttrDate("expiryDate");
         return this;
     }

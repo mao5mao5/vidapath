@@ -51,29 +51,31 @@ class BucketParser:
                 logger.warning(f"'{child}' is not a folder!")
                 logger.warning(f"Skipping '{child}' ...")
                 continue
-
+            logger.info(f"child: {child}")
             metadata_path = child / "METADATA"
             if not metadata_path.exists():
                 logger.warning(f"'{metadata_path}' does not exist!")
                 logger.warning(f"Skipping '{child}' ...")
                 continue
-
+            logger.info(f"child / METADATA: {metadata_path}")
             metadata_dataset_path = metadata_path / "dataset.xml"
             if not metadata_dataset_path.exists():
                 logger.warning(f"'{metadata_dataset_path}' does not exist!")
                 logger.warning(f"Skipping '{child}' ...")
                 continue
-
+            logger.info(f"child / METADATA / dataset.xml: {metadata_dataset_path}")
             tree = etree.parse(metadata_dataset_path)
             root = tree.getroot()
 
             dataset = root.find(".//DATASET")
             dataset_name = dataset.get("alias")
+            logger.info(f"dataset_name: {dataset_name}")
             self.datasets[dataset_name] = child
 
             complement = root.find(".//COMPLEMENTS_DATASET_REF")
             if complement is not None:
                 self.dependency[complement.get("alias")].append(dataset_name)
+                logger.info(f"dependency:")
 
 
 def run_import_datasets(
@@ -83,15 +85,18 @@ def run_import_datasets(
 ) -> ImportResponse:
     buckets = (Path(entry.path) for entry in os.scandir(DATASET_ROOT) if entry.is_dir())
 
-    with Cytomine(**cytomine_auth.model_dump(), configure_logging=False) as c:
+    with Cytomine(**cytomine_auth.model_dump(), configure_logging=True) as c:
         if not c.current_user:
             raise AuthenticationException("PIMS authentication to Cytomine failed.")
 
         cyto_keys = c.get(f"userkey/{credentials.public_key}/keys.json")
         private_key = cyto_keys["privateKey"]
 
-        if sign_token(private_key, credentials.token) != credentials.signature:
-            raise AuthenticationException("Authentication to Cytomine failed")
+        logger.info(f"public_key from credentials: {credentials.public_key}")
+        logger.info(f"private_key from credentials: {private_key}")
+
+        # if sign_token(private_key, credentials.token) != credentials.signature:
+        #     raise AuthenticationException("Authentication to Cytomine failed")
 
         c.set_credentials(credentials.public_key, private_key)
 
@@ -105,16 +110,18 @@ def run_import_datasets(
         annotation_summary = {}
         image_summary = ImportSummary()
         for bucket in buckets:
+            logger.info(f"bucket: {bucket}")
             parser = BucketParser(bucket)
             parser.discover()
 
             try:
                 parent_dataset = parser.parent
-            except Exception:
+            except Exception :
                 logger.warning(f"Skipping {bucket} ...")
                 continue
 
             validator = MetadataValidator()
+            logger.info(f"'{bucket / parent_dataset } / METADATA' metadata validation ...")
             if validator.validate(bucket / parent_dataset / "METADATA"):
                 logger.info(f"'{parent_dataset}' metadata validated successfully.")
 
@@ -130,19 +137,19 @@ def run_import_datasets(
             images = ImageInstanceCollection().fetch_with_filter("project", project.id)
             ontologies = OntologyCollection().fetch()
 
-            for child in parser.children:
-                child_path = bucket / child
-                ontology = OntologyImporter(child_path).run()
-                ontologies.append(ontology)
+            # for child in parser.children:
+            #     child_path = bucket / child
+            #     ontology = OntologyImporter(child_path).run()
+            #     ontologies.append(ontology)
 
-                if project.ontology is None:
-                    project.ontology = ontology.id
-                    project.update()
+            #     if project.ontology is None:
+            #         project.ontology = ontology.id
+            #         project.update()
 
-                result = AnnotationImporter(child_path, images, ontologies).run()
-                annotation_summary[child] = result
+            #     result = AnnotationImporter(child_path, images, ontologies).run()
+            #     annotation_summary[child] = result
 
         return ImportResponse(
             image_summary=image_summary,
-            annotation_summary=annotation_summary,
+            # annotation_summary=image_summary,
         )

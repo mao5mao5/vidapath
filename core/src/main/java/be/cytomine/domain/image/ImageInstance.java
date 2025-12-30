@@ -180,7 +180,7 @@ public class ImageInstance extends CytomineDomain {
         returnArray.put("macroURL", UrlApi.getAssociatedImage(imageInstance, "macro", Optional.ofNullable(imageInstance.getBaseImage()).map(AbstractImage::getUploadedFile).map(UploadedFile::getContentType).orElse(null), 512, "png"));
 
         // 添加本体信息到返回的JSON对象中
-        returnArray.put("ontologies", imageInstance.getOntologies().stream().map(Ontology::getId).collect(Collectors.toSet()));
+        returnArray.put("ontologies", imageInstance.getOntologies().stream().map(Ontology::toJsonObject).collect(Collectors.toSet()));
 
         return returnArray;
     }

@@ -49,6 +49,8 @@ export default class ImageInstance extends Model {
     this.reviewUser = null;
     this.reviewed = null;
     this.inReview = null;
+
+    this.ontologies = null;
   }
 
   /** @inheritdoc */

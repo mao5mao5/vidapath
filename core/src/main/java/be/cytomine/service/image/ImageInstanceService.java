@@ -651,6 +651,22 @@ public class ImageInstanceService extends ModelService {
                 object.put("imageGroup", result.get("imageGroupId"));
             }
 
+            // 通过查询中间表获取图像实例的本体ID列表
+            String sql = "SELECT ontology_id FROM image_instance_ontology WHERE image_instance_id = :imageInstanceId";
+            Query ontologyQuery = entityManager.createNativeQuery(sql);
+            ontologyQuery.setParameter("imageInstanceId", (Long)result.get("id"));
+            List<Long> ontologyIds = ontologyQuery.getResultList();
+
+            // 根据ID列表获取完整的本体对象
+            Set<JsonObject> ontologyObjects = new HashSet<>();
+            for (Long ontologyId : ontologyIds) {
+                Ontology ontology = ontologyService.get(ontologyId);
+                if (ontology != null) {
+                    ontologyObjects.add(ontology.toJsonObject());
+                }
+            }
+            object.put("ontologies", ontologyObjects);
+
             results.add(object);
         }
 

@@ -62,7 +62,8 @@ export default {
       loadedSlicePages: [],
       activeSlices: null,
       activePanel: null,
-      routedAnnotation: null
+      routedAnnotation: null,
+      ontologies: [] // 存储图像关联的本体列表
     };
   },
 
@@ -122,6 +123,21 @@ export default {
     },
     clearRoutedAnnotation(state) {
       state.routedAnnotation = null;
+    },
+    
+    // 新增本体相关的mutations
+    setOntologies(state, ontologies) {
+      state.ontologies = ontologies;
+    },
+    
+    addOntology(state, ontology) {
+      if (!state.ontologies.find(ont => ont.id === ontology.id)) {
+        state.ontologies.push(ontology);
+      }
+    },
+    
+    removeOntology(state, ontologyId) {
+      state.ontologies = state.ontologies.filter(ont => ont.id !== ontologyId);
     }
   },
 
@@ -136,7 +152,8 @@ export default {
       await Promise.all([
         dispatch('fetchProfile'),
         dispatch('fetchImageGroup'),
-        dispatch('fetchSliceInstancesAround', {rank: clone[0].rank})
+        dispatch('fetchSliceInstancesAround', {rank: clone[0].rank}),
+        dispatch('fetchImageOntologies'),
       ]);
     },
     async setImageInstance({dispatch, rootState}, {image, slices}) {
@@ -220,7 +237,8 @@ export default {
       await Promise.all([
         dispatch('fetchProfile'),
         dispatch('fetchImageGroup'),
-        dispatch('fetchSliceInstancesAround', {rank: state.activeSlices[0].rank})
+        dispatch('fetchSliceInstancesAround', {rank: state.activeSlices[0].rank}),
+        dispatch('fetchImageOntologies'),
       ]);
     },
 
@@ -280,6 +298,59 @@ export default {
       }
 
       await Promise.all(promises);
+    },
+    
+    // 新增本体相关的actions
+    async fetchImageOntologies({state, commit}) {
+      if (!state.imageInstance || !state.imageInstance.id) {
+        console.warn('Cannot fetch ontologies: no image instance or image ID');
+        return;
+      }
+      
+      try {
+        const ontologies = await state.imageInstance.fetchOntologies();
+        console.log('Fetch Image ontologies:', ontologies);
+        commit('setOntologies', ontologies);
+        return ontologies;
+      } catch (error) {
+        console.error('Error fetching image ontologies:', error);
+        throw error;
+      }
+    },
+    
+    async addOntologyToImage({state, commit}, ontologyId) {
+      if (!state.imageInstance || !state.imageInstance.id) {
+        console.error('Cannot add ontology: no image instance or image ID');
+        throw new Error('No image instance available');
+      }
+      
+      try {
+        const result = await state.imageInstance.addOntology(ontologyId);
+        // 重新获取本体列表以更新状态
+        const ontologies = await state.imageInstance.fetchOntologies();
+        commit('setOntologies', ontologies);
+        return result;
+      } catch (error) {
+        console.error('Error adding ontology to image:', error);
+        throw error;
+      }
+    },
+    
+    async removeOntologyFromImage({state, commit}, ontologyId) {
+      if (!state.imageInstance || !state.imageInstance.id) {
+        console.error('Cannot remove ontology: no image instance or image ID');
+        throw new Error('No image instance available');
+      }
+      
+      try {
+        const result = await state.imageInstance.removeOntology(ontologyId);
+        // 从状态中移除本体
+        commit('removeOntology', ontologyId);
+        return result;
+      } catch (error) {
+        console.error('Error removing ontology from image:', error);
+        throw error;
+      }
     }
   },
 
@@ -441,7 +512,14 @@ export default {
           color: slices[0].channelColor
         };
       }), 'index');
-    }
+    },
+    
+    // 新增本体相关的getters
+    imageOntologies: state => state.ontologies,
+    
+    hasOntologies: state => state.ontologies && state.ontologies.length > 0,
+    
+    ontologyById: state => id => state.ontologies.find(ont => ont.id === id)
   },
 
   modules: {

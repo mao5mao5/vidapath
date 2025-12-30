@@ -3,7 +3,6 @@ package be.cytomine.controller.project;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,13 +23,12 @@ import be.cytomine.service.appengine.TaskRunService;
 import be.cytomine.service.project.ProjectService;
 import be.cytomine.service.search.ProjectSearchExtension;
 import be.cytomine.service.security.UserService;
+import be.cytomine.service.security.TemporaryAccessTokenService;
 import be.cytomine.service.utils.TaskService;
 import be.cytomine.utils.JsonObject;
 import be.cytomine.utils.Task;
+import be.cytomine.utils.filters.SearchOperation;
 import be.cytomine.utils.filters.SearchParameterEntry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -51,6 +49,8 @@ public class RestProjectController extends RestCytomineController {
     private final UserService userService;
 
     private final TaskRunService taskRunService;
+    
+    private final TemporaryAccessTokenService temporaryAccessTokenService;
 
 
     /**
@@ -67,23 +67,47 @@ public class RestProjectController extends RestCytomineController {
             @RequestParam(value = "order", defaultValue = "desc", required = false) String order,
             @RequestParam(value = "offset", defaultValue = "0", required = false) Long offset,
             @RequestParam(value = "max", defaultValue = "0", required = false) Long max,
-            @RequestParam(value = "all", defaultValue = "false", required = false) Boolean all
+            @RequestParam(value = "all", defaultValue = "false", required = false) Boolean all,
+            @RequestParam(value = "access_token", required = false) String accessToken
 
     ) {
         log.debug("REST request to list projects");
         User user = currentUserService.getCurrentUser();
 
-        if(all) {
-            user = null;
-        }
+        if (accessToken != null && !accessToken.isEmpty()) {
+            // 如果提供了访问令牌，则只返回该令牌允许访问的项目
+            List<Long> projectIds = temporaryAccessTokenService.getProjectIdsByToken(accessToken);
+            if (projectIds.isEmpty()) {
+                // 如果令牌无效或没有关联的项目，返回空结果
+                return responseSuccess(Page.empty());
+            }
+            
+            // 使用项目ID列表查询特定项目
+            ProjectSearchExtension projectSearchExtension = new ProjectSearchExtension();
+            projectSearchExtension.setWithMembersCount(withMembersCount);
+            projectSearchExtension.setWithLastActivity(withLastActivity);
+            projectSearchExtension.setWithDescription(withDescription);
+            projectSearchExtension.setWithCurrentUserRoles(withCurrentUserRoles);
+            List<SearchParameterEntry> searchParameterEntryList = super.retrieveSearchParameters();
+            
+            // 添加项目ID过滤条件
+            searchParameterEntryList.add(new SearchParameterEntry("id", SearchOperation.in, projectIds));
+            
+            return responseSuccess(projectService.list(null, projectSearchExtension, searchParameterEntryList, sort, order, max, offset));
+        } else {
+            // 如果没有提供访问令牌，按原始逻辑处理
+            if(all) {
+                user = null;
+            }
 
-        ProjectSearchExtension projectSearchExtension = new ProjectSearchExtension();
-        projectSearchExtension.setWithMembersCount(withMembersCount);
-        projectSearchExtension.setWithLastActivity(withLastActivity);
-        projectSearchExtension.setWithDescription(withDescription);
-        projectSearchExtension.setWithCurrentUserRoles(withCurrentUserRoles);
-        List<SearchParameterEntry> searchParameterEntryList = super.retrieveSearchParameters();
-        return responseSuccess(projectService.list(user, projectSearchExtension, searchParameterEntryList, sort, order, max, offset));
+            ProjectSearchExtension projectSearchExtension = new ProjectSearchExtension();
+            projectSearchExtension.setWithMembersCount(withMembersCount);
+            projectSearchExtension.setWithLastActivity(withLastActivity);
+            projectSearchExtension.setWithDescription(withDescription);
+            projectSearchExtension.setWithCurrentUserRoles(withCurrentUserRoles);
+            List<SearchParameterEntry> searchParameterEntryList = super.retrieveSearchParameters();
+            return responseSuccess(projectService.list(user, projectSearchExtension, searchParameterEntryList, sort, order, max, offset));
+        }
     }
 
     @GetMapping("/project/{id}.json")

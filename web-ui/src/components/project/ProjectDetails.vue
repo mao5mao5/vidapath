@@ -33,7 +33,7 @@
             <button class="button" @click="showDetailModal = true" style="margin-right: 0.5rem;" >
               Case detail
             </button>
-            <button class="button" @click="showPatientInfoModal = true" style="margin-right: 0.5rem;">
+            <button class="button" v-if="!$keycloak.hasTemporaryToken" @click="showPatientInfoModal = true" style="margin-right: 0.5rem;">
               Patient information
             </button>
             <!-- <project-actions v-if="canManageProject" :project="project" @update="$emit('update', $event)"
