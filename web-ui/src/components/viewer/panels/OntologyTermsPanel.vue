@@ -53,17 +53,14 @@
             <template #custom-sidebar="{ term }">
               <div class="sidebar-tree">
                 <div class="visibility">
-                  <b-checkbox v-if="term.id" size="is-small" :value="true"
-                    @input="toggleTermVisibility(termsMapping[term.id])" />
-
+                  <b-checkbox v-if="term.id" size="is-small" :value="ontologyTerms[term.ontology][getTermsMapping(term.ontology)[term.id]].visible" @input="toggleTermVisibility(term)" />
                   <b-checkbox v-else size="is-small" v-model="displayNoTerm" />
                 </div>
 
                 <div class="opacity">
                   <input v-if="term.id" class="slider is-fullwidth is-small" step="0.05" min="0" max="1" type="range"
-                    :value="100"
-                    @change="event => changeOpacity(termsMapping[term.id], event)"
-                    @input="event => changeOpacity(termsMapping[term.id], event)">
+                    :value="ontologyTerms[term.ontology][getTermsMapping(term.ontology)[term.id]].opacity" @change="event => changeOpacity(term, event)"
+                    @input="event => changeOpacity(term, event)">
 
                   <input v-else class="slider is-fullwidth is-small" step="0.05" min="0" max="1" type="range"
                     v-model="noTermOpacity">
@@ -142,8 +139,6 @@ export default {
     };
   },
   computed: {
-    ontology: get('currentProject/ontology'),
-    project: get('currentProject/project'),
     canManageProject() {
       return this.$store.getters['currentProject/canManageProject'];
     },
@@ -163,17 +158,9 @@ export default {
     hasOntologies() {
       return this.imageWrapper.ontologies.length > 0;
     },
-    terms() {
-      return this.imageWrapper.style.terms;
-    },
 
     ontologyTerms() {
       return this.imageWrapper.style.ontologyTerms;
-    },
-    termsMapping() {
-      let mapping = {};
-      this.terms.forEach((term, idx) => mapping[term.id] = idx);
-      return mapping;
     },
     additionalNodes() {
       return [{ id: 0, name: this.$t('no-term') }];
@@ -198,6 +185,16 @@ export default {
     availableOntologies() {
       if (!this.ontologies) return [];
       return this.ontologies.filter(ont => !this.isOntologyAlreadyAdded(ont.id));
+    },
+    // 返回一个函数的计算属性
+    getTermsMapping() {
+      return (ontoId) => {
+        let mapping = {};
+        if (this.ontologyTerms && this.ontologyTerms[ontoId]) {
+          this.ontologyTerms[ontoId].forEach((term, idx) => mapping[term.id] = idx);
+        }
+        return mapping;
+      }
     }
   },
   watch: {
@@ -236,12 +233,23 @@ export default {
     }
   },
   methods: {
-    toggleTermVisibility(index) {
-      this.$store.dispatch(this.imageModule + 'toggleTermVisibility', index);
+    termsMapping(ontoId) {
+      let mapping = {};
+      if (this.ontologyTerms && this.ontologyTerms[ontoId]) {
+        this.ontologyTerms[ontoId].forEach((term, idx) => mapping[term.id] = idx);
+      }
+      return mapping;
     },
-    changeOpacity(index, event) {
+    toggleTermVisibility(term) {
+      let termsMapping = this.termsMapping(term.ontology);
+      console.log('termsMapping', termsMapping[term.id]);
+      this.$store.commit(this.imageModule + 'toggleOntologyTermVisibility', { ontoId: term.ontology, indexTerm: termsMapping[term.id] });
+    },
+    changeOpacity(term, event) {
       let opacity = Number(event.target.value);
-      this.$store.commit(this.imageModule + 'setTermOpacity', { indexTerm: index, opacity });
+      let termsMapping = this.termsMapping(term.ontology);
+      console.log('termsMapping', termsMapping[term.id]);
+      this.$store.commit(this.imageModule + 'setOntologyTermOpacity', { ontoId: term.ontology, indexTerm: termsMapping[term.id], opacity });
     },
     resetOpacities() {
       this.$store.commit(this.imageModule + 'resetTermOpacities');

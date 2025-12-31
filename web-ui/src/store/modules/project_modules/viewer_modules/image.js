@@ -49,11 +49,10 @@ import {
   rejectedStyles,
   rejectedSelectStyles,
   trackedSelectStyles,
-  createColorStyle // 添加这个导入
-} from '@/utils/style-utils.js';
+  createColorStyle, 
+  createColorLineStyle} from '@/utils/style-utils.js';
 import { Fill } from 'ol/style';
 
-// 从style模块复制的辅助函数
 function formatTerms(terms, layersOpacity, previousTerms = []) {
   if (!terms) {
     return;
@@ -71,8 +70,9 @@ function formatTerms(terms, layersOpacity, previousTerms = []) {
 
 function formatTerm(term, layersOpacity) {
   let result = { id: term.id };
-  result.opacity = 1; // 使用默认值
-  result.olStyle = createColorStyle(term.color, 1 * layersOpacity);
+  result.opacity = 0.5;
+  result.olStyle = createColorStyle(term.color, 0.5 * layersOpacity);
+  result.olLineStyle = createColorLineStyle(term.color, 0.5 * layersOpacity);
   result.visible = true;
   result.color = term.color;
   return result;

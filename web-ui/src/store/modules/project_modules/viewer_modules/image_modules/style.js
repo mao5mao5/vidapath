@@ -58,6 +58,12 @@ export default {
       term.visible = !term.visible;
     },
 
+    toggleOntologyTermVisibility(state, { ontoId, indexTerm }) {
+      let term = state.ontologyTerms[ontoId][indexTerm];;
+      term.visible = !term.visible;
+      console.log(term);
+    },
+
     setDisplayNoTerm(state, value) {
       state.displayNoTerm = value;
     },
@@ -67,6 +73,14 @@ export default {
       term.opacity = opacity;
       changeOpacity(term.olStyle, state.layersOpacity * opacity);
       changeOpacity(term.olLineStyle, state.layersOpacity * opacity);
+    },
+
+    setOntologyTermOpacity(state, { ontoId, indexTerm, opacity }) {
+      let term = state.ontologyTerms[ontoId][indexTerm];
+      term.opacity = opacity;
+      changeOpacity(term.olStyle, state.layersOpacity * opacity);
+      changeOpacity(term.olLineStyle, state.layersOpacity * opacity);
+      console.log(term);
     },
 
     setNoTermOpacity(state, opacity) {
