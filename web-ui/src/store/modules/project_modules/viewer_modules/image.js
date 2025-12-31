@@ -48,9 +48,35 @@ import {
   reviewedSelectStyles,
   rejectedStyles,
   rejectedSelectStyles,
-  trackedSelectStyles
+  trackedSelectStyles,
+  createColorStyle // 添加这个导入
 } from '@/utils/style-utils.js';
 import { Fill } from 'ol/style';
+
+// 从style模块复制的辅助函数
+function formatTerms(terms, layersOpacity, previousTerms = []) {
+  if (!terms) {
+    return;
+  }
+
+  let result = [];
+  let nbTerms = terms.length;
+  for (let i = 0; i < nbTerms; i++) {
+    let term = terms[i];
+    let prevTerm = previousTerms.find(prevTerm => prevTerm.id === term.id);
+    result.push(prevTerm ? prevTerm : formatTerm(term, layersOpacity));
+  }
+  return result;
+}
+
+function formatTerm(term, layersOpacity) {
+  let result = { id: term.id };
+  result.opacity = 1; // 使用默认值
+  result.olStyle = createColorStyle(term.color, 1 * layersOpacity);
+  result.visible = true;
+  result.color = term.color;
+  return result;
+}
 
 export default {
   namespaced: true,
@@ -149,6 +175,10 @@ export default {
       state.ontologyTerms = ontologyTerms;
     },
 
+    setStyleOntologyTerms(state, formattedOntologyTerms) {
+      state.style.ontologyTerms = formattedOntologyTerms;
+    },
+
     addOntologyTerms(state, { ontologyId, terms }) {
       state.ontologyTerms[ontologyId] = terms;
     },
@@ -179,7 +209,7 @@ export default {
   },
 
   actions: {
-    async initialize({ commit, dispatch }, { image, slices }) {
+    async initialize({ commit, dispatch, state }, { image, slices }) {
       let clone = image.clone();
       commit('setImageInstance', clone);
 
@@ -194,6 +224,16 @@ export default {
       commit('setOntologies', image.ontologies);
       console.log('image.ontologies', image.ontologies);
       commit('updateOntologyTerms'); // 使用mutation更新ontologyTerms
+
+      // 更新style模块中的ontologyTerms
+      const imageOntologyTerms = state.ontologyTerms;
+      const formattedOntologyTerms = {};
+      for (let ontologyId in imageOntologyTerms) {
+        formattedOntologyTerms[ontologyId] = formatTerms(imageOntologyTerms[ontologyId], 0.5); // 使用默认的layersOpacity
+      }
+
+      console.log('formattedOntologyTerms', formattedOntologyTerms);
+      commit('setStyleOntologyTerms', formattedOntologyTerms);
     },
     async setImageInstance({ dispatch, rootState }, { image, slices }) {
       await dispatch('initialize', { image, slices });
@@ -282,7 +322,17 @@ export default {
         dispatch('fetchSliceInstancesAround', { rank: state.activeSlices[0].rank }),
       ]);
 
-      commit('updateOntologyTerms'); // 使用mutation更新ontologyTerms
+      commit('updateOntologyTerms');
+
+      // 更新style模块中的ontologyTerms
+      const imageOntologyTerms = state.ontologyTerms;
+      const formattedOntologyTerms = {};
+      for (let ontologyId in imageOntologyTerms) {
+        formattedOntologyTerms[ontologyId] = formatTerms(imageOntologyTerms[ontologyId], 0.5); // 使用默认的layersOpacity
+      }
+
+      console.log('formattedOntologyTerms', formattedOntologyTerms);
+      commit('setStyleOntologyTerms', formattedOntologyTerms);
     },
 
     async fetchProfile({ state, commit }) {
@@ -355,6 +405,17 @@ export default {
         const ontologies = await state.imageInstance.fetchOntologies();
         commit('setOntologies', ontologies);
         commit('updateOntologyTerms'); // 使用mutation更新ontologyTerms
+
+        // 更新style模块中的ontologyTerms
+        const imageOntologyTerms = state.ontologyTerms;
+        const formattedOntologyTerms = {};
+        for (let ontologyId in imageOntologyTerms) {
+          formattedOntologyTerms[ontologyId] = formatTerms(imageOntologyTerms[ontologyId], 0.5); // 使用默认的layersOpacity
+        }
+
+        console.log('formattedOntologyTerms', formattedOntologyTerms);
+        commit('setStyleOntologyTerms', formattedOntologyTerms);
+
         return result;
       } catch (error) {
         console.error('Error adding ontology to image:', error);
@@ -373,6 +434,17 @@ export default {
         // 从状态中移除本体
         commit('removeOntology', ontologyId);
         commit('updateOntologyTerms'); // 使用mutation更新ontologyTerms
+
+        // 更新style模块中的ontologyTerms
+        const imageOntologyTerms = state.ontologyTerms;
+        const formattedOntologyTerms = {};
+        for (let ontologyId in imageOntologyTerms) {
+          formattedOntologyTerms[ontologyId] = formatTerms(imageOntologyTerms[ontologyId], 0.5); // 使用默认的layersOpacity
+        }
+
+        console.log('formattedOntologyTerms', formattedOntologyTerms);
+        commit('setStyleOntologyTerms', formattedOntologyTerms);
+
         return result;
       } catch (error) {
         console.error('Error removing ontology from image:', error);
