@@ -71,6 +71,13 @@
             <ontology-panel class="panel-options" v-show="activePanel === 'ontology'" :index="index" />
           </li>
 
+          <li v-if="isPanelDisplayed('ontology')">
+            <a @click="togglePanel('ontology-terms')" :class="{ active: activePanel === 'ontology-terms' }">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+            </a>
+            <ontology-terms-panel class="panel-options" v-show="activePanel === 'ontology-terms'" :index="index" />
+          </li>
+
           <!-- AI Analysis Panel Button -->
           <li>
             <a title="AI Analysis" @click="toggleAIAnalysisPanel" :class="{ active: showAIAnalysisPanel }">
@@ -269,6 +276,7 @@ import ColorManipulation from './panels/ColorManipulation';
 import LinkPanel from './panels/LinkPanel';
 import LayersPanel from './panels/LayersPanel';
 import OntologyPanel from './panels/OntologyPanel';
+import OntologyTermsPanel from './panels/OntologyTermsPanel.vue';
 import PropertiesPanel from './panels/PropertiesPanel';
 import FollowPanel from './panels/FollowPanel';
 import ReviewPanel from './panels/ReviewPanel';
@@ -289,7 +297,7 @@ import { KeyboardPan, KeyboardZoom } from 'ol/interaction';
 import { noModifierKeys, targetNotEditable } from 'ol/events/condition';
 import WKT from 'ol/format/WKT';
 
-import { Cytomine, ImageConsultation, Annotation, AnnotationType, UserPosition, SliceInstance, ProjectDefaultLayerCollection } from '@/api';
+import { Cytomine, ImageConsultation, Annotation, UserPosition, SliceInstance } from '@/api';
 
 // import {constLib, operation} from '@/utils/color-manipulation.js';
 
@@ -319,6 +327,7 @@ export default {
     LinkPanel,
     LayersPanel,
     OntologyPanel,
+    OntologyTermsPanel,
     PropertiesPanel,
     FollowPanel,
     ReviewPanel,

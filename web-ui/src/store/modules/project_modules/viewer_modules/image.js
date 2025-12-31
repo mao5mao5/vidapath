@@ -14,11 +14,14 @@
 * limitations under the License.
 */
 
-import {ImageInstance, AnnotationType, SliceInstanceCollection, SliceInstance,
-  CompanionFileCollection, ImageGroupImageInstanceCollection, ImageGroup} from '@/api';
+import {
+  ImageInstance, AnnotationType, SliceInstanceCollection, SliceInstance,
+  CompanionFileCollection, ImageGroupImageInstanceCollection, ImageGroup
+} from '@/api';
 
 import constants from '@/utils/constants';
-import {slicePositionToRank} from '@/utils/slice-utils';
+import { slicePositionToRank } from '@/utils/slice-utils';
+import { getAllTerms } from '@/utils/ontology-utils'; // 导入getAllTerms函数
 
 import colors from './image_modules/colors';
 import draw from './image_modules/draw';
@@ -45,9 +48,35 @@ import {
   reviewedSelectStyles,
   rejectedStyles,
   rejectedSelectStyles,
-  trackedSelectStyles
-} from '@/utils/style-utils.js';
-import {Fill} from 'ol/style';
+  trackedSelectStyles,
+  createColorStyle, 
+  createColorLineStyle} from '@/utils/style-utils.js';
+import { Fill } from 'ol/style';
+
+function formatTerms(terms, layersOpacity, previousTerms = []) {
+  if (!terms) {
+    return;
+  }
+
+  let result = [];
+  let nbTerms = terms.length;
+  for (let i = 0; i < nbTerms; i++) {
+    let term = terms[i];
+    let prevTerm = previousTerms.find(prevTerm => prevTerm.id === term.id);
+    result.push(prevTerm ? prevTerm : formatTerm(term, layersOpacity));
+  }
+  return result;
+}
+
+function formatTerm(term, layersOpacity) {
+  let result = { id: term.id };
+  result.opacity = 0.5;
+  result.olStyle = createColorStyle(term.color, 0.5 * layersOpacity);
+  result.olLineStyle = createColorLineStyle(term.color, 0.5 * layersOpacity);
+  result.visible = true;
+  result.color = term.color;
+  return result;
+}
 
 export default {
   namespaced: true,
@@ -63,7 +92,8 @@ export default {
       activeSlices: null,
       activePanel: null,
       routedAnnotation: null,
-      ontologies: [] // 存储图像关联的本体列表
+      ontologies: [], // 存储图像关联的本体列表
+      ontologyTerms: {} // 存储本体术语字典，键是本体ID，值是术语列表
     };
   },
 
@@ -90,7 +120,7 @@ export default {
 
     setSliceInstances(state, slices) {
       state.sliceInstances = Object.assign(
-        {}, state.sliceInstances, slices.reduce((acc, v) => ({...acc, [v.rank]: v}), {})
+        {}, state.sliceInstances, slices.reduce((acc, v) => ({ ...acc, [v.rank]: v }), {})
       );
     },
 
@@ -124,25 +154,62 @@ export default {
     clearRoutedAnnotation(state) {
       state.routedAnnotation = null;
     },
-    
+
     // 新增本体相关的mutations
     setOntologies(state, ontologies) {
       state.ontologies = ontologies;
     },
-    
+
     addOntology(state, ontology) {
       if (!state.ontologies.find(ont => ont.id === ontology.id)) {
         state.ontologies.push(ontology);
       }
     },
-    
+
     removeOntology(state, ontologyId) {
       state.ontologies = state.ontologies.filter(ont => ont.id !== ontologyId);
+    },
+
+    // 新增ontologyTerms相关的mutations
+    setOntologyTerms(state, ontologyTerms) {
+      state.ontologyTerms = ontologyTerms;
+    },
+
+    setStyleOntologyTerms(state, formattedOntologyTerms) {
+      state.style.ontologyTerms = formattedOntologyTerms;
+    },
+
+    addOntologyTerms(state, { ontologyId, terms }) {
+      state.ontologyTerms[ontologyId] = terms;
+    },
+
+    removeOntologyTerms(state, ontologyId) {
+      delete state.ontologyTerms[ontologyId];
+    },
+
+    // 更新ontologyTerms的mutation
+    updateOntologyTerms(state) {
+      const newOntologyTerms = {};
+      if (state.ontologies && Array.isArray(state.ontologies)) {
+        for (const ontology of state.ontologies) {
+          // 检查ontology对象是否有效，以及是否有children和array属性
+          if (ontology && ontology.children && Array.isArray(ontology.children)) {
+            const terms = getAllTerms(ontology);
+            newOntologyTerms[ontology.id] = terms;
+            console.log('addOntologyTerms', { ontologyId: ontology.id, terms });
+          } else {
+            // 如果本体结构不完整，使用空数组作为terms
+            newOntologyTerms[ontology.id] = [];
+            console.warn('Ontology missing children or children.array property:', ontology);
+          }
+        }
+      }
+      state.ontologyTerms = newOntologyTerms;
     }
   },
 
   actions: {
-    async initialize({commit, dispatch}, {image, slices}) {
+    async initialize({ commit, dispatch, state }, { image, slices }) {
       let clone = image.clone();
       commit('setImageInstance', clone);
 
@@ -152,33 +219,45 @@ export default {
       await Promise.all([
         dispatch('fetchProfile'),
         dispatch('fetchImageGroup'),
-        dispatch('fetchSliceInstancesAround', {rank: clone[0].rank}),
-        dispatch('fetchImageOntologies'),
+        dispatch('fetchSliceInstancesAround', { rank: clone[0].rank }),
       ]);
+      commit('setOntologies', image.ontologies);
+      console.log('image.ontologies', image.ontologies);
+      commit('updateOntologyTerms'); // 使用mutation更新ontologyTerms
+
+      // 更新style模块中的ontologyTerms
+      const imageOntologyTerms = state.ontologyTerms;
+      const formattedOntologyTerms = {};
+      for (let ontologyId in imageOntologyTerms) {
+        formattedOntologyTerms[ontologyId] = formatTerms(imageOntologyTerms[ontologyId], 0.5); // 使用默认的layersOpacity
+      }
+
+      console.log('formattedOntologyTerms', formattedOntologyTerms);
+      commit('setStyleOntologyTerms', formattedOntologyTerms);
     },
-    async setImageInstance({dispatch, rootState}, {image, slices}) {
-      await dispatch('initialize', {image, slices});
+    async setImageInstance({ dispatch, rootState }, { image, slices }) {
+      await dispatch('initialize', { image, slices });
       let idProject = rootState.currentProject.project.id;
       let idViewer = rootState.currentProject.currentViewer;
-      dispatch(`projects/${idProject}/viewers/${idViewer}/changePath`, null, {root: true});
+      dispatch(`projects/${idProject}/viewers/${idViewer}/changePath`, null, { root: true });
     },
 
-    async setActiveSlice({commit, dispatch, rootState}, slice) {
+    async setActiveSlice({ commit, dispatch, rootState }, slice) {
       let idProject = rootState.currentProject.project.id;
       let idViewer = rootState.currentProject.currentViewer;
       commit('setActiveSlice', slice);
-      dispatch(`projects/${idProject}/viewers/${idViewer}/changePath`, null, {root: true});
-      await dispatch('fetchSliceInstancesAround', {rank: slice.rank});
+      dispatch(`projects/${idProject}/viewers/${idViewer}/changePath`, null, { root: true });
+      await dispatch('fetchSliceInstancesAround', { rank: slice.rank });
     },
-    async setActiveSliceByPosition({state, dispatch}, {channel, zStack, time}) {
-      let rank = slicePositionToRank({channel, zStack, time}, state.imageInstance);
+    async setActiveSliceByPosition({ state, dispatch }, { channel, zStack, time }) {
+      let rank = slicePositionToRank({ channel, zStack, time }, state.imageInstance);
       await dispatch('setActiveSliceByRank', rank);
     },
-    async setActiveSlicesByPosition({state, dispatch}, {channels, zStack, time}) {
-      let ranks = channels.map(channel => slicePositionToRank({channel, zStack, time}, state.imageInstance));
+    async setActiveSlicesByPosition({ state, dispatch }, { channels, zStack, time }) {
+      let ranks = channels.map(channel => slicePositionToRank({ channel, zStack, time }, state.imageInstance));
       await dispatch('setActiveSlicesByRank', ranks);
     },
-    async addActiveSliceChannel({state, dispatch}, {channel}) {
+    async addActiveSliceChannel({ state, dispatch }, { channel }) {
       let activeSlice = state.activeSlices[0];
       let ranks = state.activeSlices.map(s => s.rank);
       ranks.push(slicePositionToRank({
@@ -186,7 +265,7 @@ export default {
       }, state.imageInstance));
       await dispatch('setActiveSlicesByRank', ranks);
     },
-    async removeActiveSliceChannel({state, dispatch}, {channel}) {
+    async removeActiveSliceChannel({ state, dispatch }, { channel }) {
       let channels = state.activeSlices.map(s => s.channel).filter(c => c !== channel);
       let activeSlice = state.activeSlices[0];
       let ranks = channels.map(channel => slicePositionToRank({
@@ -194,23 +273,23 @@ export default {
       }, state.imageInstance));
       await dispatch('setActiveSlicesByRank', ranks);
     },
-    async setActiveSliceByRank({state, commit, dispatch, rootState}, rank) {
+    async setActiveSliceByRank({ state, commit, dispatch, rootState }, rank) {
       let slice = state.sliceInstances[rank];
       if (!slice) {
-        await dispatch('fetchSliceInstancesAround', {rank, setActive: true});
+        await dispatch('fetchSliceInstancesAround', { rank, setActive: true });
       } else {
         commit('setActiveSlice', slice);
       }
 
       let idProject = rootState.currentProject.project.id;
       let idViewer = rootState.currentProject.currentViewer;
-      dispatch(`projects/${idProject}/viewers/${idViewer}/changePath`, null, {root: true});
+      dispatch(`projects/${idProject}/viewers/${idViewer}/changePath`, null, { root: true });
     },
-    async setActiveSlicesByRank({state, commit, dispatch, rootState}, ranks) {
+    async setActiveSlicesByRank({ state, commit, dispatch, rootState }, ranks) {
       let slices = await Promise.all(ranks.map(async rank => {
         let slice = state.sliceInstances[rank];
         if (!slice) {
-          await dispatch('fetchSliceInstancesAround', {rank, setActive: false});
+          await dispatch('fetchSliceInstancesAround', { rank, setActive: false });
           slice = state.sliceInstances[rank];
         }
         return slice;
@@ -219,13 +298,16 @@ export default {
 
       let idProject = rootState.currentProject.project.id;
       let idViewer = rootState.currentProject.currentViewer;
-      dispatch(`projects/${idProject}/viewers/${idViewer}/changePath`, null, {root: true});
+      dispatch(`projects/${idProject}/viewers/${idViewer}/changePath`, null, { root: true });
     },
 
-    async refreshData({state, commit, dispatch}) {
+    async refreshData({ state, commit, dispatch }) {
       await Promise.all([
         ImageInstance.fetch(state.imageInstance.id).then(
-          image => commit('setImageInstance', image)
+          image => {
+            commit('setImageInstance', image);
+            commit('setOntologies', image.ontologies);
+          }
         ),
         Promise.all(state.activeSlices.map(async slice => await SliceInstance.fetch(slice.id))).then(
           slices => commit('setActiveSlices', slices)
@@ -237,12 +319,23 @@ export default {
       await Promise.all([
         dispatch('fetchProfile'),
         dispatch('fetchImageGroup'),
-        dispatch('fetchSliceInstancesAround', {rank: state.activeSlices[0].rank}),
-        dispatch('fetchImageOntologies'),
+        dispatch('fetchSliceInstancesAround', { rank: state.activeSlices[0].rank }),
       ]);
+
+      commit('updateOntologyTerms');
+
+      // 更新style模块中的ontologyTerms
+      const imageOntologyTerms = state.ontologyTerms;
+      const formattedOntologyTerms = {};
+      for (let ontologyId in imageOntologyTerms) {
+        formattedOntologyTerms[ontologyId] = formatTerms(imageOntologyTerms[ontologyId], 0.5); // 使用默认的layersOpacity
+      }
+
+      console.log('formattedOntologyTerms', formattedOntologyTerms);
+      commit('setStyleOntologyTerms', formattedOntologyTerms);
     },
 
-    async fetchProfile({state, commit}) {
+    async fetchProfile({ state, commit }) {
       let image = state.imageInstance;
       let profile = (await CompanionFileCollection.fetchAll({
         filterKey: 'abstractimage',
@@ -251,7 +344,7 @@ export default {
       commit('setProfile', profile);
     },
 
-    async fetchImageGroup({state, commit}) {
+    async fetchImageGroup({ state, commit }) {
       let image = state.imageInstance;
       let groupLinks = (await ImageGroupImageInstanceCollection.fetchAll({
         filterKey: 'imageinstance',
@@ -266,9 +359,9 @@ export default {
       }
     },
 
-    async fetchSliceInstancesAround({state, commit}, {rank, setActive = false}) {
+    async fetchSliceInstancesAround({ state, commit }, { rank, setActive = false }) {
       let promises = [];
-      let props = {filterKey: 'imageinstance', filterValue: state.imageInstance.id, max: constants.PRELOADED_SLICES};
+      let props = { filterKey: 'imageinstance', filterValue: state.imageInstance.id, max: constants.PRELOADED_SLICES };
 
       let page = findRankPage(rank);
       if (!state.loadedSlicePages.includes(page)) {
@@ -299,53 +392,59 @@ export default {
 
       await Promise.all(promises);
     },
-    
-    // 新增本体相关的actions
-    async fetchImageOntologies({state, commit}) {
-      if (!state.imageInstance || !state.imageInstance.id) {
-        console.warn('Cannot fetch ontologies: no image instance or image ID');
-        return;
-      }
-      
-      try {
-        const ontologies = await state.imageInstance.fetchOntologies();
-        console.log('Fetch Image ontologies:', ontologies);
-        commit('setOntologies', ontologies);
-        return ontologies;
-      } catch (error) {
-        console.error('Error fetching image ontologies:', error);
-        throw error;
-      }
-    },
-    
-    async addOntologyToImage({state, commit}, ontologyId) {
+
+    async addOntologyToImage({ state, commit }, ontologyId) {
       if (!state.imageInstance || !state.imageInstance.id) {
         console.error('Cannot add ontology: no image instance or image ID');
         throw new Error('No image instance available');
       }
-      
+
       try {
         const result = await state.imageInstance.addOntology(ontologyId);
         // 重新获取本体列表以更新状态
         const ontologies = await state.imageInstance.fetchOntologies();
         commit('setOntologies', ontologies);
+        commit('updateOntologyTerms'); // 使用mutation更新ontologyTerms
+
+        // 更新style模块中的ontologyTerms
+        const imageOntologyTerms = state.ontologyTerms;
+        const formattedOntologyTerms = {};
+        for (let ontologyId in imageOntologyTerms) {
+          formattedOntologyTerms[ontologyId] = formatTerms(imageOntologyTerms[ontologyId], 0.5); // 使用默认的layersOpacity
+        }
+
+        console.log('formattedOntologyTerms', formattedOntologyTerms);
+        commit('setStyleOntologyTerms', formattedOntologyTerms);
+
         return result;
       } catch (error) {
         console.error('Error adding ontology to image:', error);
         throw error;
       }
     },
-    
-    async removeOntologyFromImage({state, commit}, ontologyId) {
+
+    async removeOntologyFromImage({ state, commit }, ontologyId) {
       if (!state.imageInstance || !state.imageInstance.id) {
         console.error('Cannot remove ontology: no image instance or image ID');
         throw new Error('No image instance available');
       }
-      
+
       try {
         const result = await state.imageInstance.removeOntology(ontologyId);
         // 从状态中移除本体
         commit('removeOntology', ontologyId);
+        commit('updateOntologyTerms'); // 使用mutation更新ontologyTerms
+
+        // 更新style模块中的ontologyTerms
+        const imageOntologyTerms = state.ontologyTerms;
+        const formattedOntologyTerms = {};
+        for (let ontologyId in imageOntologyTerms) {
+          formattedOntologyTerms[ontologyId] = formatTerms(imageOntologyTerms[ontologyId], 0.5); // 使用默认的layersOpacity
+        }
+
+        console.log('formattedOntologyTerms', formattedOntologyTerms);
+        commit('setStyleOntologyTerms', formattedOntologyTerms);
+
         return result;
       } catch (error) {
         console.error('Error removing ontology from image:', error);
@@ -377,14 +476,14 @@ export default {
           color[3] = 0.3; // 更透明
           fill.setColor(color);
         }
-        
+
         let styles = [tempStyle];
-        
+
         // 如果保存失败，添加特殊标识
         if (annot.saveFailed) {
-          styles.push(createTextStyle('!', '22px', new Fill({color: '#ff0000'}), null));
+          styles.push(createTextStyle('!', '22px', new Fill({ color: '#ff0000' }), null));
         }
-        
+
         return styles;
       }
 
@@ -513,13 +612,18 @@ export default {
         };
       }), 'index');
     },
-    
+
     // 新增本体相关的getters
     imageOntologies: state => state.ontologies,
-    
+
     hasOntologies: state => state.ontologies && state.ontologies.length > 0,
-    
-    ontologyById: state => id => state.ontologies.find(ont => ont.id === id)
+
+    ontologyById: state => id => state.ontologies.find(ont => ont.id === id),
+
+    // 新增ontologyTerms相关的getters
+    imageOntologyTerms: state => state.ontologyTerms,
+
+    getTermsByOntologyId: state => ontologyId => state.ontologyTerms[ontologyId] || []
   },
 
   modules: {

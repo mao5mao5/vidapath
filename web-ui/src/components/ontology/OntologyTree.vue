@@ -127,7 +127,7 @@ export default {
   },
   methods: {
     makeTree() {
-      let nodes = (this.ontology) ? this.createSubTree(this.ontology.children.array.slice()) : [];
+      let nodes = (this.ontology) ? this.createSubTree(Array.isArray(this.ontology.children.array)?this.ontology.children.array.slice():this.ontology.children) : [];
       let additionalNodes = this.createSubTree(this.additionalNodes.slice());
       this.treeNodes = this.startWithAdditionalNodes ? additionalNodes.concat(nodes) : nodes.concat(additionalNodes);
 
