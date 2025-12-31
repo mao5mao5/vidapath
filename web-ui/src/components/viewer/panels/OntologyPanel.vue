@@ -14,7 +14,7 @@
 
 <template>
 <div>
-  <h1>{{ $t('terms') }}</h1>
+  <h1>Case {{ $t('terms') }}</h1>
   
   <!-- 当项目没有本体时显示此部分 -->
   <div v-if="!ontology && canManageProject" class="no-ontology-message">
