@@ -211,7 +211,7 @@ def run_import_datasets_easy(
                     
                     # 获取或创建项目
                     project = get_project(project_name, projects)
-                    logger.debug(f"Project {project_name} {'already existed' if project.id else 'was created'}")
+                    logger.info(f"Project {project_name} {'already existed' if project.id else 'was created'}")
                     
                     # 使用ImageImporter的run_easy方法导入单个文件
                     importer = ImageImporter(
