@@ -77,6 +77,8 @@ class Settings(ReadableSettings):
     task_queue_user: str = "router"
     task_queue_password: str = "router"
 
+    # 控制是否使用简化版导入功能
+    use_easy_import: bool = False
 
 @lru_cache()
 def get_settings():
