@@ -36,6 +36,9 @@
             <button class="button" v-if="!$keycloak.hasTemporaryToken" @click="showPatientInfoModal = true" style="margin-right: 0.5rem;">
               Patient information
             </button>
+            <button class="button" v-if="!$keycloak.hasTemporaryToken" @click="showEditPatientInfoModal = true" style="margin-right: 0.5rem;">
+              Edit
+            </button>
             <!-- <project-actions v-if="canManageProject" :project="project" @update="$emit('update', $event)"
               @delete="$emit('delete')"/> -->
           </td>
@@ -201,11 +204,61 @@
         </footer>
       </div>
     </div>
+
+    <!-- Edit Patient Information Modal -->
+    <div v-if="showEditPatientInfoModal" class="modal is-active">
+      <div class="modal-background" @click="showEditPatientInfoModal = false"></div>
+      <div class="modal-card" style="max-height: 90vh; overflow: auto;">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Edit Patient Information</p>
+          <button class="delete" aria-label="close" @click="showEditPatientInfoModal = false"></button>
+        </header>
+        <section class="modal-card-body">
+          <b-field :label="$t('accession-id')">
+            <b-input v-model="editingProject.accessionId" :placeholder="$t('accession-id')" />
+          </b-field>
+
+          <b-field :label="$t('access-date')">
+            <b-datepicker v-model="editingProject.accessDate" :placeholder="$t('access-date')" icon="calendar-today"
+              :mobile-native="true" />
+          </b-field>
+
+          <b-field :label="$t('status')">
+            <b-select v-model="editingProject.status" :placeholder="$t('select-status')" expanded>
+              <option value="NOT_READY">{{$t('status-not-ready')}}</option>
+              <option value="READY">{{$t('status-ready')}}</option>
+              <option value="REVIEWED">{{$t('status-reviewed')}}</option>
+            </b-select>
+          </b-field>
+
+          <b-field :label="$t('patient-id')">
+            <b-input v-model="editingProject.patientId" :placeholder="$t('patient-id')" />
+          </b-field>
+
+          <b-field :label="$t('tissue')">
+            <b-input v-model="editingProject.tissue" :placeholder="$t('tissue')" />
+          </b-field>
+
+          <b-field :label="$t('specimen')">
+            <b-input v-model="editingProject.specimen" :placeholder="$t('specimen')" />
+          </b-field>
+
+          <b-field label="Stain">
+            <b-input v-model="editingProject.stain" :placeholder="$t('stain')" />
+          </b-field>
+        </section>
+        <footer class="modal-card-foot" style="justify-content: flex-end;">
+          <button class="button" @click="showEditPatientInfoModal = false">{{ $t('button-cancel') }}</button>
+          <button class="button is-primary" @click="savePatientInfo">Save</button>
+        </footer>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { get } from '@/utils/store-helpers';
+import { Project } from '@/api';
 
 import ListImagesPreview from '@/components/image/ListImagesPreview';
 import ListUsernames from '@/components/user/ListUsernames';
@@ -237,12 +290,24 @@ export default {
       error: false,
       showDetailModal: false,
       showPatientInfoModal: false,
+      showEditPatientInfoModal: false,
 
       creator: null,
       managers: [],
       members: [],
       onlines: [],
-      representatives: []
+      representatives: [],
+      
+      // 用于编辑患者信息的数据
+      editingProject: {
+        accessionId: '',
+        accessDate: null,
+        status: '',
+        patientId: '',
+        tissue: '',
+        specimen: '',
+        stain: ''
+      }
     };
   },
   computed: {
@@ -293,6 +358,61 @@ export default {
       });
     },
 
+    // 初始化编辑项目数据
+    initializeEditingProject() {
+      this.editingProject = {
+        accessionId: this.project.accessionId || '',
+        accessDate: this.project.accessDate ? new Date(this.project.accessDate) : null,
+        status: this.project.status || '',
+        patientId: this.project.patientId || '',
+        tissue: this.project.tissue || '',
+        specimen: this.project.specimen || '',
+        stain: this.project.stain || ''
+      };
+    },
+
+    // 保存患者信息
+    async savePatientInfo() {
+      try {
+        // 创建一个新对象，包含需要更新的字段
+        const updatedData = {
+          accessionId: this.editingProject.accessionId,
+          accessDate: this.editingProject.accessDate,
+          status: this.editingProject.status,
+          patientId: this.editingProject.patientId,
+          tissue: this.editingProject.tissue,
+          specimen: this.editingProject.specimen,
+          stain: this.editingProject.stain
+        };
+
+        // 创建一个新的Project实例，包含当前项目的数据和更新的数据
+        const projectToUpdate = {
+          ...this.project,
+          ...updatedData
+        };
+
+        // 使用update方法更新项目
+        const updatedProject = await new Project(projectToUpdate).update();
+
+        // 刷新父组件
+        this.$emit('update', updatedProject);
+
+        // 关闭模态框
+        this.showEditPatientInfoModal = false;
+
+        this.$notify({
+          type: 'success',
+          text: 'Patient information updated successfully.'
+        });
+      } catch (error) {
+        console.error('Error updating patient information:', error);
+        this.$notify({
+          type: 'error',
+          text: 'Failed to update patient information.'
+        });
+      }
+    }
+
   },
   async created() {
     try {
@@ -308,6 +428,18 @@ export default {
       this.error = true;
     }
     this.loading = false;
+  },
+  
+  // 在组件更新时初始化编辑数据
+  watch: {
+    project: {
+      handler() {
+        if (this.project) {
+          this.initializeEditingProject();
+        }
+      },
+      immediate: true
+    }
   }
 };
 </script>
@@ -337,7 +469,7 @@ td.prop-content {
 }
 
 .modal-card {
-  max-width: 800px;
+  min-width: 400px;
   width: auto;
   margin: 0 auto;
 }
