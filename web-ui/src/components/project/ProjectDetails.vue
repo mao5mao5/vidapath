@@ -235,6 +235,22 @@
             <b-input v-model="editingProject.patientId" :placeholder="$t('patient-id')" />
           </b-field>
 
+          <b-field :label="$t('patient-name')">
+            <b-input v-model="editingProject.patientName" :placeholder="$t('patient-name')" />
+          </b-field>
+
+          <b-field :label="$t('patient-age')">
+            <b-input v-model="editingProject.patientAge" :placeholder="$t('patient-age')" type="number" />
+          </b-field>
+
+          <b-field label="Gender">
+            <b-input v-model="editingProject.patientSex" :placeholder="$t('gender')" />
+          </b-field>
+
+          <b-field :label="$t('medical-record-number')">
+            <b-input v-model="editingProject.medicalRecordNumber" :placeholder="$t('mrn')" />
+          </b-field>
+
           <b-field :label="$t('tissue')">
             <b-input v-model="editingProject.tissue" :placeholder="$t('tissue')" />
           </b-field>
@@ -304,6 +320,11 @@ export default {
         accessDate: null,
         status: '',
         patientId: '',
+        patientName: '',
+        patientAge: '',
+        patientSex: '',
+        medicalRecordNumber: '',
+        numberOfImages: 0,
         tissue: '',
         specimen: '',
         stain: ''
@@ -365,6 +386,11 @@ export default {
         accessDate: this.project.accessDate ? new Date(this.project.accessDate) : null,
         status: this.project.status || '',
         patientId: this.project.patientId || '',
+        patientName: this.project.patientName || '',
+        patientAge: this.project.patientAge || '',
+        patientSex: this.project.patientSex || '',
+        medicalRecordNumber: this.project.medicalRecordNumber || '',
+        numberOfImages: this.project.numberOfImages || 0,
         tissue: this.project.tissue || '',
         specimen: this.project.specimen || '',
         stain: this.project.stain || ''
@@ -380,6 +406,10 @@ export default {
           accessDate: this.editingProject.accessDate,
           status: this.editingProject.status,
           patientId: this.editingProject.patientId,
+          patientName: this.editingProject.patientName,
+          patientAge: this.editingProject.patientAge,
+          patientSex: this.editingProject.patientSex,
+          medicalRecordNumber: this.editingProject.medicalRecordNumber,
           tissue: this.editingProject.tissue,
           specimen: this.editingProject.specimen,
           stain: this.editingProject.stain
