@@ -60,7 +60,7 @@
       <div v-if="showPatientInfo" class="patient-info">
         <div class="patient-details">
           <span v-if="currentProject.patientName" class="patient-field">PATIENT: {{ currentProject.patientName }}</span>
-          <span v-if="currentProject.patientId" class="patient-field">ID: {{ currentProject.patientId }}</span>
+          <span v-if="currentProject.patientId" class="patient-field">PATIENT ID: {{ currentProject.patientId }}</span>
           <span v-if="currentProject.patientAge" class="patient-field">AGE: {{ currentProject.patientAge }}</span>
           <span v-if="currentProject.patientAge" class="patient-field">GENDER: {{ currentProject.patientSex }}</span>
         </div>

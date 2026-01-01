@@ -65,7 +65,7 @@
 
       <div class="columns">
         <div class="column is-one-quarter has-text-right">
-          <strong style="color: white;">{{$t('link-with-project')}}</strong>
+          <strong style="color: white;">Link with case</strong>
         </div>
         <div class="column is-half">
           <cytomine-multiselect
