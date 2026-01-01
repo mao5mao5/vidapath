@@ -73,7 +73,7 @@ use_accesslog = accesslog_var or None
 errorlog_var = os.getenv("ERROR_LOG", "-")
 use_errorlog = errorlog_var or None
 graceful_timeout_str = os.getenv("GRACEFUL_TIMEOUT", "120")
-timeout_str = os.getenv("TIMEOUT", "120")
+timeout_str = os.getenv("TIMEOUT", "86400")
 keepalive_str = os.getenv("KEEP_ALIVE", "5")
 
 preload_str = os.getenv("PRELOAD", "0")
