@@ -97,6 +97,66 @@ class ImageImporter:
             results=results,
         )
 
+    def run_easy(self, file_path: Path, projects: List[str]) -> ImportResult:
+        """
+        简化版导入方法，用于导入单个文件
+        :param file_path: 要导入的文件路径
+        :param projects: 项目列表
+        :return: 导入结果
+        """
+        logger.info(f"[START] Importing single image: {file_path.name}")
+        
+        if not file_path.exists():
+            logger.warning(f"'{file_path}' does not exist!")
+            return ImportResult(
+                name=file_path.name,
+                success=False,
+                message="Image does not exist",
+            )
+
+        if is_already_imported(file_path, Path(FILE_ROOT_PATH)):
+            logger.warning(f"'{file_path}' already imported!")
+            return ImportResult(
+                name=file_path.name,
+                success=True,
+                message="Already imported",
+            )
+
+        tmp_path = Path(WRITING_PATH, file_path.name)
+        tmp_path.symlink_to(file_path, target_is_directory=file_path.is_dir())
+
+        uploadedFile = UploadedFile(
+            original_filename=file_path.name,
+            filename=str(tmp_path),
+            size=file_path.size,
+            ext="",
+            content_type="",
+            id_projects=[],
+            id_storage=self.storage_id,
+            id_user=self.user.id,
+            status=UploadedFile.UPLOADED,
+        )
+
+        cytomine_listener = CytomineListener(
+            self.cytomine_auth,
+            uploadedFile,
+            projects=projects,
+            user_properties=iter([]),
+        )
+
+        try:
+            run_import(
+                tmp_path,
+                file_path.name,
+                extra_listeners=[cytomine_listener],
+            )
+
+            logger.info(f"[END] Importing single image: {file_path.name}")
+            return ImportResult(name=file_path.name, success=True)
+        except Exception as e:
+            logger.error(f"Failed to import '{file_path.name}': {e}")
+            return ImportResult(name=file_path.name, success=False, message=e)
+
 
 def is_already_imported(image_path: Path, data_path: Path) -> bool:
     """Check if an image was already imported."""

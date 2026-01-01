@@ -37,7 +37,7 @@ from pims.api.utils.response import serialize_cytomine_model
 from pims.config import Settings, get_settings
 from pims.files.archive import make_zip_archive
 from pims.files.file import Path
-from pims.importer.dataset import run_import_datasets
+from pims.importer.dataset import run_import_datasets, run_import_datasets_easy
 from pims.importer.importer import run_import
 from pims.importer.listeners import CytomineListener
 from pims.schemas.auth import ApiCredentials, CytomineAuth
@@ -84,7 +84,11 @@ def import_datasets(
         signature=signature,
     )
 
-    return run_import_datasets(cytomine_auth, api_credentials, storage_id)
+    # 根据配置决定使用哪个导入方法
+    if config.use_easy_import:
+        return run_import_datasets_easy(cytomine_auth, api_credentials, storage_id)
+    else:
+        return run_import_datasets(cytomine_auth, api_credentials, storage_id)
 
 
 @router.post('/upload', tags=['Import'])

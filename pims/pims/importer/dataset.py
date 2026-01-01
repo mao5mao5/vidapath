@@ -153,3 +153,90 @@ def run_import_datasets(
             image_summary=image_summary,
             # annotation_summary=image_summary,
         )
+
+
+def run_import_datasets_easy(
+    cytomine_auth: CytomineAuth,
+    credentials: ApiCredentials,
+    storage_id: str,
+) -> ImportResponse:
+    """
+    简化版导入函数，递归查找bucket下的所有文件，文件名前12个字符作为项目名
+    如果文件名（不含后缀）长度小于12个字符，则跳过
+    """
+    logger.info("Starting simplified dataset import process...")
+    buckets = (Path(entry.path) for entry in os.scandir(DATASET_ROOT) if entry.is_dir())
+
+    with Cytomine(**cytomine_auth.model_dump(), configure_logging=True) as c:
+        if not c.current_user:
+            raise AuthenticationException("PIMS authentication to Cytomine failed.")
+
+        cyto_keys = c.get(f"userkey/{credentials.public_key}/keys.json")
+        private_key = cyto_keys["privateKey"]
+
+        logger.info(f"public_key from credentials: {credentials.public_key}")
+        logger.info(f"private_key from credentials: {private_key}")
+
+        c.set_credentials(credentials.public_key, private_key)
+
+        storage = Storage().fetch(storage_id)
+        if not storage:
+            raise CytomineProblem(f"Storage {storage_id} not found")
+
+        # 获取所有项目，用于后续查找或创建项目
+        project_collection = ProjectCollection().fetch()
+        projects = {project.name: project for project in project_collection}
+        logger.info(f"Found {len(projects)} existing projects")
+
+        image_summary = ImportSummary()
+        for bucket in buckets:
+            logger.info(f"Processing bucket: {bucket}")
+            
+            # 递归遍历bucket下的所有文件
+            file_count = 0
+            for root, dirs, files in os.walk(bucket):
+                for file in files:
+                    file_path = Path(root) / file
+                    file_count += 1
+                    
+                    # 分离文件名和扩展名
+                    stem = file_path.stem  # 不含扩展名的文件名
+                    if len(stem) < 12:
+                        logger.warning(f"Skipping file '{file_path}' - filename without extension is less than 12 characters: '{stem}' (length: {len(stem)})")
+                        continue
+                    
+                    # 使用文件名的前12个字符作为项目名
+                    project_name = stem[:12]
+                    logger.info(f"Processing file: {file}, derived project name: {project_name}")
+                    
+                    # 获取或创建项目
+                    project = get_project(project_name, projects)
+                    logger.debug(f"Project {project_name} {'already existed' if project.id else 'was created'}")
+                    
+                    # 使用ImageImporter的run_easy方法导入单个文件
+                    importer = ImageImporter(
+                        base_path=bucket,  # 传入bucket路径，虽然run_easy不使用它
+                        cytomine_auth=cytomine_auth,
+                        user=c.current_user,
+                        storage_id=storage_id,
+                    )
+                    
+                    result = importer.run_easy(file_path, projects=[project])
+                    
+                    # 更新导入结果统计
+                    image_summary.total += 1
+                    if result.success:
+                        image_summary.successful += 1
+                        logger.info(f"Successfully imported file: {file_path.name}")
+                    else:
+                        image_summary.failed += 1
+                        logger.error(f"Failed to import file: {file_path.name}, reason: {result.message}")
+                    
+                    image_summary.results.append(result)
+
+            logger.info(f"Finished processing bucket {bucket}, total files processed: {file_count}")
+
+        logger.info(f"Import process completed. Total: {image_summary.total}, Successful: {image_summary.successful}, Failed: {image_summary.failed}")
+        return ImportResponse(
+            image_summary=image_summary,
+        )
