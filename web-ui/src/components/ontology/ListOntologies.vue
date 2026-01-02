@@ -24,7 +24,9 @@
 
       <div v-else class="panel">
         <p class="panel-heading">
-          Term management
+          <strong style="font-size: 1.2em; color: #fff;">
+            Term management
+          </strong>
         </p>
         <div class="panel-block">
           <div class="panel-heading-buttons">
@@ -36,7 +38,7 @@
               <span class="icon">
                 <i class="fas fa-plus"></i>
               </span>
-              <span>New case</span>
+              <span>New terms</span>
             </button>
           </div>
           <div v-if="filteredOntologies.length > 0" class="columns is-fullwidth">

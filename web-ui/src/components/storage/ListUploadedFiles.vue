@@ -15,29 +15,21 @@
 <template>
   <div class="panel">
     <p class="panel-heading">
-      {{ $t('storage') }}
+      <strong style="font-size: 1.2em; color: #fff;">
+        {{ $t('storage') }}
+      </strong>
     </p>
     <div class="panel-block storage">
-      <b-input
-        :value="searchString"
-        @input="debounceSearchString"
-        class="search-uploaded-file"
-        :placeholder="$t('search-placeholder')"
-        icon="search"
-      />
+      <b-input :value="searchString" @input="debounceSearchString" class="search-uploaded-file"
+        :placeholder="$t('search-placeholder')" icon="search" />
 
-      <cytomine-table
-        :collection="uploadedFileCollection"
-        sort="created" order="desc"
-        :revision="revision"
-        :refreshInterval="tableRefreshInterval"
-        :openedDetailed.sync="openedDetails"
-        :detailed="false"
-      >
-        <template #default="{row: uFile}">
+      <cytomine-table :collection="uploadedFileCollection" sort="created" order="desc" :revision="revision"
+        :refreshInterval="tableRefreshInterval" :openedDetailed.sync="openedDetails" :detailed="false">
+        <template #default="{ row: uFile }">
           <b-table-column :label="$t('preview')" width="80" class="image-overview">
-            <image-thumbnail v-if="uFile.thumbURL" :url="uFile.thumbURL" :size="128" :key="uFile.thumbURL" :extra-parameters="{Authorization: 'Bearer ' + shortTermToken }"/>
-            <div v-else class="is-size-7 has-text-grey">{{$t('no-preview-available')}}</div>
+            <image-thumbnail v-if="uFile.thumbURL" :url="uFile.thumbURL" :size="128" :key="uFile.thumbURL"
+              :extra-parameters="{ Authorization: 'Bearer ' + shortTermToken }" />
+            <div v-else class="is-size-7 has-text-grey">{{ $t('no-preview-available') }}</div>
           </b-table-column>
 
           <b-table-column field="originalFilename" :label="$t('filename')" sortable width="200">
@@ -59,10 +51,10 @@
           <b-table-column label="" width="120">
             <div class="buttons is-right">
               <a class="button is-small is-link" @click="download(uFile.downloadURL)" v-if="uFile.status >= 100">
-                {{$t('button-download')}}
+                {{ $t('button-download') }}
               </a>
               <button class="button is-small is-danger" @click="confirmDeletion(uFile)">
-                {{$t('button-delete')}}
+                {{ $t('button-delete') }}
               </button>
             </div>
           </b-table-column>
@@ -70,7 +62,7 @@
         </template>
 
         <template #empty>
-          <p class="has-text-grey">{{$t('no-uploaded-file')}}</p>
+          <p class="has-text-grey">{{ $t('no-uploaded-file') }}</p>
         </template>
       </cytomine-table>
     </div>
@@ -78,14 +70,14 @@
 </template>
 
 <script>
-import {get} from '@/utils/store-helpers';
+import { get } from '@/utils/store-helpers';
 import ImageThumbnail from '@/components/image/ImageThumbnail';
-import {UploadedFileCollection, UploadedFile} from '@/api';
+import { UploadedFileCollection, UploadedFile } from '@/api';
 import filesize from 'filesize';
 import _ from 'lodash';
 import CytomineTable from '@/components/utils/CytomineTable';
 import UploadedFileStatusComponent from './UploadedFileStatus';
-import {appendShortTermToken} from '@/utils/token-utils';
+import { appendShortTermToken } from '@/utils/token-utils';
 
 export default {
   name: 'list-uploaded-files',
@@ -106,7 +98,7 @@ export default {
       type: Number,
       default: 0
     },
-    revision : {type: Number, default: 0}
+    revision: { type: Number, default: 0 }
   },
   computed: {
     currentUser: get('currentUser/user'),
@@ -115,13 +107,13 @@ export default {
     uploadedFileCollection() {
       return new UploadedFileCollection({
         onlyRootsWithDetails: true,
-        originalFilename: {ilike: encodeURIComponent(this.searchString)}
+        originalFilename: { ilike: encodeURIComponent(this.searchString) }
       });
     }
   },
   methods: {
     filesize(size) {
-      return (size) ? filesize(size, {base: 10}) : null;
+      return (size) ? filesize(size, { base: 10 }) : null;
     },
     debounceSearchString: _.debounce(async function (value) {
       this.searchString = value;
@@ -162,7 +154,7 @@ export default {
         } else {
           text = this.$t('notif-error-delete-uploaded-file');
         }
-        this.$notify({type: 'error', text});
+        this.$notify({ type: 'error', text });
       }
     },
   },

@@ -1,124 +1,88 @@
-<!-- Copyright (c) 2009-2022. Authors: see NOTICE file.
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.-->
-
 <template>
-  <div class="airunner-management content-wrapper">
+  <div class="content-wrapper">
     <b-loading :is-full-page="false" :active="loading" />
-    <div class="box" v-if="!loading">
-      <div class="airunner-header level">
-        <div class="level-left">
-          <h1 class="title is-2">AI Runner Management</h1>
-        </div>
-        <div class="level-right">
-          <b-button
-            class="button is-primary"
-            @click="openAddModal"
-            icon-left="plus"
-          >
-            Add AI Runner
-          </b-button>
-        </div>
+    <div class="panel" v-if="!loading">
+      <div class="panel-heading">
+        <strong style="font-size: 1.2em; color: #fff;">
+          AI algorithm management
+        </strong>
       </div>
 
-      <div class="columns is-multiline">
-        <div
-          class="column is-one-third"
-          v-for="airunner in airunners"
-          :key="airunner.id"
-        >
-          <div class="card airunner-card">
-            <header class="card-header">
-              <p class="card-header-title">
-                {{ airunner.name }}
-              </p>
-            </header>
-            <div class="card-content">
-              <div class="content">
-                <p><strong>Runner Name:</strong> {{ airunner.runnerName }}</p>
-                <p><strong>Address:</strong> {{ airunner.runnerAddress }}</p>
-                <p v-if="airunner.description">
-                  <strong>Description:</strong> {{ airunner.description }}
+      <div class="panel-block">
+        <div class="level-right">
+          <button class="button" @click="openAddModal">
+            <span class="icon">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>Add AI algorithm runner</span>
+          </button>
+        </div>
+        <div class="columns is-multiline">
+          <div class="column is-one-third" v-for="airunner in airunners" :key="airunner.id">
+            <div class="card airunner-card">
+              <header class="card-header">
+                <p class="card-header-title">
+                  {{ airunner.name }}
                 </p>
-                <p><strong>Created:</strong> {{ formatDate(airunner.created) }}</p>
-                <p><strong>Updated:</strong> {{ formatDate(airunner.updated) }}</p>
+              </header>
+              <div class="card-content">
+                <div class="content">
+                  <p><strong>Runner Name:</strong> {{ airunner.runnerName }}</p>
+                  <p><strong>Address:</strong> {{ airunner.runnerAddress }}</p>
+                  <p v-if="airunner.description">
+                    <strong>Description:</strong> {{ airunner.description }}
+                  </p>
+                  <p><strong>Created:</strong> {{ formatDate(airunner.created) }}</p>
+                  <p><strong>Updated:</strong> {{ formatDate(airunner.updated) }}</p>
+                </div>
               </div>
+              <footer class="card-footer">
+                <a class="card-footer-item" @click="openEditModal(airunner)">
+                  <b-icon icon="pencil" size="is-small"></b-icon>&nbsp;Edit
+                </a>
+                <a class="card-footer-item" @click="fetchRunnerInfo(airunner)">
+                  <b-icon icon="sync" size="is-small"></b-icon>&nbsp;Sync
+                </a>
+                <a class="card-footer-item" @click="confirmDelete(airunner)">
+                  <b-icon icon="delete" size="is-small"></b-icon>&nbsp;Delete
+                </a>
+              </footer>
             </div>
-            <footer class="card-footer">
-              <a class="card-footer-item" @click="openEditModal(airunner)">
-                <b-icon icon="pencil" size="is-small"></b-icon>&nbsp;Edit
-              </a>
-              <a class="card-footer-item" @click="fetchRunnerInfo(airunner)">
-                <b-icon icon="sync" size="is-small"></b-icon>&nbsp;Sync
-              </a>
-              <a class="card-footer-item" @click="confirmDelete(airunner)">
-                <b-icon icon="delete" size="is-small"></b-icon>&nbsp;Delete
-              </a>
-            </footer>
           </div>
         </div>
-      </div>
 
-      <div v-if="airunners.length === 0" class="has-text-centered">
-        <p class="subtitle is-5">No AI Runners found.</p>
-        <b-button
-          class="button is-primary mt-3"
-          @click="openAddModal"
-          icon-left="plus"
-        >
-          Add your first AI Runner
-        </b-button>
+        <div v-if="airunners.length === 0" class="has-text-centered">
+          <p class="subtitle is-5">No AI Runners found.</p>
+          <b-button class="button is-primary mt-3" @click="openAddModal" icon-left="plus">
+            Add your first AI Runner
+          </b-button>
+        </div>
       </div>
     </div>
 
     <!-- Add/Edit Modal -->
     <b-modal :active="isModalActive" has-modal-card @close="closeModal">
-      <div class="modal-card" style="width: auto">
+      <div class="modal-card" style="width: 400px">
         <header class="modal-card-head">
           <p class="modal-card-title">{{ isEditMode ? 'Edit AI Runner' : 'Add AI Runner' }}</p>
           <button class="delete" @click="closeModal" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
           <b-field label="Name">
-            <b-input
-              v-model="form.name"
-              placeholder="Enter AI Runner name"
-              required
-            ></b-input>
+            <b-input v-model="form.name" placeholder="Enter AI Runner name" required></b-input>
           </b-field>
 
           <b-field label="Runner Name">
-            <b-input
-              v-model="form.runnerName"
-              placeholder="Enter runner display name"
-              required
-            ></b-input>
+            <b-input v-model="form.runnerName" placeholder="Enter runner display name" required></b-input>
           </b-field>
 
           <b-field label="Runner Address">
-            <b-input
-              v-model="form.runnerAddress"
-              placeholder="Enter runner address (e.g., http://localhost:8080)"
-              required
-            ></b-input>
+            <b-input v-model="form.runnerAddress" placeholder="Enter runner address (e.g., http://localhost:8080)"
+              required></b-input>
           </b-field>
 
           <b-field label="Description">
-            <b-input
-              v-model="form.description"
-              type="textarea"
-              placeholder="Enter description (optional)"
-            ></b-input>
+            <b-input v-model="form.description" type="textarea" placeholder="Enter description (optional)"></b-input>
           </b-field>
         </section>
         <footer class="modal-card-foot">
@@ -154,9 +118,9 @@ export default {
   },
   computed: {
     isFormValid() {
-      return this.form.name.trim() !== '' && 
-             this.form.runnerName.trim() !== '' && 
-             this.form.runnerAddress.trim() !== '';
+      return this.form.name.trim() !== '' &&
+        this.form.runnerName.trim() !== '' &&
+        this.form.runnerAddress.trim() !== '';
     }
   },
   async mounted() {
@@ -292,14 +256,6 @@ export default {
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
 
-.airunner-management {
-  padding: 20px;
-}
-
-.airunner-header {
-  margin-bottom: 30px;
-}
-
 .airunner-card {
   height: 100%;
   display: flex;
@@ -357,12 +313,6 @@ export default {
 
 .title {
   color: $dark-text-primary;
-}
-
-.box {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-  border: 1px solid $dark-border-color;
 }
 
 .level {
@@ -448,11 +398,120 @@ export default {
   box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
 }
 
-.delete:before, .delete:after {
+.delete:before,
+.delete:after {
   background-color: $dark-text-primary;
 }
 
-.delete:hover:before, .delete:hover:after {
+.delete:hover:before,
+.delete:hover:after {
   background-color: #cccccc;
+}
+
+/* Panel-specific styles to match Storage component */
+.panel {
+  background-color: $dark-bg-primary;
+  border: 1px solid $dark-border-color;
+  border-radius: 6px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.panel-heading {
+  background-color: $dark-bg-secondary;
+  border-bottom: 1px solid $dark-border-color;
+  border-radius: 6px 6px 0 0;
+  padding: 0.75em 1em;
+  font-weight: 600;
+  font-size: 1.1em;
+  color: $dark-text-primary;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-block {
+  background-color: $dark-bg-primary;
+  padding: 1.5em;
+  color: $dark-text-primary;
+}
+
+.columns {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.column {
+  color: $dark-text-primary;
+}
+
+.subtitle {
+  color: $dark-text-primary;
+}
+
+/* Card styles within panel */
+.card {
+  background-color: $dark-bg-secondary;
+  border: 1px solid $dark-border-color;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  border-color: #409eff;
+  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.2);
+}
+
+.card-header {
+  background-color: $dark-bg-tertiary;
+  border-bottom: 1px solid $dark-border-color;
+  padding: 0.75rem;
+}
+
+.card-header-title {
+  color: $dark-text-primary;
+  font-weight: 600;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-footer {
+  background-color: $dark-bg-tertiary;
+  border-top: 1px solid $dark-border-color;
+}
+
+.card-footer-item {
+  color: $dark-text-primary;
+  border-right: 1px solid $dark-border-color;
+}
+
+.card-footer-item:last-child {
+  border-right: none;
+}
+
+.card-footer-item:hover {
+  background-color: $dark-bg-hover;
+}
+
+/* Column layout for cards */
+.columns.is-multiline {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.column.is-one-third {
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+  padding: 0.75rem;
+}
+
+@media screen and (max-width: 768px) {
+  .column.is-one-third {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
 }
 </style>

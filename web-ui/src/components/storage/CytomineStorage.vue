@@ -13,151 +13,148 @@
  limitations under the License.-->
 
 <template>
-<div class="storage-wrapper content-wrapper">
-  <div class="panel">
-    <p class="panel-heading">
-      {{ $t('upload') }}
-    </p>
-    <div class="panel-block" v-if="newUploadError">
-      <b-message type="is-danger" has-icon icon-size="is-small">
-        {{ $t('error-cannot-upload') }}
-      </b-message>
-    </div>
-    <div class="panel-block" v-else>
-      <b-message type="is-info" has-icon icon-size="is-small">
-        <h2 style="color: white;">{{$t('important-notes')}}</h2>
-        <ul class="small-text">
-<!--          <li>{{$t('max-size-upload-info')}}</li>-->
-          <li>
-            {{$t('allowed-formats-upload-info')}}
-            <template v-if="formatInfos.length">
-            <span v-for="(format, index) in formatInfos" :key="format.id">
-              {{format.name}}<v-popover v-if="format.remarks">
-                <i class="fas fa-info-circle"></i>
-                <template #popover>
-                  <p>{{format.remarks}}</p>
-                </template>
-              </v-popover><template v-if="index < formatInfos.length - 1">, </template>
-            </span>
-            </template>
-          </li>
-          <li>{{$t('drag-drop-upload-info', {labelButton: $t('add-files')})}}</li>
-          <li>{{$t('link-to-project-upload-info')}}</li>
-
-        </ul>
-      </b-message>
-
-      <div class="columns">
-        <div class="column is-one-quarter has-text-right">
-          <strong style="color: white;">{{$t('storage')}}</strong>
-        </div>
-        <div class="column is-half">
-          <cytomine-multiselect v-model="selectedStorage" :options="storages" label="extendedName" track-by="id" :allow-empty="false">
-            <template #option="{option}">
-              {{option.extendedName}}
-              <template v-if="currentAccount.isDeveloper">
-                 ({{$t('id')}}: {{option.id}})
+  <div class="storage-wrapper content-wrapper">
+    <div class="panel">
+      <p class="panel-heading">
+        <strong style="font-size: 1.2em; color: #fff;">
+          {{ $t('upload') }}
+        </strong>
+      </p>
+      <div class="panel-block" v-if="newUploadError">
+        <b-message type="is-danger" has-icon icon-size="is-small">
+          {{ $t('error-cannot-upload') }}
+        </b-message>
+      </div>
+      <div class="panel-block" v-else>
+        <b-message type="is-info" has-icon icon-size="is-small">
+          <h2 style="color: white;">{{ $t('important-notes') }}</h2>
+          <ul class="small-text">
+            <!--          <li>{{$t('max-size-upload-info')}}</li>-->
+            <li>
+              {{ $t('allowed-formats-upload-info') }}
+              <template v-if="formatInfos.length">
+                <span v-for="(format, index) in formatInfos" :key="format.id">
+                  {{ format.name }}<v-popover v-if="format.remarks">
+                    <i class="fas fa-info-circle"></i>
+                    <template #popover>
+                      <p>{{ format.remarks }}</p>
+                    </template>
+                  </v-popover><template v-if="index < formatInfos.length - 1">, </template>
+                </span>
               </template>
-            </template>
-          </cytomine-multiselect>
-        </div>
-      </div>
+            </li>
+            <li>{{ $t('drag-drop-upload-info', { labelButton: $t('add-files') }) }}</li>
+            <li>{{ $t('link-to-project-upload-info') }}</li>
 
-      <div class="columns">
-        <div class="column is-one-quarter has-text-right">
-          <strong style="color: white;">Link with case</strong>
-        </div>
-        <div class="column is-half">
-          <cytomine-multiselect
-            v-model="selectedProjects"
-            :options="projects"
-            label="name"
-            track-by="id"
-            :multiple="true"
-            :close-on-select="true"
-          />
-        </div>
-      </div>
+          </ul>
+        </b-message>
 
-      <div class="columns">
-        <div class="column is-one-quarter has-text-right">
-          <strong style="color: white;">{{$t('files')}}</strong>
-        </div>
-        <div class="column is-half">
-          <table v-if="dropFiles.length > 0" class="table is-fullwidth upload-table">
-            <tbody>
-              <tr v-for="(wrapper, idx) in dropFiles" :key="idx">
-                <td>{{wrapper.file.name}}</td>
-                <td>{{filesize(wrapper.file.size)}}</td>
-                <template v-if="wrapper.uploadedFile === null">
-                  <td>
-                    <progress class="progress is-info" :value="wrapper.progress" max="100">
-                      {{wrapper.progress}}%
-                    </progress>
-                  </td>
-                  <td>
-                    <div class="field is-grouped">
-                      <p class="control">
-                        <button class="button is-link" @click="startUpload(wrapper)">
-                          {{$t('button-start')}}
-                        </button>
-                      </p>
-                      <p class="control">
-                        <button class="button" @click="cancelUpload(idx)">
-                          {{$t('button-cancel')}}
-                        </button>
-                      </p>
-                    </div>
-                  </td>
+        <div class="columns">
+          <div class="column is-one-quarter has-text-right">
+            <strong style="color: white;">{{ $t('storage') }}</strong>
+          </div>
+          <div class="column is-half">
+            <cytomine-multiselect v-model="selectedStorage" :options="storages" label="extendedName" track-by="id"
+              :allow-empty="false">
+              <template #option="{ option }">
+                {{ option.extendedName }}
+                <template v-if="currentAccount.isDeveloper">
+                  ({{ $t('id') }}: {{ option.id }})
                 </template>
-                <template v-else>
-                  <td>
-                    <uploaded-file-status v-if="wrapper.uploadedFile" :file="wrapper.uploadedFile" />
-                    <span v-else class="tag is-danger">
-                      {{$t('upload-error')}}
-                    </span>
-                  </td>
-                  <td>
-                    <p class="control">
-                      <button class="button" @click="cancelUpload(idx)">{{$t('button-hide')}}</button>
-                    </p>
-                  </td>
-                </template>
-              </tr>
-            </tbody>
-          </table>
-          <em v-else class="first-child-like has-text-grey">{{$t('no-file')}}</em>
-        </div>
-      </div>
-
-      <div class="columns">
-        <div class="column is-half flex-column is-offset-one-quarter">
-          <progress v-if="ongoingUpload" class="progress is-success" :value="overallProgress" max="100">
-            {{overallProgress}}%
-          </progress>
-
-          <div class="buttons">
-            <b-upload :value="plainFiles" type="is-link" multiple drag-drop @input="filesChange">
-              <a class="button is-success">{{$t('add-files')}}</a>
-            </b-upload>
-            <button class="button is-link" @click="startAll()" :disabled="!filesPendingUpload">
-              {{$t('start-upload')}}
-            </button>
-            <button class="button" @click="cancelAll()" :disabled="!filesPendingUpload && !ongoingUpload">
-              {{$t('cancel-upload')}}
-            </button>
-            <button class="button" @click="hideFinished()" v-if="filesFinishedUpload">
-              {{$t('hide-successful-upload')}}
-            </button>
+              </template>
+            </cytomine-multiselect>
           </div>
         </div>
+
+        <div class="columns">
+          <div class="column is-one-quarter has-text-right">
+            <strong style="color: white;">Link with case</strong>
+          </div>
+          <div class="column is-half">
+            <cytomine-multiselect v-model="selectedProjects" :options="projects" label="name" track-by="id"
+              :multiple="true" :close-on-select="true" />
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column is-one-quarter has-text-right">
+            <strong style="color: white;">{{ $t('files') }}</strong>
+          </div>
+          <div class="column is-half">
+            <table v-if="dropFiles.length > 0" class="table is-fullwidth upload-table">
+              <tbody>
+                <tr v-for="(wrapper, idx) in dropFiles" :key="idx">
+                  <td>{{ wrapper.file.name }}</td>
+                  <td>{{ filesize(wrapper.file.size) }}</td>
+                  <template v-if="wrapper.uploadedFile === null">
+                    <td>
+                      <progress class="progress is-info" :value="wrapper.progress" max="100">
+                        {{ wrapper.progress }}%
+                      </progress>
+                    </td>
+                    <td>
+                      <div class="field is-grouped">
+                        <p class="control">
+                          <button class="button is-link" @click="startUpload(wrapper)">
+                            {{ $t('button-start') }}
+                          </button>
+                        </p>
+                        <p class="control">
+                          <button class="button" @click="cancelUpload(idx)">
+                            {{ $t('button-cancel') }}
+                          </button>
+                        </p>
+                      </div>
+                    </td>
+                  </template>
+                  <template v-else>
+                    <td>
+                      <uploaded-file-status v-if="wrapper.uploadedFile" :file="wrapper.uploadedFile" />
+                      <span v-else class="tag is-danger">
+                        {{ $t('upload-error') }}
+                      </span>
+                    </td>
+                    <td>
+                      <p class="control">
+                        <button class="button" @click="cancelUpload(idx)">{{ $t('button-hide') }}</button>
+                      </p>
+                    </td>
+                  </template>
+                </tr>
+              </tbody>
+            </table>
+            <em v-else class="first-child-like has-text-grey">{{ $t('no-file') }}</em>
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column is-half flex-column is-offset-one-quarter">
+            <progress v-if="ongoingUpload" class="progress is-success" :value="overallProgress" max="100">
+              {{ overallProgress }}%
+            </progress>
+
+            <div class="buttons">
+              <b-upload :value="plainFiles" type="is-link" multiple drag-drop @input="filesChange">
+                <a class="button is-success">{{ $t('add-files') }}</a>
+              </b-upload>
+              <button class="button is-link" @click="startAll()" :disabled="!filesPendingUpload">
+                {{ $t('start-upload') }}
+              </button>
+              <button class="button" @click="cancelAll()" :disabled="!filesPendingUpload && !ongoingUpload">
+                {{ $t('cancel-upload') }}
+              </button>
+              <button class="button" @click="hideFinished()" v-if="filesFinishedUpload">
+                {{ $t('hide-successful-upload') }}
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
-
     </div>
-  </div>
 
-  <list-uploaded-files :tableRefreshInterval="tableRefreshInterval" :revision.sync="revision"></list-uploaded-files>
-</div>
+    <list-uploaded-files :tableRefreshInterval="tableRefreshInterval" :revision.sync="revision"></list-uploaded-files>
+  </div>
 </template>
 
 <script>
@@ -173,7 +170,7 @@ import {
   User,
 } from '@/api';
 
-import {get} from '@/utils/store-helpers';
+import { get } from '@/utils/store-helpers';
 import constants from '@/utils/constants.js';
 
 import CytomineMultiselect from '@/components/form/CytomineMultiselect';
@@ -362,7 +359,7 @@ export default {
       });
     },
     filesize(size) {
-      return (size) ? filesize(size, {base: 10}) : null;
+      return (size) ? filesize(size, { base: 10 }) : null;
     },
 
     startUpload(fileWrapper) {
@@ -456,7 +453,7 @@ export default {
     this.refreshStatusSessionUploads();
     this.fetchPrimaryKey();
     this.tableRefreshInterval = constants.STORAGE_REFRESH_INTERVAL;
-      },
+  },
   deactivated() {
     clearTimeout(this.timeoutRefreshSessionUploads);
     this.tableRefreshInterval = 0;
@@ -471,7 +468,7 @@ export default {
   font-size: 0.9em;
 }
 
-.upload-table  {
+.upload-table {
   position: relative;
   bottom: 0.4em;
 }
@@ -532,13 +529,15 @@ export default {
 }
 
 .storage-wrapper .upload-draggable .button.is-success {
-  background-color: #48c774; /* 保持成功按钮的绿色 */
+  background-color: #48c774;
+  /* 保持成功按钮的绿色 */
   border-color: transparent;
   color: #fff;
 }
 
 .storage-wrapper .upload-draggable .button.is-success:hover {
-  background-color: #34a853; /* 保持成功按钮悬停时的颜色 */
+  background-color: #34a853;
+  /* 保持成功按钮悬停时的颜色 */
   border-color: transparent;
   color: #fff;
 }
@@ -648,12 +647,14 @@ export default {
 }
 
 .progress::-webkit-progress-value {
-  background-color: #48c774; /* 保持进度条的绿色 */
+  background-color: #48c774;
+  /* 保持进度条的绿色 */
   transition: width 0.3s ease;
 }
 
 .progress::-moz-progress-bar {
-  background-color: #48c774; /* 保持进度条的绿色 */
+  background-color: #48c774;
+  /* 保持进度条的绿色 */
 }
 
 .progress.is-info {
@@ -661,19 +662,23 @@ export default {
 }
 
 .progress.is-info::-webkit-progress-value {
-  background-color: #209cee; /* 保持信息进度条的蓝色 */
+  background-color: #209cee;
+  /* 保持信息进度条的蓝色 */
 }
 
 .progress.is-info::-moz-progress-bar {
-  background-color: #209cee; /* 保持信息进度条的蓝色 */
+  background-color: #209cee;
+  /* 保持信息进度条的蓝色 */
 }
 
 .progress.is-success::-webkit-progress-value {
-  background-color: #48c774; /* 成功进度条的绿色 */
+  background-color: #48c774;
+  /* 成功进度条的绿色 */
 }
 
 .progress.is-success::-moz-progress-bar {
-  background-color: #48c774; /* 成功进度条的绿色 */
+  background-color: #48c774;
+  /* 成功进度条的绿色 */
 }
 
 /* 暗色主题标签样式 */
