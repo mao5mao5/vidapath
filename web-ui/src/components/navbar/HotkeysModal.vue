@@ -109,6 +109,12 @@ export default {
   font-weight: normal;
 }
 
+h2 {
+  color: white;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
 .key {
   min-width: 3rem;
   height: 2.25rem;
@@ -139,4 +145,3 @@ export default {
   margin-bottom: 1em;
 }
 </style>
-

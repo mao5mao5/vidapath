@@ -33,19 +33,19 @@
       </navbar-dropdown> -->
         <router-link to="/projects" class="navbar-item">
           <i class="fas fa-list-alt"></i>
-          {{ $t('cases') }}
+          <span>{{ $t('cases') }}</span>
         </router-link>
         <router-link to="/ontology" class="navbar-item">
           <i class="fa fa-tags" aria-hidden="true"></i>
-          Terms
+          <span>Terms</span>
         </router-link>
         <router-link v-if="!currentUser.guestByNow" to="/storage" class="navbar-item">
           <i class="fas fa-upload"></i>
-          Upload
+          <span>Upload</span>
         </router-link>
         <router-link to="/ai" class="navbar-item">
           <i class="fas fa-robot"></i>
-          AI
+          <span>AI</span>
         </router-link>
         <!-- <router-link v-if="appEngineEnabled" to="/apps" class="navbar-item">
         <i class="fas fa-code"></i>
@@ -71,9 +71,11 @@
 
         <!-- <cytomine-searcher /> -->
         <!-- TODO IAM -->
-        <navbar-dropdown v-if="!$keycloak.hasTemporaryToken" icon="fa-user" :title="currentUser.name" :listPathes="['/account']">
+        <navbar-dropdown v-if="!$keycloak.hasTemporaryToken" icon="fa-user" :title="currentUser.name"
+          :listPathes="['/account']">
           <router-link to="/account" class="navbar-item">
-            <span class="icon"><i class="fas fa-user fa-xs"></i></span> {{ $t('account') }}
+            <span class="icon"><i class="fas fa-user fa-xs"></i></span>
+            <span>{{ $t('account') }}</span>
           </router-link>
           <!-- <router-link to="/activity" class="navbar-item">
             <span class="icon"><i class="fas fa-history fa-xs"></i></span> {{ $t('activity-history') }}
@@ -87,17 +89,20 @@
             </a>
           </template> -->
           <a class="navbar-item" @click="logout()">
-            <span class="icon"><i class="fas fa-power-off fa-xs"></i></span> {{ $t('logout') }}
+            <span class="icon"><i class="fas fa-power-off fa-xs"></i></span>
+            <span>{{ $t('logout') }}</span>
           </a>
         </navbar-dropdown>
 
         <navbar-dropdown icon="fa-question-circle" :title="$t('help')">
           <a class="navbar-item" @click="openHotkeysModal()">
-            <span class="icon"><i class="far fa-keyboard fa-xs"></i></span> {{ $t('shortcuts') }}
+            <span class="icon"><i class="far fa-keyboard fa-xs"></i></span>
+            <span>{{ $t('shortcuts') }}</span>
           </a>
-          <!-- <a class="navbar-item" @click="openAboutModal()">
-            <span class="icon"><i class="fas fa-info-circle fa-xs"></i></span> About
-          </a> -->
+          <a class="navbar-item" @click="openAboutModal()">
+            <span class="icon"><i class="fas fa-info-circle fa-xs"></i></span>
+            <span>About</span>
+          </a>
         </navbar-dropdown>
       </div>
     </div>
