@@ -95,9 +95,9 @@
           <a class="navbar-item" @click="openHotkeysModal()">
             <span class="icon"><i class="far fa-keyboard fa-xs"></i></span> {{ $t('shortcuts') }}
           </a>
-          <!-- <a class="navbar-item" @click="openAboutModal()">
+          <a class="navbar-item" @click="openAboutModal()">
             <span class="icon"><i class="fas fa-info-circle fa-xs"></i></span> About
-          </a> -->
+          </a>
         </navbar-dropdown>
       </div>
     </div>
