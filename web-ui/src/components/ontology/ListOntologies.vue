@@ -44,6 +44,9 @@
           <div v-if="filteredOntologies.length > 0" class="columns is-fullwidth">
             <div class="column is-one-third">
               <div class="panel">
+                <p class="panel-heading">
+                  Terms collections
+                </p>
                 <div class="panel-block ontology-list">
                   <a v-for="ontology in filteredOntologies" :key="ontology.id" @click="selectOntology(ontology)"
                     class="panel-block" :class="{ 'is-active': isSelected(ontology) }">
@@ -210,12 +213,9 @@ export default {
 <style lang="scss">
 @import '../../assets/styles/dark-variables';
 
-.list-ontologies-wrapper.content-wrapper {
-  height: 100%;
-}
 
 .panel {
-  height: 100%;
+  height: auto;
 }
 
 .panel-heading-buttons {
@@ -237,7 +237,7 @@ export default {
 .ontology-list {
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: auto;
   overflow-y: auto;
 }
 
@@ -249,20 +249,17 @@ export default {
   align-items: center;
 }
 
-.list-ontologies-wrapper {
-  color: $dark-text-primary;
-}
 
 .list-ontologies-wrapper .panel {
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
 }
 
-
 .list-ontologies-wrapper .panel-block a.panel-block {
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
   border-color: $dark-border-color;
+  border-radius: 8px;
 }
 
 .list-ontologies-wrapper .panel-block a.panel-block:hover {

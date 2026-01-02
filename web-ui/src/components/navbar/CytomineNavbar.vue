@@ -36,7 +36,7 @@
           <span>{{ $t('cases') }}</span>
         </router-link>
         <router-link to="/ontology" class="navbar-item">
-          <i class="fa fa-tags" aria-hidden="true"></i>
+          <i class="fa fa-tags"></i>
           <span>Terms</span>
         </router-link>
         <router-link v-if="!currentUser.guestByNow" to="/storage" class="navbar-item">
@@ -74,8 +74,8 @@
         <navbar-dropdown v-if="!$keycloak.hasTemporaryToken" icon="fa-user" :title="currentUser.name"
           :listPathes="['/account']">
           <router-link to="/account" class="navbar-item">
-            <span class="icon"><i class="fas fa-user fa-xs"></i></span>
-            <span>{{ $t('account') }}</span>
+            <i class="fas fa-user fa-xs"></i>
+            {{ $t('account') }}
           </router-link>
           <!-- <router-link to="/activity" class="navbar-item">
             <span class="icon"><i class="fas fa-history fa-xs"></i></span> {{ $t('activity-history') }}
@@ -89,19 +89,19 @@
             </a>
           </template> -->
           <a class="navbar-item" @click="logout()">
-            <span class="icon"><i class="fas fa-power-off fa-xs"></i></span>
-            <span>{{ $t('logout') }}</span>
+            <i class="fas fa-power-off fa-xs"></i>
+            {{ $t('logout') }}
           </a>
         </navbar-dropdown>
 
         <navbar-dropdown icon="fa-question-circle" :title="$t('help')">
           <a class="navbar-item" @click="openHotkeysModal()">
-            <span class="icon"><i class="far fa-keyboard fa-xs"></i></span>
-            <span>{{ $t('shortcuts') }}</span>
+            <i class="far fa-keyboard fa-xs"></i>
+            {{ $t('shortcuts') }}
           </a>
           <a class="navbar-item" @click="openAboutModal()">
-            <span class="icon"><i class="fas fa-info-circle fa-xs"></i></span>
-            <span>About</span>
+            <i class="fas fa-info-circle fa-xs"></i>
+            About
           </a>
         </navbar-dropdown>
       </div>

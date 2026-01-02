@@ -16,7 +16,7 @@
   <div class="navbar-item has-dropdown is-hoverable">
     <div class="navbar-link" :class="{ 'is-active': isActive, ...linkClasses }" tabindex="0">
       <i v-if="icon" :class="[iconPack, icon]"></i>
-      <span>{{ title }}</span>
+      <span style="margin-left: 4px;">{{ title }}</span>
       <!-- <b-tag v-if="tag" :type="tag.type">{{tag.text}}</b-tag> -->
     </div>
     <div class="navbar-dropdown" :class="classes">
