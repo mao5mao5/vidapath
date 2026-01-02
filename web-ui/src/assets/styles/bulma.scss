@@ -10,9 +10,11 @@ $loadingColor: #bbb;
 
 html {
   font-size: 12px;
+
   @include widescreen {
     font-size: 13px;
   }
+
   @include fullhd {
     font-size: 14px;
   }
@@ -28,7 +30,8 @@ html {
   border-bottom-width: 2px !important;
 }
 
-.table tbody > tr:last-child > td, .table tbody > tr:last-child > th {
+.table tbody>tr:last-child>td,
+.table tbody>tr:last-child>th {
   border-bottom-width: 0 !important;
 }
 
@@ -46,7 +49,7 @@ html {
   color: $dark-text-primary;
 }
 
-.b-table .table .th-wrap { 
+.b-table .table .th-wrap {
   color: $dark-text-primary;
 }
 
@@ -55,7 +58,7 @@ html {
 }
 
 .b-table .table tr.detail {
-    background-color: $dark-bg-primary !important;
+  background-color: $dark-bg-primary !important;
 }
 
 .detail-container {
@@ -68,11 +71,20 @@ html {
 .panel-heading {
   border-radius: 8px 8px 0 0;
   font-weight: 400 !important;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-bottom: 1px solid $dark-border-color;
+  padding: 0.75em 1em;
+  font-weight: 600;
+  font-size: 1.1em;
 }
 
 .panel-block {
   background: #fff;
   display: block;
+  color: $dark-text-primary;
+  background-color: $dark-bg-primary;
+  padding: 1em;
 
   &:last-of-type {
     border-radius: 0 0 8px 8px;
@@ -183,7 +195,8 @@ html {
 }
 
 /* Change for IE compatibility */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
 
   /* Upload button (incorrect handling of z-index: -1 */
   .upload.control input[type=file] {

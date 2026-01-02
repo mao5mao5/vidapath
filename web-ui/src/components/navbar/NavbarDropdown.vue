@@ -13,16 +13,16 @@
  limitations under the License.-->
 
 <template>
-<div class="navbar-item has-dropdown is-hoverable">
-  <span class="navbar-link" :class="{'is-active': isActive, ...linkClasses}" tabindex="0">
-    <i v-if="icon" :class="[iconPack, icon]"></i>
-    {{title}}
-    <!-- <b-tag v-if="tag" :type="tag.type">{{tag.text}}</b-tag> -->
-  </span>
-  <div class="navbar-dropdown" :class="classes">
-    <slot></slot>
+  <div class="navbar-item has-dropdown is-hoverable">
+    <div class="navbar-link" :class="{ 'is-active': isActive, ...linkClasses }" tabindex="0">
+      <i v-if="icon" :class="[iconPack, icon]"></i>
+      <span>{{ title }}</span>
+      <!-- <b-tag v-if="tag" :type="tag.type">{{tag.text}}</b-tag> -->
+    </div>
+    <div class="navbar-dropdown" :class="classes">
+      <slot></slot>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -30,7 +30,7 @@ export default {
   name: 'navbar-dropdown',
   props: {
     icon: String,
-    iconPack: {type: String, default: 'fas'},
+    iconPack: { type: String, default: 'fas' },
     title: String,
     tag: Object,
     classes: Array,
@@ -96,6 +96,7 @@ export default {
   .navbar-item.is-hoverable:hover .navbar-dropdown {
     display: block;
   }
+
   .navbar-item.is-hoverable:focus-within:not(:hover) .navbar-dropdown {
     display: none;
   }

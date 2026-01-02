@@ -597,38 +597,6 @@ export default {
   border-bottom: none;
 }
 
-/* 暗色主题面板样式 */
-.panel {
-  background-color: $dark-bg-panel;
-  color: $dark-text-primary;
-  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-
-.panel-heading {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-bottom: 1px solid $dark-border-color;
-  padding: 0.75em 1em;
-  font-weight: 600;
-  font-size: 1.1em;
-}
-
-.panel-block {
-  color: $dark-text-primary;
-  border-bottom: 1px solid $dark-border-color;
-  background-color: $dark-bg-primary;
-  padding: 1em;
-}
-
-.panel-block:last-child {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  border-bottom: none;
-}
-
 /* 暗色主题消息框样式 */
 .message.is-info {
   background-color: $dark-bg-secondary;

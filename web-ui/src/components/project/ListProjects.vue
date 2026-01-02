@@ -20,9 +20,11 @@
       <p>{{ $t('unexpected-error-info-message') }}</p>
     </div>
     <div v-else-if="!loading" class="panel">
-      <p class="panel-heading">
-        {{ $t('case-management') }}
-      </p>
+      <div class="panel-heading">
+        <strong style="font-size: 1.2em; color: #fff;">
+          {{ $t('case-management') }}
+        </strong>
+      </div>
       <div class="panel-block">
         <div class="panel-heading-buttons" v-if="!$keycloak.hasTemporaryToken">
           <div class="buttons has-addons">
@@ -77,7 +79,6 @@
             <span>Delete</span>
           </button> -->
         </div>
-
         <b-collapse :open="filtersOpened">
           <div class="filters">
             <div class="columns">
@@ -157,7 +158,6 @@
             </div>
           </div>
         </b-collapse>
-
         <cytomine-table :collection="projectCollection" :is-empty="nbEmptyFilters > 0" class="table-projects"
           :currentPage.sync="currentPage" :perPage.sync="perPage" :openedDetailed.sync="openedDetails"
           :sort.sync="sortField" :order.sync="sortOrder" :revision="revision" :checkable="true"
@@ -1264,24 +1264,9 @@ export default {
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
 
-.panel-block {
-  padding-top: 0.8em;
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-.panel-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-}
-
 .panel-heading-buttons {
   display: flex;
-  gap: 0.5rem;
+  padding-right: 0.5rem;
   justify-content: flex-end;
 }
 
