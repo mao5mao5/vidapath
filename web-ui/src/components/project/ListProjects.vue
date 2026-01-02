@@ -838,11 +838,13 @@ export default {
             project: project.id,
             user: id
           });
+          await project.addAdmin(id);
           await newRep.save();
         }
 
         // 删除不再需要的代表用户
         for (const id of toRemove) {
+          await project.deleteAdmin(id);
           await ProjectRepresentative.delete(0, project.id, id);
         }
 
@@ -1091,11 +1093,13 @@ export default {
               project: project.id,
               user: id
             });
+            await project.addAdmin(id);
             await newRep.save();
           }
 
           // 删除不再需要的代表用户
           for (const id of toRemove) {
+            await project.deleteAdmin(id);
             await ProjectRepresentative.delete(0, project.id, id);
           }
         });
