@@ -1268,23 +1268,16 @@ export default {
   display: flex;
   padding-right: 0.5rem;
   justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0;
+}
+
+.buttons:not(:last-child){
+  margin-bottom: 0;
 }
 
 .search-block {
   display: flex;
-}
-
-.legend {
-  margin-top: 0.8rem;
-  margin-bottom: 1rem;
-  border-radius: 10px;
-  padding: 1rem 1.5em;
-  background: $dark-bg-tertiary;
-  color: $dark-text-primary;
-}
-
-.legend p:not(:last-child) {
-  margin-bottom: 0.4em;
 }
 
 /* 暗黑模式下的过滤器区域 */
@@ -1322,28 +1315,33 @@ export default {
   font-weight: bold;
 }
 
-/* 暗黑模式下的表格样式 */
-:deep(.table) {
+/* 暗黑模式下的表格样式 - 统一定义 */
+:deep(.table), 
+.table-projects :deep(.table) {
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
 }
 
-:deep(.table tr) {
+:deep(.table tr), 
+.table-projects :deep(.table tr) {
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
 }
 
-:deep(.table tr:hover) {
+:deep(.table tr:hover), 
+.table-projects :deep(.table tr:hover) {
   background-color: $dark-bg-hover;
 }
 
-:deep(.table th) {
+:deep(.table th), 
+.table-projects :deep(.table th) {
   background-color: $dark-bg-secondary;
   color: $dark-text-primary;
   border-color: $dark-border-color;
 }
 
-:deep(.table td) {
+:deep(.table td), 
+.table-projects :deep(.table td) {
   color: $dark-text-primary;
   border-color: $dark-border-color;
 }
@@ -1387,7 +1385,7 @@ export default {
   box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
 }
 
-/* 暗黑模式下的按钮 */
+/* 暗黑模式下的按钮 - 统一定义 */
 :deep(.button) {
   background-color: $dark-button-bg;
   color: $dark-text-primary;
@@ -1399,23 +1397,14 @@ export default {
   border-color: $dark-button-hover-border;
 }
 
-:deep(.button.is-link) {
-  background-color: $dark-button-bg;
-  color: $dark-text-primary;
-  border-color: $dark-button-border;
-}
-
-:deep(.button.is-link:hover) {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
+:deep(.button.is-link),
 :deep(.button.is-small) {
   background-color: $dark-button-bg;
   color: $dark-text-primary;
   border-color: $dark-button-border;
 }
 
+:deep(.button.is-link:hover),
 :deep(.button.is-small:hover) {
   background-color: $dark-button-hover-bg;
   border-color: $dark-button-hover-border;
@@ -1558,20 +1547,20 @@ export default {
 .buttons {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  margin-right: 5px;
 }
 
 .bulk-actions {
   margin-top: 1rem;
-  padding-top: 1rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  margin-right: 5px;
 }
 
 .bulk-actions .button {
   flex: 1;
   min-width: 120px;
+  margin-right: 5px;
 }
 
 .bulk-action-button {
@@ -1650,10 +1639,6 @@ export default {
 .buttons.has-addons .switch+.switch {
   border-left: none;
 }
-</style>
-
-<style lang="scss">
-@import '../../assets/styles/dark-variables';
 
 .search-projects {
   max-width: 25em;
@@ -1667,32 +1652,6 @@ export default {
 .list-projects-wrapper td,
 .list-projects-wrapper th {
   vertical-align: middle !important;
-}
-
-/* 暗黑模式下的表格全局样式 */
-.table-projects :deep(.table) {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-.table-projects :deep(.table tr) {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-.table-projects :deep(.table tr:hover) {
-  background-color: $dark-bg-hover;
-}
-
-.table-projects :deep(.table th) {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-}
-
-.table-projects :deep(.table td) {
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
 }
 
 /* 暗黑模式下滚动条样式 */
