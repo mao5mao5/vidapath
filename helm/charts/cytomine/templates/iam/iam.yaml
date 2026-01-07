@@ -16,6 +16,7 @@ spec:
       annotations:
         checksum/config: "{{ include (print $.Template.BasePath "/iam/iam-config.yaml") . | sha256sum }}"
     spec:
+      serviceAccountName: {{ include "cytomine.serviceAccountName" . }}
       volumes:
       - name: keystore
         emptyDir: {}
@@ -34,6 +35,7 @@ spec:
         command:
         - "/opt/keycloak/bin/kc.sh"
         - "start"
+        - "--log-level=DEBUG"
         envFrom:
         - configMapRef:
             name: iam

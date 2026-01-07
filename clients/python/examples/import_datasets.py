@@ -48,11 +48,16 @@ if __name__ == "__main__":
     ) as cytomine:
         # To import the datasets, we need to know the ID of your Cytomine storage.
         storages = StorageCollection().fetch()
+        
+        # 检查storages是否为有效的可迭代对象
+        if not hasattr(storages, '__iter__'):
+            raise ValueError(f"Failed to fetch storages. API returned: {storages}")
+        
         storage = next(
-            filter(lambda storage: storage.user == cytomine.current_user.id, storages)
+            filter(lambda storage: storage.user == cytomine.current_user.id, storages), None
         )
         if not storage:
-            raise ValueError("Storage not found")
+            raise ValueError("Storage not found for current user")
 
         response = cytomine.import_datasets(storage.id, pims_url= urljoin(params.cytomine_pims_host, params.import_uri))
 

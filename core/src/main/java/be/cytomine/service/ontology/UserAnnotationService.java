@@ -49,7 +49,6 @@ import be.cytomine.utils.CommandResponse;
 import be.cytomine.utils.GeometryUtils;
 import be.cytomine.utils.JsonObject;
 import be.cytomine.utils.Task;
-import be.cytomine.utils.TokenUtils;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.ParseException;
@@ -57,6 +56,7 @@ import org.locationtech.jts.io.WKTReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -155,15 +155,6 @@ public class UserAnnotationService extends ModelService {
         Optional<UserAnnotation> optionalUserAnnotation = userAnnotationRepository.findById(id);
         optionalUserAnnotation.ifPresent(userAnnotation -> securityACLService.check(userAnnotation.container(),READ));
         return optionalUserAnnotation;
-    }
-
-    public Optional<UserAnnotation> find(Long id, String authHeader) {
-        Optional<UserAnnotation> userAnnotation = userAnnotationRepository.findById(id);
-        String token = authHeader.replace("Bearer ", "");
-        String username = TokenUtils.getUsernameFromToken(token);
-        User user = currentUserService.getCurrentUser(username);
-        userAnnotation.ifPresent(annotation -> securityACLService.check(annotation.container(),READ, user));
-        return userAnnotation;
     }
 
     public List listIncluded(ImageInstance image, String geometry, User user, List<Long> terms, AnnotationDomain annotation, List<String> propertiesToShow) {
@@ -404,8 +395,12 @@ public class UserAnnotationService extends ModelService {
         response.getData().put("annotation", response.getData().get("userannotation"));
         response.getData().remove("userannotation");
 
-        AnnotationDomain annotation = (AnnotationDomain) domain;
-        retrievalService.indexAnnotation(annotation);
+        try {
+            AnnotationDomain annotation = (AnnotationDomain) domain;
+            retrievalService.indexAnnotation(annotation);
+        } catch (HttpClientErrorException e) {
+            log.warn("Indexing annotation failed: " + e.getMessage());
+        }
     }
 
     /**
@@ -504,7 +499,11 @@ public class UserAnnotationService extends ModelService {
         //Check if user is admin, the project mode and if is the owner of the annotation
         securityACLService.checkFullOrRestrictedForOwner(domain, ((UserAnnotation)domain).getUser());
 
-        retrievalService.deleteIndex((AnnotationDomain) domain);
+        try {
+            retrievalService.deleteIndex((AnnotationDomain) domain);
+        } catch (HttpClientErrorException e) {
+            log.warn("Deleting annotation index failed: " + e.getMessage());
+        }
 
         Command c = new DeleteCommand(currentUser, transaction);
         return executeCommand(c,domain, null);
