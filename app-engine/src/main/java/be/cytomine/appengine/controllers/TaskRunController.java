@@ -101,7 +101,8 @@ public class TaskRunController {
         log.info("ProvisionParameter: calculating & caching CRC32 checksum...");
         taskRunService.setChecksumCRC32(
             "task-run-inputs-" + runId,
-            taskRunService.calculateFileCRC32(uploadedFile),
+            uploadedFile.isFile() ? taskRunService.calculateFileCRC32(uploadedFile)
+                : taskRunService.calculateDirectoryCRC32(uploadedFile),
             parameterName
         );
 
@@ -279,7 +280,8 @@ public class TaskRunController {
         log.info("ProvisionCollectionItem: calculating & caching CRC32 checksum...");
         taskRunService.setChecksumCRC32(
             "task-run-inputs-" + runId,
-            taskRunService.calculateFileCRC32(uploadedFile),
+            uploadedFile.isFile() ? taskRunService.calculateFileCRC32(uploadedFile)
+                : taskRunService.calculateDirectoryCRC32(uploadedFile),
             parameterName + "/" + String.join("/", indexesArray)
         );
         log.info("/task-runs/{run_id}/input-provisions/{param_name}/indexes Binary POST Ended");
@@ -307,9 +309,9 @@ public class TaskRunController {
     public ResponseEntity<?> getRun(
         @PathVariable("run_id") String runId
     ) throws ProvisioningException {
-        log.info("/task-runs/{run_id} GET");
+        log.info("/task-runs/{} GET", runId);
         TaskRunResponse run = taskRunService.retrieveRun(runId);
-        log.info("/task-runs/{run_id} GET Ended");
+        log.info("/task-runs/{} GET Ended", runId);
         return new ResponseEntity<>(run, HttpStatus.OK);
     }
 
@@ -339,9 +341,9 @@ public class TaskRunController {
         @PathVariable("run_id") String runId
     ) throws ProvisioningException {
         log.info("/task-runs/{run_id}/inputs GET");
-        List<TaskRunParameterValue> outputs = taskRunService.retrieveRunInputs(runId);
+        List<TaskRunParameterValue> inputs = taskRunService.retrieveRunInputs(runId);
         log.info("/task-runs/{run_id}/inputs GET Ended");
-        return new ResponseEntity<>(outputs, HttpStatus.OK);
+        return new ResponseEntity<>(inputs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/task-runs/{run_id}/input/{parameter_name}")
@@ -451,13 +453,13 @@ public class TaskRunController {
 
     @PostMapping(value = "/task-runs/{run_id}/state-actions")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<?> updateState(
+    public ResponseEntity<StateAction> updateState(
         @PathVariable("run_id") String runId,
         @RequestBody State state
     ) throws ProvisioningException, SchedulingException, FileStorageException {
-        log.info("/task-runs/{run_id}/state_actions POST");
+        log.info("POST /task-runs/{}/state-actions", runId);
         StateAction stateAction = taskRunService.updateRunState(runId, state);
-        log.info("/task-runs/{run_id}/state_actions POST Ended");
+        log.info("POST /task-runs/{}/state-actions Ended", runId);
         return new ResponseEntity<>(stateAction, HttpStatus.OK);
     }
 }

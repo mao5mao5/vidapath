@@ -9,13 +9,15 @@
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
         devShell = pkgs.mkShell {
+          LD_LIBRARY_PATH = pkgs.lib.strings.makeLibraryPath [ pkgs.stdenv.cc.cc.lib pkgs.zlib ];
           buildInputs = with pkgs;[
-            openssl
+            chart-testing
             fluxcd
             kubectl
-            postgresql
-            kustomize
             kubernetes-helm
+            kustomize
+            openssl
+            postgresql
             python3
             uv
           ];

@@ -1,9 +1,8 @@
 # List ARGs here for better readability.
 ARG CORE_VERSION
 ARG CORE_REVISION
-ARG JAVA_VERSION=17-jre
-ARG GRADLE_VERSION=7.6-jdk17
-ARG OPENJDK_VERSION=25-ea-17-slim-bullseye
+ARG JAVA_VERSION=21-jre
+ARG GRADLE_VERSION=8.14-jdk21
 
 #######################################################################################
 # Stage: core dependencies download via gradle
@@ -56,7 +55,7 @@ CMD ["/bin/sh"]
 
 #######################################################################################
 ## Stage: Cytomine core image
-FROM openjdk:${OPENJDK_VERSION} AS production
+FROM eclipse-temurin:${JAVA_VERSION} AS production
 
 ARG CORE_VERSION
 ARG CORE_REVISION
