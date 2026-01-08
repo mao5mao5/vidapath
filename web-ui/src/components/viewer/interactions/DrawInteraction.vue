@@ -171,7 +171,7 @@ export default {
     },
 
     clearDrawnFeatures() {
-      this.$refs.olSourceDrawTarget.clear(true);
+      this.$refs.olSourceDrawTarget?.clear(true);
     },
 
     async drawEndHandler({feature}) {

@@ -17,7 +17,8 @@
       <div class="annotation-details-container">
         <annotation-details
           v-if="selectedFeature?.properties?.annot?.hasOwnProperty('user')"
-          :annotation="selectedFeature?.properties?.annot"
+          :index="index"
+          :annotation="annot"
           :terms="terms"
           :images="images"
           :slices="slices"
@@ -60,13 +61,13 @@
 
 <script>
 import VueDraggableResizable from 'vue-draggable-resizable';
-import {Cytomine, UserCollection} from '@/api';
+import {UserCollection} from '@/api';
 import AnnotationDetails from '@/components/annotations/AnnotationDetails';
 import AnnotationLinksPreview from '@/components/annotations/AnnotationLinksPreview';
 import AnnotationSimpleDetails from '@/components/viewer/annotations/AnnotationSimpleDetails';
 
 export default {
-  name: 'annotations-details-container',
+  name: 'annotation-details-container',
   components: {
     AnnotationDetails,
     AnnotationLinksPreview,
@@ -78,16 +79,11 @@ export default {
   },
   data() {
     return {
-      width: 320,
       projectUsers: [],
-      reload: true,
       showComments: false
     };
   },
   computed: {
-    viewerModule() {
-      return this.$store.getters['currentProject/currentViewerModule'];
-    },
     imageModule() {
       return this.$store.getters['currentProject/imageModule'](this.index);
     },
@@ -112,22 +108,6 @@ export default {
     profiles() {
       return this.imageWrapper.profile ? [this.imageWrapper.profile] : [];
     },
-    displayAnnotDetails: {
-      get() {
-        return this.imageWrapper.selectedFeatures.displayAnnotDetails;
-      },
-      set(value) {
-        this.$store.commit(this.imageModule + 'setDisplayAnnotDetails', value);
-      }
-    },
-    positionAnnotDetails: {
-      get() {
-        return this.imageWrapper.selectedFeatures.positionAnnotDetails;
-      },
-      set(value) {
-        this.$store.commit(this.imageModule + 'setPositionAnnotDetails', value);
-      }
-    },
     selectedFeature() {
       return this.$store.getters[this.imageModule + 'selectedFeature'];
     },
@@ -138,7 +118,7 @@ export default {
       return this.selectedFeature ? this.selectedFeature?.properties?.annot : {};
     },
     terms() {
-      return this.$store.getters['currentProject/terms'] || [];
+      return this.$store.getters[this.imageModule + 'terms'] || [];
     },
     tracks() {
       return this.imageWrapper.tracks.tracks;
@@ -165,57 +145,10 @@ export default {
 
       this.projectUsers = (await collection.fetchAll()).array;
     },
-
-    dragStop(x, y) {
-      this.positionAnnotDetails = {x, y};
-    },
-
-    async handleResize() {
-      await this.$nextTick(); // wait for update of clientWidth and clientHeight to their new values
-
-      if (this.$refs.playground) {
-        let maxX = Math.max(this.$refs.playground.clientWidth - this.width, 0);
-        let height = 500;
-        if (this.$refs.detailsPanel) {
-          height = this.$refs.detailsPanel.height;
-        }
-        let maxY = Math.max(this.$refs.playground.clientHeight - height, 0);
-        let x = Math.min(this.positionAnnotDetails.x, maxX);
-        let y = Math.min(this.positionAnnotDetails.y, maxY);
-        this.positionAnnotDetails = {x, y};
-
-        // HACK to force the component to recreate and take into account new (x,y) ; should no longer be
-        // necessary with version 2 of vue-draggable-resizable
-        this.reload = false;
-        this.$nextTick(() => this.reload = true);
-      }
-    },
-    // async searchSimilarAnnotations() {
-    //   let data = (await Cytomine.instance.api.get(
-    //     'retrieval/search',
-    //     {
-    //       params: {
-    //         annotation: this.selectedFeature?.properties?.annot?.id,
-    //         nrt_neigh: 10 // eslint-disable-line camelcase
-    //       }
-    //     }
-    //   )).data;
-    //   this.$store.commit(this.imageModule + 'setShowSimilarAnnotations', true);
-    //   this.$store.commit(this.imageModule + 'setSimilarAnnotations', data);
-    //   this.$store.commit(this.imageModule + 'setQueryAnnotation', this.selectedFeature.properties.annot);
-    // }
   },
   created() {
     this.fetchUsers();
   },
-  mounted() {
-    window.addEventListener('resize', this.handleResize);
-    this.$eventBus.$on('updateMapSize', this.handleResize);
-  },
-  destroyed() {
-    window.removeEventListener('resize', this.handleResize);
-    this.$eventBus.$off('updateMapSize', this.handleResize);
-  }
 };
 </script>
 

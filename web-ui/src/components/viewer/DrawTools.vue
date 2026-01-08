@@ -51,7 +51,7 @@
         <ontology-tree
           class="ontology-tree"
           v-model="termsToAssociate"
-          :ontology="ontology"
+          :ontologies="ontologies"
           :searchString="searchStringTerm"
         />
       </div>
@@ -496,7 +496,6 @@ export default {
   },
   computed: {
     configUI: get('currentProject/configUI'),
-    ontology: get('currentProject/ontology'),
     currentUser: get('currentUser/user'),
 
     imageModule() {
@@ -528,7 +527,10 @@ export default {
       return this.$store.getters[this.imageModule + 'maxRank'];
     },
     terms() {
-      return this.$store.getters['currentProject/terms'];
+      return this.$store.getters[this.imageModule + 'terms'];
+    },
+    ontologies() {
+      return this.$store.getters[this.imageModule + 'ontologies'];
     },
     termsToAssociate: {
       get() {

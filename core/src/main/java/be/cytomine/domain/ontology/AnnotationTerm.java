@@ -57,9 +57,9 @@ public class AnnotationTerm extends CytomineDomain implements Serializable {
         relationTerm.created = json.getJSONAttrDate("created");
         relationTerm.updated = json.getJSONAttrDate("updated");
 
-        if(relationTerm.term.getOntology()!=relationTerm.userAnnotation.project.getOntology()) {
-            throw new WrongArgumentException("Term " +term.getName()+ " from ontology " + term.getOntology().getName() + " is not in ontology from the annotation project");
-        }
+        // if(relationTerm.term.getOntology()!=relationTerm.userAnnotation.project.getOntology()) {
+        //     throw new WrongArgumentException("Term " +term.getName()+ " from ontology " + term.getOntology().getName() + " is not in ontology from the annotation project");
+        // }
         return relationTerm;
     }
 

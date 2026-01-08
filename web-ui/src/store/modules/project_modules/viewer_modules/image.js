@@ -623,7 +623,30 @@ export default {
     // 新增ontologyTerms相关的getters
     imageOntologyTerms: state => state.ontologyTerms,
 
-    getTermsByOntologyId: state => ontologyId => state.ontologyTerms[ontologyId] || []
+    getTermsByOntologyId: state => ontologyId => state.ontologyTerms[ontologyId] || [],
+
+    terms: (state) => {
+      if (!state.ontologies || !Array.isArray(state.ontologies)) {
+        return [];
+      }
+      
+      let allTerms = [];
+      for (const ontology of state.ontologies) {
+        if (ontology && ontology.children && Array.isArray(ontology.children)) {
+          const terms = getAllTerms(ontology);
+          // 为每个term添加ontologyId属性
+          const termsWithOntologyId = terms.map(term => ({
+            ...term,
+            ontologyId: ontology.id
+          }));
+          allTerms = allTerms.concat(termsWithOntologyId);
+        }
+      }
+      console.log('allTerms:', allTerms);
+      return allTerms;
+    },
+
+    ontologies: (state) => state.ontologies,
   },
 
   modules: {

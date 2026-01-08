@@ -136,9 +136,8 @@
         </template>
 
         <!-- TERMS -->
-        <tr v-if="isPropDisplayed('terms') && ontology">
+        <tr v-if="isPropDisplayed('terms')">
           <td colspan="2">
-            <!-- <h5>{{ $t('terms') }}</h5> -->
             <b-tag v-for="{ term, user } in associatedTerms" :key="term.id"
               :title="$t('associated-by', { username: user.fullName })">
               <cytomine-term :term="term" />
@@ -146,19 +145,23 @@
                 @click="removeTerm(term.id, user.id)">
               </button>
             </b-tag>
-            <div class="add-term-wrapper" v-if="canEditTerms" v-click-outside="() => showTermSelector = false">
+            <div v-if="canEditTerms" class="add-term-wrapper" v-click-outside="() => showTermSelector = false">
               <b-field>
                 <b-input size="is-small" expanded :placeholder="$t('add-term')" v-model="addTermString"
                   @focus="showTermSelector = true" />
               </b-field>
 
               <div class="ontology-tree-container" v-show="showTermSelector">
-                <ontology-tree class="ontology-tree" :ontology="ontology" :searchString="addTermString"
-                  :selectedNodes="associatedTermsIds" :allowNew="true" @newTerm="newTerm" @select="addTerm"
+                <ontology-tree class="ontology-tree" 
+                  :ontologies="ontologies" 
+                  :searchString="addTermString"
+                  :selectedNodes="annotation.term" 
+                  :allowNew="true" 
+                  @newTerm="newTerm" 
+                  @select="addTerm"
                   @unselect="removeTerm" />
               </div>
             </div>
-            <em v-else-if="!associatedTerms.length">{{ $t('no-term') }}</em>
           </td>
         </tr>
 
@@ -308,6 +311,7 @@ export default {
     AnnotationLinksPreview,
   },
   props: {
+    index: { type: String },
     annotation: { type: Object },
     terms: { type: Array },
     tracks: { type: Array },
@@ -330,7 +334,7 @@ export default {
       revTracks: 0,
       linkCropSize: 64,
       linkColor: '696969',
-      properties: [],
+      // properties: [],
       loadPropertiesError: false,
       description: null,
       inputedcomment: '',
@@ -338,9 +342,14 @@ export default {
   },
   computed: {
     configUI: get('currentProject/configUI'),
-    ontology: get('currentProject/ontology'),
     currentAccount: get('currentUser/account'),
     shortTermToken: get('currentUser/shortTermToken'),
+    imageModule() {
+      return this.$store.getters['currentProject/imageModule'](this.index);
+    },
+    ontologies() {
+      return this.$store.getters[this.imageModule + 'ontologies'];
+    },
     creator() {
       return this.users.find(user => user.id === this.annotation.user) || {};
     },
@@ -359,7 +368,7 @@ export default {
     canEditTerms() {
       // HACK: because core prevents from modifying term of algo annot (https://github.com/cytomine/Cytomine-core/issues/1138 & 1139)
       // + term modification forbidden for reviewed annotation
-      return this.canEdit && this.annotation.type === AnnotationType.USER;
+      return this.canEdit; //&& this.annotation.type === AnnotationType.USER;
     },
     image() {
       return this.images.find(image => image.id === this.annotation.image) ||
@@ -378,6 +387,7 @@ export default {
       return this.profiles.find(profile => profile.image === this.image.baseImage);
     },
     annotationURL() {
+      console.log('annotation', this.annotation);
       return `/project/${this.annotation.project}/image/${this.annotation.image}/annotation/${this.annotation.id}`;
     },
     associatedTerms() {
@@ -390,10 +400,6 @@ export default {
       } else {
         return [];
       }
-    },
-    associatedTermsIds() {
-      this.revTerms;
-      return this.associatedTerms.map(({ term }) => term.id);
     },
     associatedTracks() {
       if (this.annotation.annotationTrack) {
@@ -415,9 +421,9 @@ export default {
     isPoint() {
       return this.annotation.location && this.annotation.location.includes('POINT');
     },
-    internalUseFilteredProperties() {
-      return this.properties.filter(prop => !prop.key.startsWith(constants.PREFIX_HIDDEN_PROPERTY_KEY));
-    },
+    // internalUseFilteredProperties() {
+    //   return this.properties.filter(prop => !prop.key.startsWith(constants.PREFIX_HIDDEN_PROPERTY_KEY));
+    // },
     spatialProjection() {
       if (this.image.channels > 1) {
         return this.$t('fluorescence-spectra');
@@ -588,12 +594,12 @@ export default {
       // the error may make sense if the object has no description
     }
 
-    try {
-      this.properties = (await PropertyCollection.fetchAll({ object: this.annotation })).array;
-    } catch (error) {
-      this.loadPropertiesError = true;
-      console.log(error);
-    }
+    // try {
+    //   this.properties = (await PropertyCollection.fetchAll({ object: this.annotation })).array;
+    // } catch (error) {
+    //   this.loadPropertiesError = true;
+    //   console.log(error);
+    // }
 
     this.$eventBus.$emit('hide-similar-annotations');
   },
