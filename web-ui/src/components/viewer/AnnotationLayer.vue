@@ -84,19 +84,23 @@ export default {
     ongoingEdit() {
       return this.imageWrapper.draw.ongoingEdit;
     },
-    terms() {
-      return this.imageWrapper.style.terms || [];
+    ontologyTerms() {
+      return this.imageWrapper.style.ontologyTerms || [];
     },
     styleFunctionFactory() {
       // Force computed property update when one of those properties change (leading to new style function =>
       // rerendering - see https://github.com/ghettovoice/vuelayers/issues/68#issuecomment-404223423)
       this.imageWrapper.selectedFeatures.selectedFeatures;
       this.imageWrapper.style.layersOpacity;
-      this.terms.forEach(term => {
-        term.visible;
-        term.color;
-        term.opacity;
-      });
+      for (let ontoId in this.ontologyTerms) {
+        if (this.ontologyTerms[ontoId]) {
+          this.ontologyTerms[ontoId].forEach(term => {
+            term.visible;
+            term.color;
+            term.opacity;
+          });
+        }
+      }
       this.imageWrapper.style.displayNoTerm;
       this.imageWrapper.style.noTermOpacity;
       this.imageWrapper.properties.selectedPropertyKey;

@@ -19,11 +19,11 @@
     <!-- 当图像没有本体时显示此部分 -->
     <div v-if="!hasOntologies" class="no-ontology-message">
       <p class="has-text-centered">
-        <em>{{ $t('no-image-ontology') }}</em>
+        <em>No terms</em>
       </p>
       <p class="has-text-centered mt-2">
         <button class="button is-small is-link" @click="openSelectOntologyModal">
-          {{ $t('add-ontology-to-image') }}
+          Add terms
         </button>
       </p>
     </div>
@@ -39,8 +39,8 @@
 
         <div class="ontology-tree-wrapper">
           <div class="header-tree">
-            <b-input v-model="searchStrings[currentOntology.id]" :placeholder="$t('search-placeholder')" size="is-small"
-              expanded />
+            <!-- <b-input v-model="searchStrings[currentOntology.id]" :placeholder="$t('search-placeholder')" size="is-small"
+              expanded /> -->
 
             <div class="sidebar-tree">
               <div class="visibility">
@@ -78,18 +78,18 @@
     </div>
 
     <!-- 选择本体的模态框 -->
-    <cytomine-modal :active="showSelectOntologyModal" :title="$t('add-ontology-to-image')"
+    <cytomine-modal :active="showSelectOntologyModal" title="Add terms to image"
       @close="showSelectOntologyModal = false">
       <b-message v-if="errorOntologies" type="is-danger" has-icon icon-size="is-small">
         <h2> {{ $t('error') }} </h2>
         <p> {{ $t('unexpected-error-info-message') }} </p>
       </b-message>
       <template v-else>
-        <b-field :label="$t('ontology')">
-          <b-select v-model="selectedOntology" :placeholder="$t('select-ontology')" :disabled="loadingOntologies"
+        <b-field label="Terms">
+          <b-select v-model="selectedOntology" placeholder="Select terms by name" :disabled="loadingOntologies"
             :loading="loadingOntologies">
             <option :value="null">
-              {{ $t('select-ontology') }}
+              Select terms
             </option>
             <option v-for="ontology in availableOntologies" :value="ontology.id" :key="ontology.id"
               v-show="!isOntologyAlreadyAdded(ontology.id)">
@@ -118,6 +118,7 @@ import { get } from '@/utils/store-helpers';
 import OntologyTree from '@/components/ontology/OntologyTree';
 import CytomineModal from '@/components/utils/CytomineModal';
 import { OntologyCollection, Project } from '@/api';
+import { Select } from 'ol/interaction';
 
 export default {
   name: 'ontology-terms-panel',
@@ -324,7 +325,7 @@ export default {
   border: 1px solid #eee;
   border-radius: 4px;
   padding: 0.5em;
-  width: 20rem;
+  width: 22rem;
 }
 
 .ontology-header {

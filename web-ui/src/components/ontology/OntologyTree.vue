@@ -77,6 +77,7 @@ export default {
   },
   props: {
     ontology: {type: Object},
+    ontologies: {type: Array, default: null}, // 新增ontologies属性
     additionalNodes: {type: Array, default: () => []},
     startWithAdditionalNodes: {type: Boolean, default: false},
     searchString: {type: String, default: ''},
@@ -111,6 +112,9 @@ export default {
     ontology() {
       this.makeTree();
     },
+    ontologies() { // 监听ontologies的变化
+      this.makeTree();
+    },
     additionalNodes() {
       this.makeTree();
     },
@@ -127,9 +131,27 @@ export default {
   },
   methods: {
     makeTree() {
+      console.log('ontologies',this.ontologies);
+      // 构建基本节点树
       let nodes = (this.ontology) ? this.createSubTree(Array.isArray(this.ontology.children.array)?this.ontology.children.array.slice():this.ontology.children) : [];
+      
+      // 添加additionalNodes
       let additionalNodes = this.createSubTree(this.additionalNodes.slice());
-      this.treeNodes = this.startWithAdditionalNodes ? additionalNodes.concat(nodes) : nodes.concat(additionalNodes);
+
+      // 根据startWithAdditionalNodes决定顺序
+      let baseNodes = this.startWithAdditionalNodes ? additionalNodes.concat(nodes) : nodes.concat(additionalNodes);
+      
+      // 如果提供了ontologies且不为空，则添加到baseNodes之后
+      if (this.ontologies && Array.isArray(this.ontologies) && this.ontologies.length > 0) {
+        for (let ontology of this.ontologies) {
+          if (ontology && Array.isArray(ontology.children)) {
+            let ontologyNodes = this.createSubTree(ontology.children.slice());
+            baseNodes = baseNodes.concat(ontologyNodes);
+          }
+        }
+      }
+
+      this.treeNodes = baseNodes;
 
       this.filter();
     },
@@ -326,7 +348,7 @@ created() {
 @import '../../assets/styles/dark-variables';
 
 .ontology-tree {
-  padding: 0 0 2px 0;
+  padding: 0;
 }
 
 .ontology-tree .tree-checkbox {

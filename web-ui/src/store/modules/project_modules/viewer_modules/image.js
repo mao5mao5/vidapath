@@ -49,8 +49,9 @@ import {
   rejectedStyles,
   rejectedSelectStyles,
   trackedSelectStyles,
-  createColorStyle, 
-  createColorLineStyle} from '@/utils/style-utils.js';
+  createColorStyle,
+  createColorLineStyle
+} from '@/utils/style-utils.js';
 import { Fill } from 'ol/style';
 
 function formatTerms(terms, layersOpacity, previousTerms = []) {
@@ -70,9 +71,9 @@ function formatTerms(terms, layersOpacity, previousTerms = []) {
 
 function formatTerm(term, layersOpacity) {
   let result = { id: term.id };
-  result.opacity = 0.5;
-  result.olStyle = createColorStyle(term.color, 0.5 * layersOpacity);
-  result.olLineStyle = createColorLineStyle(term.color, 0.5 * layersOpacity);
+  result.opacity = 1;
+  result.olStyle = createColorStyle(term.color, 1 * layersOpacity);
+  result.olLineStyle = createColorLineStyle(term.color, 1 * layersOpacity);
   result.visible = true;
   result.color = term.color;
   return result;
@@ -499,10 +500,10 @@ export default {
       let styles = [];
 
       let nbTerms = annot.term.length;
-      let terms = state.style.terms;
+      let ontologyTerms = state.style.ontologyTerms;
 
-      if (terms && nbTerms === 1) {
-        let wrappedTerm = getters.termsMapping[annot.term[0]];
+      if (ontologyTerms && nbTerms === 1) {
+        let wrappedTerm = getters.getTermByIdFromOntologyTerms(annot.term[0]);
         if (wrappedTerm) {
           if (!wrappedTerm.visible) {
             return; // do not display annot
@@ -515,10 +516,14 @@ export default {
         } else {
           styles.push(state.style.noTermStyle); // could not find term => display no term style
         }
-      } else if (terms && nbTerms > 1) {
-        let hasTermsToDisplay = terms.some(term => term.visible && annot.term.includes(term.id));
-        if (!hasTermsToDisplay) {
-          return; // do not display
+      } else if (ontologyTerms && nbTerms > 1) {
+        for (let ontoId in ontologyTerms) {
+          if (ontologyTerms[ontoId]) {
+            let hasTermsToDisplay = ontologyTerms[ontoId].some(term => term.visible && annot.term.includes(term.id));
+            if (!hasTermsToDisplay) {
+              return; // do not display
+            }
+          }
         }
         styles.push(state.style.multipleTermsStyle);
       } else {
@@ -623,7 +628,30 @@ export default {
     // 新增ontologyTerms相关的getters
     imageOntologyTerms: state => state.ontologyTerms,
 
-    getTermsByOntologyId: state => ontologyId => state.ontologyTerms[ontologyId] || []
+    getTermsByOntologyId: state => ontologyId => state.ontologyTerms[ontologyId] || [],
+
+    terms: (state) => {
+      if (!state.ontologies || !Array.isArray(state.ontologies)) {
+        return [];
+      }
+
+      let allTerms = [];
+      for (const ontology of state.ontologies) {
+        if (ontology && ontology.children && Array.isArray(ontology.children)) {
+          const terms = getAllTerms(ontology);
+          // 为每个term添加ontologyId属性
+          const termsWithOntologyId = terms.map(term => ({
+            ...term,
+            ontologyId: ontology.id
+          }));
+          allTerms = allTerms.concat(termsWithOntologyId);
+        }
+      }
+      console.log('allTerms:', allTerms);
+      return allTerms;
+    },
+
+    ontologies: (state) => state.ontologies,
   },
 
   modules: {

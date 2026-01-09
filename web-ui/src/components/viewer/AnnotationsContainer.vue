@@ -18,9 +18,15 @@
     </a-collapse> -->
     <!-- <similar-annotation v-if="showSimilarAnnotations" :image="image" :index="index" @select="selectAnnotation"
       @updateTermsOrTracks="updateTermsOrTracks" /> -->
-    <annotation-details-container v-if="isPanelDisplayed('annotation-main')" class="dark-content" :index="index"
-      @select="selectAnnotation" @centerView="centerView({ annot: $event, sameView: true })" @addTerm="addTerm"
-      @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks" @updateProperties="updateProperties"
+    <annotation-details-container 
+      v-if="isPanelDisplayed('annotation-main')" 
+      :index="index" 
+      @select="selectAnnotation"
+      @centerView="centerView({ annot: $event, sameView: true })" 
+      @addTerm="addTerm"
+       @addTrack="addTrack"
+      @updateTermsOrTracks="updateTermsOrTracks" 
+      @updateProperties="updateProperties" 
       @delete="handleDeletion" />
   </div>
 </template>
@@ -189,13 +195,16 @@ export default {
   right: 0.1rem;
   width: 20rem;
   height: auto;
-  overflow: auto;
-  overflow-y: auto;
+  max-height: calc(100vh - 15rem); // 设置最大高度为视窗高度减去顶部偏移
+  overflow: visible; // 改为visible，防止内容被裁剪
+  overflow-y: visible; // 同样设置为visible
 
   background-color: $dark-bg-primary;
   color: $dark-text-primary;
   opacity: 0.95;
   border-radius: 1%;
+  box-sizing: border-box; // 添加box-sizing以确保padding和border包含在元素的总宽高内
+  z-index: 10; // 确保组件在其他元素之上
 }
 
 .dark-collapse {
@@ -223,10 +232,11 @@ export default {
   border-top: 0;
 }
 
-.dark-content {
-  background-color: $dark-bg-primary !important;
-  color: $dark-text-primary !important;
-}
+// .dark-content {
+//   background-color: $dark-bg-primary !important;
+//   color: $dark-text-primary !important;
+//   height: 100% !important;
+// }
 
 .annotations-container :deep(.ant-collapse-content-box) {
   padding: 0 !important;

@@ -64,12 +64,12 @@
             <color-manipulation class="panel-options" v-show="activePanel === 'colors'" :index="index" />
           </li>
 
-          <li v-if="isPanelDisplayed('ontology')">
+          <!-- <li v-if="isPanelDisplayed('ontology')">
             <a @click="togglePanel('ontology')" :class="{ active: activePanel === 'ontology' }">
               <i class="fa fa-tags" aria-hidden="true"></i>
             </a>
             <ontology-panel class="panel-options" v-show="activePanel === 'ontology'" :index="index" />
-          </li>
+          </li> -->
 
           <li v-if="isPanelDisplayed('ontology')">
             <a @click="togglePanel('ontology-terms')" :class="{ active: activePanel === 'ontology-terms' }">
@@ -204,7 +204,7 @@
                 :layers-to-preload="layersToPreload" />
             </li>
 
-            <li v-if="isPanelDisplayed('ontology') && terms && terms.length > 0">
+            <li v-if="isPanelDisplayed('ontology')>
               <a @click="togglePanel('ontology')" :class="{ active: activePanel === 'ontology' }">
                 <i class="fas fa-hashtag"></i>
               </a>
@@ -407,9 +407,6 @@ export default {
     },
     projectionName() {
       return `CYTO-${this.image.id}`;
-    },
-    terms() {
-      return this.$store.getters['currentProject/terms'];
     },
     selectedLayers() {
       return this.imageWrapper.layers.selectedLayers || [];
@@ -820,7 +817,7 @@ export default {
           }
           return;
         case 'toggle-ontology':
-          if (this.isPanelDisplayed('ontology') && this.terms && this.terms.length > 0) {
+          if (this.isPanelDisplayed('ontology')) {
             this.togglePanel('ontology');
           }
           return;
