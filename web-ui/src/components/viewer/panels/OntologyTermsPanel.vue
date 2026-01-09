@@ -39,8 +39,8 @@
 
         <div class="ontology-tree-wrapper">
           <div class="header-tree">
-            <b-input v-model="searchStrings[currentOntology.id]" :placeholder="$t('search-placeholder')" size="is-small"
-              expanded />
+            <!-- <b-input v-model="searchStrings[currentOntology.id]" :placeholder="$t('search-placeholder')" size="is-small"
+              expanded /> -->
 
             <div class="sidebar-tree">
               <div class="visibility">
@@ -325,7 +325,7 @@ export default {
   border: 1px solid #eee;
   border-radius: 4px;
   padding: 0.5em;
-  width: 20rem;
+  width: 22rem;
 }
 
 .ontology-header {
