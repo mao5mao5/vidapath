@@ -185,6 +185,19 @@ export default {
       }
       return list || [];
     },
+    
+    // 根据term.id从ontologyTerms中查找对应term的getter
+    getTermByIdFromOntologyTerms: (state) => (termId) => {
+      for (let ontoId in state.ontologyTerms) {
+        if (state.ontologyTerms[ontoId]) {
+          const foundTerm = state.ontologyTerms[ontoId].find(term => term.id === termId);
+          if (foundTerm) {
+            return foundTerm;
+          }
+        }
+      }
+      return null;
+    }
   }
 };
 

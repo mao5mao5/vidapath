@@ -348,7 +348,7 @@ created() {
 @import '../../assets/styles/dark-variables';
 
 .ontology-tree {
-  padding: 0 0 2px 0;
+  padding: 0;
 }
 
 .ontology-tree .tree-checkbox {

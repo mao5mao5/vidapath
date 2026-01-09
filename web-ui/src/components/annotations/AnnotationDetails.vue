@@ -156,7 +156,6 @@
                   :ontologies="ontologies" 
                   :searchString="addTermString"
                   :selectedNodes="annotation.term" 
-                  :allowNew="true" 
                   @newTerm="newTerm" 
                   @select="addTerm"
                   @unselect="removeTerm" />

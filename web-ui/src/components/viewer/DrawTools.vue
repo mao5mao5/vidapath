@@ -39,22 +39,19 @@
         @click="showTermSelector = !showTermSelector"
         :title="disabledDrawMessage"
       >
-        <span class="icon is-small"><i class="fa fa-tag" aria-hidden="true"></i></span>
+        <span class="icon is-small"><i class="fa fa-hashtag" aria-hidden="true"></i></span>
       </button>
 
       <div class="color-preview" :style="{background: backgroundTermsNewAnnot}">
         <span v-if="termsToAssociate.length > 1">{{termsToAssociate.length}}</span>
       </div>
 
-      <div class="ontology-tree-container" v-show="showTermSelector">
-        <b-input v-model="searchStringTerm" :placeholder="$t('search-placeholder')" size="is-small" />
-        <ontology-tree
-          class="ontology-tree"
-          v-model="termsToAssociate"
-          :ontologies="ontologies"
-          :searchString="searchStringTerm"
-        />
-      </div>
+      <ontology-tree
+        class="ontology-tree-container" v-show="showTermSelector"
+        v-model="termsToAssociate"
+        :ontologies="ontologies"
+        :searchString="searchStringTerm"
+      />
     </div>
     <!-- <div
       v-if="tracks && maxRank > 1"
@@ -1302,10 +1299,11 @@ export default {
   top: 100%;
   left: -1.5em;
   margin-top: 5px;
-  min-width: 18em;
+  min-width: 20em;
   max-width: 20vw;
   max-height: 40vh;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .term-selection .ontology-tree-container, .track-selection .tracks-tree-container {
@@ -1386,10 +1384,6 @@ $colorActiveIcon: #fff;
     .control {
       margin: 0.75em;
       margin-bottom: 0;
-    }
-
-    .ontology-tree, .track-tree {
-      padding: 0.75em 0;
     }
 
     .sl-vue-tree-sidebar {

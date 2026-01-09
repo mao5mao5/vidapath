@@ -13,55 +13,34 @@
  limitations under the License.-->
 
 <template>
-  <div ref="playground">
-      <div class="annotation-details-container">
-        <annotation-details
-          v-if="selectedFeature?.properties?.annot?.hasOwnProperty('user')"
-          :index="index"
-          :annotation="annot"
-          :terms="terms"
-          :images="images"
-          :slices="slices"
-          :profiles="profiles"
-          :tracks="tracks"
-          :users="allUsers"
-          :showImageInfo="false"
-          :showChannelInfo="showChannelInfo"
-          :key="selectedFeature.id"
-          :showComments="showComments"
-          @addTerm="$emit('addTerm', $event)"
-          @addTrack="$emit('addTrack', $event)"
-          @updateTerms="$emit('updateTermsOrTracks', annot)"
-          @updateTracks="$emit('updateTermsOrTracks', annot)"
-          @updateProperties="$emit('updateProperties')"
-          @select="$emit('select', $event)"
-          @centerView="$emit('centerView', ($event) ? $event : annot)"
-          @deletion="$emit('delete', annot)"
-        />
-
-        <!-- <annotation-simple-details
-          v-else
-          :annotation="selectedFeature?.properties?.annot"
-          @centerView="$emit('centerView', ($event) ? $event : annot)"
-        /> -->
-      </div>
-      <!-- HACK for prev/next linked annotation shortkeys -->
-      <!-- <annotation-links-preview
-        v-show="false"
-        :index="index"
-        :show-main-annotation="false"
-        :show-select-all-button="false"
-        :allow-annotation-selection="true"
-        :annotation="selectedFeature.properties.annot"
-        :images="images"
-        @select="$emit('select', $event)"
-      /> -->
+  <div class="annotation-details-container" ref="playground">
+    <annotation-details v-if="selectedFeature?.properties?.annot?.hasOwnProperty('user')" 
+      :index="index"
+      :annotation="annot" 
+      :terms="terms" 
+      :images="images" 
+      :slices="slices" 
+      :profiles="profiles" 
+      :tracks="tracks"
+      :users="allUsers" 
+      :showImageInfo="false" 
+      :showChannelInfo="showChannelInfo" 
+      :key="selectedFeature.id"
+      :showComments="showComments" 
+      @addTerm="$emit('addTerm', $event)" 
+      @addTrack="$emit('addTrack', $event)"
+      @updateTerms="$emit('updateTermsOrTracks', annot)" 
+      @updateTracks="$emit('updateTermsOrTracks', annot)"
+      @updateProperties="$emit('updateProperties')"
+       @select="$emit('select', $event)"
+      @centerView="$emit('centerView', ($event) ? $event : annot)"
+       @deletion="$emit('delete', annot)" />
   </div>
 </template>
 
 <script>
 import VueDraggableResizable from 'vue-draggable-resizable';
-import {UserCollection} from '@/api';
+import { UserCollection } from '@/api';
 import AnnotationDetails from '@/components/annotations/AnnotationDetails';
 import AnnotationLinksPreview from '@/components/annotations/AnnotationLinksPreview';
 import AnnotationSimpleDetails from '@/components/viewer/annotations/AnnotationSimpleDetails';
@@ -155,17 +134,6 @@ export default {
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
 
-.annotation-details-playground {
-  position: block;
-  /* left: 3.5rem;
-  top: 3.5rem;
-  right: 4.5rem;
-  bottom: 2em; */
-  pointer-events: none; /* to allow selection of elements below it */
-  /* background: rgba(255, 255, 255, 0.2);
-  border: 2px dashed rgba(0, 0, 0, 0.5); */
-}
-
 .draggable {
   background: $dark-bg-secondary;
   display: flex;
@@ -209,7 +177,7 @@ h1 {
 
 .annotation-details-container {
   padding: 0em;
-  overflow: auto;
+  overflow-y: auto;
   height: 100%;
   background-color: $dark-bg-primary;
   color: $dark-text-primary;

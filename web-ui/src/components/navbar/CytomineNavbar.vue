@@ -36,10 +36,10 @@
           <span>{{ $t('cases') }}</span>
         </router-link>
         <router-link to="/ontology" class="navbar-item">
-          <i class="fa fa-tags"></i>
+          <i class="fa fa-hashtag"></i>
           <span>Terms</span>
         </router-link>
-        <router-link v-if="!currentUser.guestByNow" to="/storage" class="navbar-item">
+        <router-link to="/storage" class="navbar-item">
           <i class="fas fa-upload"></i>
           <span>Upload</span>
         </router-link>

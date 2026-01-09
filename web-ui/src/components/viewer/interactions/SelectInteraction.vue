@@ -105,17 +105,21 @@ export default {
         // this.$store.commit(this.imageModule + 'setShowSimilarAnnotations', false);
       }
     },
-    terms() {
-      return this.imageWrapper.style.terms || [];
+    ontologyTerms() {
+      return this.imageWrapper.style.ontologyTerms || [];
     },
     styleFunctionFactory() {
       this.imageWrapper.selectedFeatures.selectedFeatures;
       this.imageWrapper.style.layersOpacity;
-      this.terms.forEach(term => {
-        term.visible;
-        term.color;
-        term.opacity;
-      });
+      for (let ontoId in this.ontologyTerms) {
+        if (this.ontologyTerms[ontoId]) {
+          this.ontologyTerms[ontoId].forEach(term => {
+            term.visible;
+            term.color;
+            term.opacity;
+          });
+        }
+      }
       this.imageWrapper.style.displayNoTerm;
       this.imageWrapper.style.noTermOpacity;
       this.imageWrapper.draw.activeEditTool; // style is different in edit mode (vertices displayed)
