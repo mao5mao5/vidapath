@@ -1,0 +1,29 @@
+/* Notifications */
+.notifications {
+  .notification {
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding: 1.25rem 1.5rem;
+    animation: fadeIn 0.3s ease-in-out;
+
+    &.is-success {
+      background-color: #A3BE8C;
+      color: white;
+    }
+
+    &.is-danger {
+      background-color: #BF616A;
+      color: white;
+    }
+
+    &.is-warning {
+      background-color: #EBCB8B;
+      color: #2E3440;
+    }
+
+    &.is-info {
+      background-color: #88C0D0;
+      color: white;
+    }
+  }
+}

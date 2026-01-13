@@ -1,0 +1,27 @@
+/* Panel */
+
+.panel-heading {
+  border-radius: 8px 8px 0 0;
+  font-weight: 400 !important;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-bottom: 1px solid $dark-border-color;
+  padding: 0.75em 1em;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.panel-block {
+  display: block;
+  color: $dark-text-primary;
+  background-color: $dark-bg-primary;
+  padding: 1em;
+
+  &:last-of-type {
+    border-radius: 0 0 8px 8px;
+  }
+}
+
+.panel-tabs {
+  background: white;
+}

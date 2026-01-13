@@ -1,0 +1,45 @@
+/* Radio button */
+
+.radio-buttons-fullwidth .control {
+  flex: 1;
+
+  .b-radio {
+    width: 100%;
+    border-color: $radio-border-color;
+
+    &:hover:not(.is-link) {
+      background: $radio-hover-bg;
+    }
+  }
+}
+
+/* Forms */
+.input, .textarea, .select select {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+  border-radius: 8px;
+  box-shadow: none;
+  transition: all 0.2s ease-in-out;
+
+  &:focus, &:active {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.25);
+  }
+}
+
+.label {
+  color: $dark-text-secondary;
+  font-weight: 500;
+  margin-bottom: 0.75em;
+}
+
+/* Upload button (incorrect handling of z-index: -1 */
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+  .upload.control input[type=file] {
+    z-index: auto;
+    height: 100%;
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,21 @@
+/* Message */
+
+.message.is-warning {
+  background: $message-warning-bg !important;
+
+  .message-body {
+    border-color: $message-warning-border;
+  }
+
+  .icon {
+    color: $message-warning-border;
+  }
+}
+
+.message.is-success .icon {
+  color: $success;
+}
+
+.message {
+  font-size: 1em;
+}
