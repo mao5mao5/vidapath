@@ -119,16 +119,17 @@ export default {
 <style lang="scss">
 @import '~vue-multiselect/dist/vue-multiselect.min.css';
 @import '~bulma/sass/utilities/initial-variables.sass';
+@import '@/assets/styles/dark-variables.scss';
 
-.multiselect--active, .multiselect__content-wrapper {
-  z-index: 50 !important;
+.multiselect.multiselect--active, .multiselect .multiselect__content-wrapper {
+  z-index: 50;
 }
 
-.multiselect__option--selected {
-  font-weight: 600 !important;
+.multiselect .multiselect__option--selected {
+  font-weight: 600;
 }
 
-.multiselect__option--selected::before {
+.multiselect .multiselect__option--selected::before {
   content: "\f00c";
   font-family: 'Font Awesome 5 Free';
   font-size: 10px;
@@ -136,50 +137,50 @@ export default {
   left: 10px;
 }
 
-.multiselect__option {
-  padding: 6px 5px 5px 30px !important;
-  font-size: 1rem !important;
-  min-height: 30px !important;
+.multiselect .multiselect__option {
+  padding: 6px 5px 5px 30px;
+  font-size: 1rem;
+  min-height: 30px;
 }
 
-.multiselect__option:hover {
-  background: #61b2e8 !important;
-  color: white;
+.multiselect .multiselect__option:hover {
+  background: $dark-bg-primary;
+  color: $dark-text-primary;
 }
 
-.multiselect__select-all {
-  border-bottom: 1px solid #eee;
+.multiselect .multiselect__select-all {
+  border-bottom: 1px solid $dark-border-color;
   display: inline-block;
   width: 100%;
   height:100%;
 }
 
-.multiselect__placeholder, .multiselect__tags-wrap, .multiselect__single {
+.multiselect .multiselect__placeholder, .multiselect .multiselect__tags-wrap, .multiselect .multiselect__single {
   margin-bottom: 8px;
   line-height: 20px;
   vertical-align: top;
   font-size: 1rem;
 }
 
-.multiselect__tags-wrap :first-child {
+.multiselect .multiselect__tags-wrap :first-child {
   margin-left: 5px;
 }
 
-.multiselect__placeholder, .multiselect__single {
+.multiselect .multiselect__placeholder, .multiselect .multiselect__single {
   padding-left: 5px;
   position: relative;
-  padding-top: 0 !important;
+  padding-top: 0;
 }
 
-.multiselect__input {
-  font-size: 1rem !important;
+.multiselect .multiselect__input {
+  font-size: 1rem;
 }
 
-.is-danger .multiselect__tags {
+.multiselect.is-danger .multiselect__tags {
   border-color: $red;
 }
 
-.is-danger .multiselect__select::before {
+.multiselect.is-danger .multiselect__select::before {
   border-color: $red transparent transparent;
 }
 </style>

@@ -13,7 +13,7 @@
  limitations under the License.-->
 
 <template>
-  <nav class="navbar is-light" role="navigation">
+  <nav class="navbar" role="navigation">
     <div class="navbar-brand">
       <router-link :to="projects" exact class="navbar-item">
         <div class="logo-container">
@@ -218,7 +218,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+@import '../../assets/styles/dark-variables.scss';
+
 .logo-container {
   color: white;
   display: flex;
@@ -226,11 +228,7 @@ export default {
   height: 30px;
 }
 
-.navbar-brand {
-  .brand {
-    color: white;
-  }
-}
+
 
 #logo {
   height: 2rem;
@@ -240,41 +238,38 @@ export default {
   line-height: 1em;
 }
 
-/* Special styling for IE */
-@media screen and (-ms-high-contrast: active),
-(-ms-high-contrast: none) {
-  #logo {
-    height: 40px;
-    max-height: none;
-  }
-}
-
 .navbar {
   font-weight: 600;
   z-index: 500;
-  background-color: #1e2939 !important;
-  color: white !important;
+  background-color: $navbar-bg-primary !important;
+  color: $navbar-text-color !important;
 
   .fas,
   .far {
     padding-right: 0.5rem;
   }
 
+  .navbar-brand {
+    .brand {
+      color: $navbar-text-color !important;
+    }
+  }
+
   .navbar-item,
   .navbar-link {
     background-color: transparent !important;
-    color: white !important;
+    color: $navbar-text-color !important;
   }
 
   .navbar-item:hover,
   .navbar-link:hover {
-    background-color: #28364d !important;
-    color: white !important;
+    background-color: $navbar-bg-secondary !important;
+    color: $navbar-text-color !important;
   }
 
   .navbar-dropdown .navbar-item:hover {
-    background-color: #28364d !important;
-    color: white !important;
+    background-color: $navbar-bg-secondary !important;
+    color: $navbar-text-color !important;
   }
 }
 
@@ -298,5 +293,14 @@ export default {
 .patient-feild {
   font-weight: bold;
   font-size: 1.1rem;
+}
+
+/* Special styling for IE */
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+  #logo {
+    height: 40px;
+    max-height: none;
+  }
 }
 </style>

@@ -1,23 +1,5 @@
 <template>
   <div class="annotations-container">
-    <!-- <a-collapse :bordered="false" v-model="activeKey" class="dark-collapse" :expand-icon-position="right">
-      <a-collapse-panel key="container-0" header="Information" class="dark-panel">
-        <information-panel class="dark-content" :index="index" @openMetadata="togglePanel('metadata')" />
-      </a-collapse-panel>
-      <a-collapse-panel key="container-1" header="Annotation Details" class="dark-panel">
-        <annotation-details-container v-if="isPanelDisplayed('annotation-main')" class="dark-content" :index="index"
-          @select="selectAnnotation" @centerView="centerView({ annot: $event, sameView: true })" @addTerm="addTerm"
-          @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks" @updateProperties="updateProperties"
-          @delete="handleDeletion" />
-      </a-collapse-panel>
-      <a-collapse-panel key="container-2" header="Annotations List" class="dark-panel">
-        <annotations-list class="dark-content" :index="index" @select="selectAnnotation" @centerView="centerView"
-          @addTerm="addTerm" @addTrack="addTrack" @updateTermsOrTracks="updateTermsOrTracks"
-          @updateProperties="updateProperties" @delete="handleDeletion" />
-      </a-collapse-panel>
-    </a-collapse> -->
-    <!-- <similar-annotation v-if="showSimilarAnnotations" :image="image" :index="index" @select="selectAnnotation"
-      @updateTermsOrTracks="updateTermsOrTracks" /> -->
     <annotation-details-container 
       v-if="isPanelDisplayed('annotation-main')" 
       :index="index" 
@@ -37,8 +19,6 @@ import { Action, updateTermProperties, updateTrackProperties } from '@/utils/ann
 
 import WKT from 'ol/format/WKT';
 
-import InformationPanel from './panels/InformationPanel';
-import AnnotationsList from './AnnotationsList';
 import AnnotationDetailsContainer from './AnnotationDetailsContainer';
 import SimilarAnnotation from '@/components/annotations/SimilarAnnotation';
 import { listAnnotationsInGroup, updateAnnotationLinkProperties } from '@/utils/annotation-utils';
@@ -53,20 +33,11 @@ export default {
   data() {
     return {
       format: new WKT(),
-      activeKey: null,
-      right: 'right',
     };
   },
-  watch: {
-    activeKey(key) {
-      console.log(key);
-    },
-  },
   components: {
-    AnnotationsList,
     AnnotationDetailsContainer,
     SimilarAnnotation,
-    InformationPanel,
   },
   computed: {
     configUI: get('currentProject/configUI'),
@@ -207,80 +178,5 @@ export default {
   z-index: 10; // 确保组件在其他元素之上
 }
 
-.dark-collapse {
-  background-color: $dark-bg-primary;
-  border-radius: 1%;
-  overflow-y: auto;
-  max-height: fit-content;
-}
-
-.dark-collapse :deep(.ant-collapse-header) {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-radius: 4px 4px 0 0;
-}
-
-.dark-panel {
-  background-color: $dark-bg-primary;
-  border: 1px solid $dark-border-color;
-  margin-bottom: 1px;
-}
-
-.dark-panel :deep(.ant-collapse-content) {
-  background-color: $dark-bg-primary;
-  border: 1px solid $dark-border-color;
-  border-top: 0;
-}
-
-// .dark-content {
-//   background-color: $dark-bg-primary !important;
-//   color: $dark-text-primary !important;
-//   height: 100% !important;
-// }
-
-.annotations-container :deep(.ant-collapse-content-box) {
-  padding: 0 !important;
-}
-
-/* 深色模式滚动条样式 */
-.dark-content::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.dark-content::-webkit-scrollbar-track {
-  background: $dark-scrollbar-track;
-}
-
-.dark-content::-webkit-scrollbar-thumb {
-  background: $dark-scrollbar-thumb;
-  border-radius: 4px;
-}
-
-.dark-content::-webkit-scrollbar-thumb:hover {
-  background: $dark-scrollbar-thumb-hover;
-}
-
-/* 深色模式下的图标颜色 */
-.dark-collapse :deep(.anticon) {
-  color: $dark-text-primary;
-}
-
-/* 深色模式下的按钮 */
-.dark-collapse :deep(.ant-btn) {
-  background-color: $dark-button-bg;
-  border-color: $dark-button-border;
-  color: $dark-text-primary;
-}
-
-.dark-collapse :deep(.ant-btn:hover) {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-  color: $dark-text-primary;
-}
-
-/* 确保折叠面板标题文字为白色 */
-.dark-collapse :deep(.ant-collapse-header) {
-  color: $dark-text-primary !important;
-}
+/* Deep-scoped selectors for child components can be added here if needed */
 </style>

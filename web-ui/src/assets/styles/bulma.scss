@@ -35,6 +35,10 @@ html {
   border-bottom-width: 0 !important;
 }
 
+.b-table .table {
+  background-color: $dark-bg-primary !important;
+}
+
 .b-table .table th.is-sortable:not(.is-current-sort) .th-wrap::after {
   font-family: "Font Awesome 5 Free";
   content: "\f0dc";
@@ -207,5 +211,249 @@ html {
 
   .tile {
     flex-basis: auto !important;
+  }
+}
+
+/* Buttons */
+.button {
+  border-radius: 9999px; /* pill shape */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  font-weight: 600;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &.is-small {
+    font-size: 0.75rem;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  &.is-medium {
+    font-size: 1rem;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+  }
+
+  &.is-large {
+    font-size: 1.25rem;
+    padding-left: 2em;
+    padding-right: 2em;
+  }
+
+  &.is-primary {
+    background-color: $primary;
+    border-color: $primary;
+    color: white;
+
+    &:hover {
+      background-color: darken($primary, 5%);
+    }
+  }
+
+  &.is-link {
+    background-color: $dark-button-bg;
+    color: $dark-text-primary;
+    border-color: $dark-button-border;
+
+    &:hover {
+      background-color: $dark-button-hover-bg;
+      border-color: $dark-button-hover-border;
+    }
+  }
+}
+
+/* Forms */
+.input, .textarea, .select select {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+  border-radius: 8px;
+  // padding: 0.75em 1em;
+  box-shadow: none;
+  transition: all 0.2s ease-in-out;
+
+  &:focus, &:active {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.25);
+  }
+}
+
+.label {
+  color: $dark-text-secondary;
+  font-weight: 500;
+  margin-bottom: 0.75em;
+}
+
+// .checkbox, .radio {
+//   color: $dark-text-primary;
+
+//   input[type="checkbox"], input[type="radio"] {
+//     display: none;
+
+//     & + .check {
+//       display: inline-block;
+//       width: 20px;
+//       height: 20px;
+//       border-radius: 4px;
+//       border: 2px solid $dark-input-border;
+//       background-color: $dark-input-bg;
+//       margin-right: 0.5em;
+//       vertical-align: middle;
+//       cursor: pointer;
+//       position: relative;
+//       transition: all 0.2s ease-in-out;
+
+//       &:before,
+//       &:after {
+//         content: "";
+//         position: absolute;
+//         display: none;
+//       }
+//     }
+
+//     &:checked + .check {
+//       background-color: $primary;
+//       border-color: $primary;
+
+//       &:after {
+//         display: block;
+//       }
+//     }
+//   }
+// }
+
+// .checkbox {
+//   input[type="checkbox"] {
+//     & + .check:after {
+//       left: 6px;
+//       top: 2px;
+//       width: 6px;
+//       height: 12px;
+//       border: solid white;
+//       border-width: 0 2px 2px 0;
+//       transform: rotate(45deg);
+//     }
+//   }
+// }
+
+// .radio {
+//   input[type="radio"] {
+//     & + .check {
+//       border-radius: 50%;
+      
+//       &:after {
+//         left: 50%;
+//         top: 50%;
+//         transform: translate(-50%, -50%);
+//         width: 10px;
+//         height: 10px;
+//         border-radius: 50%;
+//         background-color: white;
+//       }
+//     }
+//   }
+// }
+
+/* Modals */
+.modal {
+  &.is-active {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .modal-background {
+    background-color: rgba($dark-bg-primary, 0.85);
+  }
+
+  .modal-card {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: slideInUp 0.4s ease-in-out;
+    max-width: 600px;
+
+    .modal-card-head {
+      background-color: $dark-bg-secondary;
+      border-bottom: 1px solid $dark-border-color;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      padding: 1.5rem;
+
+      .modal-card-title {
+        color: $dark-text-primary;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    }
+
+    .modal-card-body {
+      background-color: $dark-bg-primary;
+      padding: 2rem;
+    }
+
+    .modal-card-foot {
+      background-color: $dark-bg-secondary;
+      border-top: 1px solid $dark-border-color;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      padding: 1.5rem;
+      justify-content: flex-end;
+
+      .button {
+        margin-left: 1rem;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Notifications */
+.notifications {
+  .notification {
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding: 1.25rem 1.5rem;
+    animation: fadeIn 0.3s ease-in-out;
+
+    &.is-success {
+      background-color: #A3BE8C;
+      color: white;
+    }
+
+    &.is-danger {
+      background-color: #BF616A;
+      color: white;
+    }
+
+    &.is-warning {
+      background-color: #EBCB8B;
+      color: #2E3440;
+    }
+
+    &.is-info {
+      background-color: #88C0D0;
+      color: white;
+    }
   }
 }

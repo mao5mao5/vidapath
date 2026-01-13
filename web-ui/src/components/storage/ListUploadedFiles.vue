@@ -29,7 +29,7 @@
           <b-table-column :label="$t('preview')" width="80" class="image-overview">
             <image-thumbnail v-if="uFile.thumbURL" :url="uFile.thumbURL" :size="128" :key="uFile.thumbURL"
               :extra-parameters="{ Authorization: 'Bearer ' + shortTermToken }" />
-            <div v-else class="is-size-7 has-text-grey">{{ $t('no-preview-available') }}</div>
+            <div v-else class="has-text-grey">{{ $t('no-preview-available') }}</div>
           </b-table-column>
 
           <b-table-column field="originalFilename" :label="$t('filename')" sortable width="200">
@@ -164,10 +164,6 @@ export default {
 <style scoped lang="scss">
 @import '@/assets/styles/dark-variables.scss';
 
-.small-text {
-  font-size: 0.9em;
-  color: $dark-text-secondary;
-}
 
 .image-overview {
   max-height: 4em;
@@ -175,113 +171,9 @@ export default {
   color: $dark-text-primary !important;
 }
 
-.panel-block.storage {
-  min-height: 20vh;
-  position: relative;
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-.panel {
-  background-color: $dark-bg-panel;
-  color: $dark-text-primary;
-  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
-}
-
-.panel-heading {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-bottom: 1px solid $dark-border-color;
-}
-
-/* 暗色主题表格样式 */
-.table {
-  background-color: $dark-table-bg;
-  color: $dark-text-primary;
-}
-
-.table th {
-  color: $dark-text-primary;
-  background-color: $dark-bg-secondary;
-}
-
-.table td {
-  border-color: $dark-table-border;
-  color: $dark-text-primary;
-}
-
-.table tr:hover {
-  background-color: $dark-table-hover-bg;
-}
-
-.table tr:nth-child(even) {
-  background-color: $dark-bg-tertiary;
-}
-
-.table tr:nth-child(even):hover {
-  background-color: $dark-table-hover-bg;
-}
-
-/* 暗色主题按钮样式 */
-.button {
-  background-color: $dark-button-bg;
-  border-color: $dark-button-border;
-  color: $dark-text-primary;
-}
-
-.button:hover {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
-.button.is-link {
-  background-color: $dark-button-link-bg;
-  border-color: $dark-button-link-border;
-  color: $dark-text-primary;
-}
-
-.button.is-link:hover {
-  background-color: $dark-button-link-hover-bg;
-  border-color: $dark-button-link-hover-border;
-}
-
-.button.is-danger {
-  background-color: $dark-button-danger-bg;
-  border-color: $dark-button-danger-border;
-  color: $dark-text-primary;
-}
-
-.button.is-danger:hover {
-  background-color: $dark-button-danger-hover-bg;
-  border-color: $dark-button-danger-hover-border;
-}
-
-.button.is-small {
-  font-size: 0.75rem;
-}
-
-.buttons.is-right {
-  justify-content: flex-end;
-}
-
 /* 暗色主题输入框样式 */
 .search-uploaded-file {
   max-width: 25em;
-}
-
-.search-uploaded-file input {
-  background-color: $dark-input-bg;
-  border-color: $dark-input-border;
-  color: $dark-text-primary;
-}
-
-.search-uploaded-file input::placeholder {
-  color: $dark-text-disabled;
-}
-
-.search-uploaded-file input:focus {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.125em rgba(104, 153, 208, 0.25);
 }
 
 /* 暗色主题通用样式 */
@@ -289,48 +181,25 @@ export default {
   color: $dark-text-disabled !important;
 }
 
-.is-size-7 {
-  font-size: 0.875rem;
-}
-</style>
-
-<style lang="scss">
-@import '@/assets/styles/dark-variables.scss';
-
-.storage-wrapper .upload-draggable .button {
-  margin-bottom: 0;
-  background-color: $dark-button-bg;
-  border-color: $dark-button-border;
+::v-deep .table {
+  background-color: $dark-bg-primary;
   color: $dark-text-primary;
 }
 
-.storage-wrapper .upload-draggable .button:hover {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
-.storage-wrapper .upload-draggable {
-  margin-right: 0.75em;
-  position: relative;
-  bottom: 4px;
-}
-
-.search-uploaded-file {
-  max-width: 25em;
-}
-
-.search-uploaded-file input {
+/* 暗黑模式下的输入框 */
+::v-deep .input {
   background-color: $dark-input-bg;
-  border-color: $dark-input-border;
   color: $dark-text-primary;
+  border-color: $dark-input-border;
 }
 
-.search-uploaded-file input::placeholder {
+::v-deep .input::placeholder {
   color: $dark-text-disabled;
 }
 
-.search-uploaded-file input:focus {
+::v-deep .input:focus {
   border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.125em rgba(104, 153, 208, 0.25);
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
 }
 </style>
+

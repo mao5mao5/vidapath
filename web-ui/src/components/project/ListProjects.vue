@@ -21,7 +21,7 @@
     </div>
     <div v-else-if="!loading" class="panel">
       <div class="panel-heading">
-        <strong style="font-size: 1.2em; color: #fff;">
+        <strong class="panel-heading-title">
           {{ $t('case-management') }}
         </strong>
       </div>
@@ -1272,6 +1272,11 @@ export default {
   margin-bottom: 0;
 }
 
+.panel-heading-title {
+  font-size: 1.2em;
+  color: $dark-text-primary;
+}
+
 .buttons:not(:last-child){
   margin-bottom: 0;
 }
@@ -1530,7 +1535,7 @@ export default {
 }
 
 :deep(a:hover) {
-  color: #cccccc;
+  color: $dark-text-disabled;
 }
 
 :deep(a.button) {

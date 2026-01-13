@@ -1,50 +1,61 @@
-// 深色主题颜色变量
-$dark-bg-primary: #1e1e1e;
-$dark-bg-secondary: #2d2d2d;
-$dark-bg-tertiary: #252525;
-$dark-bg-panel: #3a3a3a;
-$dark-bg-hover: #4d4d4d;
-$dark-bg-active: #555;
-$dark-text-primary: #ffffff;
-$dark-text-secondary: #e0e0e0;
-$dark-text-disabled: #aaa;
-$dark-border-color: #3a3a3a;
-$dark-scrollbar-track: #2d2d2d;
-$dark-scrollbar-thumb: #555;
-$dark-scrollbar-thumb-hover: #777;
+// a modern Nord-themed color palette
+$dark-bg-primary: #2E3440;
+$dark-bg-secondary: #3B4252;
+$dark-bg-tertiary: #434C5E;
+$dark-bg-panel: #4C566A;
+$dark-bg-hover: #4C566A;
+$dark-bg-active: #81A1C1;
+$dark-text-primary: #ECEFF4;
+$dark-text-secondary: #E5E9F0;
+$dark-text-disabled: #D8DEE9;
+$dark-border-color: #3B4252;
+$dark-scrollbar-track: #2E3440;
+$dark-scrollbar-thumb: #4C566A;
+$dark-scrollbar-thumb-hover: #5E81AC;
 
-// 深色主题按钮颜色
-$dark-button-bg: #3a3a3a;
-$dark-button-border: #555;
-$dark-button-hover-bg: #4d4d4d;
-$dark-button-hover-border: #666;
 
-// 深色主题危险按钮颜色
-$dark-button-danger-bg: #a94442;
-$dark-button-danger-border: #873634;
-$dark-button-danger-hover-bg: #c9302c;
-$dark-button-danger-hover-border: #a72522;
+$dark-wapper-bg: #101828;
 
-// 深色主题链接按钮颜色
-$dark-button-link-bg: #3a3a3a;
-$dark-button-link-border: #555;
-$dark-button-link-hover-bg: #4d4d4d;
-$dark-button-link-hover-border: #666;
+// deep background theme
+$background-color: #1a202c;
 
-// 深色主题标签颜色
-$dark-tag-bg: #3a3a3a;
-$dark-tag-border: #555;
-$dark-tag-hover-bg: #4d4d4d;
+// buttons
+$dark-button-bg: #4C566A;
+$dark-button-border: #5E81AC;
+$dark-button-hover-bg: #5E81AC;
+$dark-button-hover-border: #81A1C1;
 
-// 深色主题输入框颜色
-$dark-input-bg: #2d2d2d;
-$dark-input-border: #555;
-$dark-input-focus-border: #6899d0;
-$dark-input-focus-shadow: rgba(104, 153, 208, 0.25);
+// danger buttons
+$dark-button-danger-bg: #BF616A;
+$dark-button-danger-border: #BF616A;
+$dark-button-danger-hover-bg: #d08770;
+$dark-button-danger-hover-border: #d08770;
 
-// 深色主题表格颜色
-$dark-table-bg: #2d2d2d;
-$dark-table-hover-bg: #3a3a3a;
-$dark-table-border: #3a3a3a;
+// links
+$dark-button-link-bg: transparent;
+$dark-button-link-border: transparent;
+$dark-button-link-hover-bg: #434C5E;
+$dark-button-link-hover-border: #434C5E;
+
+// tags
+$dark-tag-bg: #4C566A;
+$dark-tag-border: #5E81AC;
+$dark-tag-hover-bg: #5E81AC;
+
+// inputs
+$dark-input-bg: #2E3440;
+$dark-input-border: #3B4252;
+$dark-input-focus-border: #88C0D0;
+$dark-input-focus-shadow: rgba(136, 192, 208, 0.25);
+
+// tables
+$dark-table-bg: #2E3440;
+$dark-table-hover-bg: #3B4252;
+$dark-table-border: #3B4252;
+
+// navbar
+$navbar-bg-primary: #1e2939;
+$navbar-bg-secondary: #28364d;
+$navbar-text-color: #ffffff;
 
 $details-font-size: 0.8em;
