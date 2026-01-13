@@ -211,7 +211,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/styles/main.scss';
+@import './assets/styles/main.scss';
+@import './assets/styles/dark-variables.scss';
 
 @font-face {
   font-family: 'cytomine';
@@ -228,8 +229,8 @@ body {
 
 body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif, sans-serif;
-  color: #333;
-  background: #d4d4d4;
+  color: $dark-text-primary;
+  background: $dark-bg-secondary;
 }
 
 .wrapper {
@@ -237,7 +238,7 @@ body {
   height: 100%;
   width: 100%;
   flex-direction: column;
-  background: #101828;
+  background: $dark-wapper-bg;
 }
 
 .box.error {
@@ -251,7 +252,7 @@ body {
 }
 
 .notification.info {
-  background: #77b1ea;
+  background: $primary;
 }
 
 .bottom {
@@ -282,7 +283,7 @@ h2 {
 }
 
 .input[readonly] {
-  background-color: #2d2d2d;
+  background-color: $dark-bg-primary;
 }
 
 strong,
@@ -299,7 +300,7 @@ strong,
 /* Filters */
 
 .filters {
-  background: #f8f8f8;
+  background: $dark-bg-secondary;
   margin-top: 1.2rem;
   border-radius: 10px;
   padding: 1rem;

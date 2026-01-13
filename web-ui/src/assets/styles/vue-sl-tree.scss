@@ -1,3 +1,5 @@
+@import './colors.scss';
+
 .sl-vue-tree {
   position: relative;
   -webkit-touch-callout: none;
@@ -59,13 +61,13 @@
 
 .sl-vue-tree-cursor {
   position: absolute;
-  border: 1px dashed #61b2e8;
+  border: 1px dashed $dark-primary;
   height: 1px;
   width: 100%;
 }
 
 .sl-vue-tree-node-item.sl-vue-tree-cursor-inside {
-  outline: 1px dashed #61b2e8;
+  outline: 1px dashed $dark-primary;
 }
 
 .sl-vue-tree-drag-info {

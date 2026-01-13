@@ -47,7 +47,7 @@
             </a>
             <rotation-selector class="panel-options" v-show="activePanel === 'rotation'" :index="index" />
           </li>
-          <a-divider />
+          <hr class="is-divider">
 
           <li>
             <a @click="togglePanel('layers')" :class="{ active: activePanel === 'layers' }">
@@ -92,7 +92,7 @@
             <properties-panel class="panel-options" v-show="activePanel === 'properties'" :index="index" />
           </li> -->
 
-          <a-divider />
+          <hr class="is-divider">
           <li v-if="isPanelDisplayed('info')">
             <a @click="togglePanel('info')" :class="{ active: ['info', 'metadata'].includes(activePanel) }">
               <i class="fas fa-info"></i>
