@@ -289,6 +289,7 @@ export default {
 
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
+@import '../../assets/styles/colors.scss';
 
 .pathology-viewer.dark-theme {
   padding: 10px;
@@ -297,8 +298,8 @@ export default {
 .panel {
   width: 380px;
   border: 1px solid $dark-border-color;
-  border-radius: 6px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border-radius: 8px; // Standardized
+  // font-family removed to inherit global
   background: $dark-bg-primary;
   color: $dark-text-primary;
 }
@@ -426,7 +427,7 @@ input:checked+.slider:before {
 
 .link {
   font-size: 14px;
-  color: #64B5F6;
+  color: $primary;
   cursor: pointer;
   display: inline-block;
   margin-top: 8px;
@@ -436,57 +437,6 @@ input:checked+.slider:before {
   margin: 5px 0;
   font-size: 14px;
   line-height: 1.4;
-  color: $dark-text-primary;
-}
-
-/* Modal Styles */
-.modal-card {
-  max-width: 500px;
-  width: auto;
-  margin: 0 auto;
-}
-
-.modal-card-head {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-bottom: 1px solid $dark-border-color;
-}
-
-.modal-card-body {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-.modal-card-foot {
-  background-color: $dark-bg-secondary;
-  border-top: 1px solid $dark-border-color;
-}
-
-.modal-card-title {
-  color: $dark-text-primary;
-}
-
-.field {
-  margin-bottom: 1rem;
-}
-
-.label {
-  color: $dark-text-primary;
-}
-
-.select select {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
-}
-
-.select select:focus {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
-}
-
-.select option {
-  background-color: $dark-bg-primary;
   color: $dark-text-primary;
 }
 
@@ -502,49 +452,6 @@ input:checked+.slider:before {
 }
 
 .run-algorithm-controls .select select {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
   width: 100%;
-}
-
-.run-algorithm-controls .select select:focus {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
-}
-
-.run-algorithm-controls .select option {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-/* Button Styles */
-.button {
-  background-color: $dark-button-bg;
-  border-color: $dark-button-border;
-  color: $dark-text-primary;
-}
-
-.button:hover {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
-.button.is-primary {
-  background-color: #4CAF50;
-  border-color: transparent;
-  color: white;
-}
-
-.button.is-primary:hover {
-  background-color: #45a049;
-  border-color: transparent;
-  color: white;
-}
-
-.button.is-primary:disabled {
-  background-color: $dark-button-bg;
-  border-color: $dark-button-border;
-  color: $dark-text-disabled;
 }
 </style>

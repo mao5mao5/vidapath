@@ -33,7 +33,7 @@ limitations under the License.-->
     <div class="panel-block">
       <div class="search-block">
         <b-input
-            class="search-images"
+            class="search-input"
             v-model="searchString"
             :placeholder="$t('search-placeholder')"
             type="search" icon="search"
@@ -336,23 +336,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.panel-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.search-block {
-  display: flex;
-}
-
->>> .search-images {
-  max-width: 30rem;
-  margin-right: 1rem;
-}
-
->>> td, >>> th {
-  vertical-align: middle !important;
-}
-</style>

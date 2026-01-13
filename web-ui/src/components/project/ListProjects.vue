@@ -35,7 +35,7 @@
               My cases
             </button>
           </div>
-          <b-input class="search-projects" v-model="searchString" placeholder="Search cases..." type="search"
+          <b-input class="search-input" v-model="searchString" placeholder="Search cases..." type="search"
             icon="search" />
           <button class="button" @click="toggleFilterDisplay()">
             <span class="icon">
@@ -1341,11 +1341,6 @@ export default {
   flex: 1;
   min-width: 120px;
   margin-right: 5px;
-}
-
-.search-projects {
-  max-width: 25em;
-  margin-right: 1em;
 }
 
 .table-projects {

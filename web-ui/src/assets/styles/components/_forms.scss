@@ -22,6 +22,24 @@
   box-shadow: none;
   transition: all 0.2s ease-in-out;
 
+  &::placeholder {
+    color: rgba($dark-text-primary, 0.5);
+  }
+
+  /* Fix for some browsers/Bulma versions */
+  &::-webkit-input-placeholder {
+    color: rgba($dark-text-primary, 0.5);
+  }
+  &:-moz-placeholder {
+    color: rgba($dark-text-primary, 0.5);
+  }
+  &::-moz-placeholder {
+    color: rgba($dark-text-primary, 0.5);
+  }
+  &:-ms-input-placeholder {
+    color: rgba($dark-text-primary, 0.5);
+  }
+
   &:focus, &:active {
     border-color: $primary;
     box-shadow: 0 0 0 3px rgba($primary, 0.25);

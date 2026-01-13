@@ -9,6 +9,11 @@
   padding: 0.75em 1em;
   font-weight: 600;
   font-size: 1.1em;
+  
+  /* Flex layout for titles with actions */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .panel-block {

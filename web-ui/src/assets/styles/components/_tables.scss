@@ -28,6 +28,7 @@
       background-color: $dark-bg-secondary;
       color: $dark-text-primary;
       border-color: $dark-border-color;
+      vertical-align: middle;
     }
   }
 
@@ -49,6 +50,7 @@
     td {
       border-color: $dark-border-color;
       color: $dark-text-primary;
+      vertical-align: middle;
     }
   }
   
@@ -56,6 +58,7 @@
     th {
       border-color: $dark-border-color;
       color: $dark-text-primary;
+      vertical-align: middle;
     }
   }
 }

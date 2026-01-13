@@ -14,7 +14,7 @@
 
 <template>
   <div>
-    <table class="table" s>
+    <table class="table properties-table">
       <tbody>
         <!-- <tr v-if="currentAccount.isDeveloper">
           <td><strong>{{ $t('id') }}</strong></td>
@@ -290,33 +290,14 @@ export default {
 @import '../../../assets/styles/dark-variables';
 
 .table {
-  margin-bottom: 0 !important;
   width: 100%;
   table-layout: fixed;
-  color: $dark-text-primary;
-  background-color: transparent;
-  border-collapse: collapse;
-  border-color: $dark-table-border;
 }
 
-.table th,
-.table td {
-  word-wrap: break-word;
-  vertical-align: middle;
-  color: $dark-text-primary;
-  border-color: $dark-table-border;
-
-}
-
-td:first-child {
-  width: 10em;
-  color: $dark-text-primary;
-}
-
-td:first-child strong {
-  color: $dark-text-primary;
-  border-color: $dark-table-border;
-}
+// Override properties-table specific to this panel if needed, or rely on global.
+// The global properties-table uses width: 1% for label. 
+// This panel had width: 10em. 
+// Let's stick to global for consistency, or add a specific override if wrapping is bad.
 
 .buttons-wrapper {
   padding: 0;

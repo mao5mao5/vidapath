@@ -33,7 +33,7 @@
     <div class="panel-block">
       <div class="search-block">
         <b-input
-          class="search-images"
+          class="search-input"
           v-model="searchString"
           :placeholder="$t('search-placeholder')"
           type="search" icon="search"
@@ -493,28 +493,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.panel-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-::v-deep .image-thumbnail {
-  max-height: 4rem;
-  max-width: 10rem;
-}
-
-.search-block {
-  display: flex;
-}
-
-::v-deep .search-images {
-  max-width: 30rem;
-  margin-right: 1rem;
-}
-
-::v-deep td, ::v-deep th {
-  vertical-align: middle !important;
-}
-</style>

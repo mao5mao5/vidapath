@@ -18,7 +18,7 @@
     <p> {{ $t('unexpected-error-info-message') }} </p>
   </b-message>
   <div v-else>
-    <table class="table">
+    <table class="table properties-table">
       <b-loading :is-full-page="false" :active="loading" class="small" />
       <tbody v-if="!loading">
         <tr v-if="isPropDisplayed('imagesPreview')">
@@ -54,7 +54,7 @@
           <button class="delete" aria-label="close" @click="showDetailModal = false"></button>
         </header>
         <section class="modal-card-body">
-          <table class="table is-fullwidth">
+          <table class="table is-fullwidth properties-table">
             <tbody>
               <!-- <tr v-if="currentAccount.isDeveloper">
                 <td class="prop-label">{{ $t('id') }}</td>
@@ -174,7 +174,7 @@
           <button class="delete" aria-label="close" @click="showPatientInfoModal = false"></button>
         </header>
         <section class="modal-card-body">
-          <table class="table is-fullwidth">
+          <table class="table is-fullwidth properties-table">
             <tbody>
               <tr>
                 <td class="prop-label">Patient ID</td>
@@ -473,66 +473,3 @@ export default {
   }
 };
 </script>
-
-<style scoped lang="scss">
-@import '../../assets/styles/dark-variables.scss';
-
-.table {
-  background: none;
-  position: relative;
-  height: 3em;
-}
-
-td.prop-label {
-  white-space: nowrap;
-  font-weight: 600;
-  width: 5%;
-}
-
-td.prop-content {
-  display: flex;
-  width: 100%;
-}
-
-.prop-label {
-  font-weight: bold;
-}
-
-.modal-card {
-  min-width: 400px;
-  width: auto;
-  margin: 0 auto;
-}
-
-.modal-card-head {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-bottom: 1px solid $dark-border-color;
-}
-
-.modal-card-body {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-  max-height: 70vh;
-}
-
-.modal-card-foot {
-  background-color: $dark-bg-secondary;
-  border-top: 1px solid $dark-border-color;
-}
-
-.modal-card-title {
-  color: $dark-text-primary;
-}
-
-.modal-card-foot button {
-  background-color: $dark-button-bg;
-  border-color: $dark-button-border;
-  color: $dark-text-primary;
-}
-
-.modal-card-foot button:hover {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-</style>
