@@ -213,11 +213,6 @@ export default {
 <style lang="scss">
 @import './assets/styles/main.scss';
 
-@font-face {
-  font-family: 'cytomine';
-  src: url('assets/cytomine-font.woff') format('woff');
-}
-
 html,
 body {
   height: 100vh;
@@ -257,7 +252,7 @@ body {
 .bottom {
   flex: 1;
   overflow-y: auto;
-  /* position: relative; */
+  position: relative; 
 }
 
 h1 {

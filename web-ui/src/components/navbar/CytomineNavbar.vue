@@ -228,16 +228,6 @@ export default {
   height: 30px;
 }
 
-
-
-#logo {
-  height: 2rem;
-  font-family: "cytomine";
-  font-size: 2em;
-  font-weight: lighter;
-  line-height: 1em;
-}
-
 .navbar {
   font-weight: 600;
   z-index: 500;
