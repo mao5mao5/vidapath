@@ -480,6 +480,7 @@ export default {
   },
   data() {
     return {
+      defaultPreviewColor: '#434C5E', // corresponds to $dark-bg-tertiary
       showTermSelector: false,
       format: new WKT(),
       searchStringTerm: '',
@@ -541,7 +542,7 @@ export default {
       if (this.termsToAssociate.length === 1) {
         return this.terms.find(term => this.termsToAssociate[0] === term.id).color;
       } else {
-        return '#e2e2e2';
+        return this.defaultPreviewColor;
       }
     },
     tracks() {
@@ -562,7 +563,7 @@ export default {
       if (this.tracksToAssociate.length === 1) {
         return this.tracks.find(track => this.tracksToAssociate[0] === track.id).color;
       } else {
-        return '#e2e2e2';
+        return this.defaultPreviewColor;
       }
     },
     activeTool: {
@@ -1351,7 +1352,7 @@ export default {
 <style lang="scss">
 @import '../../assets/styles/dark-variables.scss';
 
-$colorActiveIcon: #fff;
+$colorActiveIcon: $dark-text-primary;
 
 .draw-tools-wrapper {
   .special-paste-selection .special-paste-container {
@@ -1392,7 +1393,7 @@ $colorActiveIcon: #fff;
   }
 
   .button.is-selected {
-    background-color: #6899d0;
+    background-color: $dark-bg-primary;
     color: $colorActiveIcon;
 
     path {
