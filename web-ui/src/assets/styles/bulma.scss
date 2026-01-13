@@ -35,6 +35,10 @@ html {
   border-bottom-width: 0 !important;
 }
 
+.b-table .table {
+  background-color: $dark-bg-primary !important;
+}
+
 .b-table .table th.is-sortable:not(.is-current-sort) .th-wrap::after {
   font-family: "Font Awesome 5 Free";
   content: "\f0dc";
