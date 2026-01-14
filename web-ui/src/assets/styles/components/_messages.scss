@@ -1,21 +1,53 @@
 /* Message */
 
-.message.is-warning {
-  background: $message-warning-bg !important;
-
-  .message-body {
-    border-color: $message-warning-border;
-  }
-
-  .icon {
-    color: $message-warning-border;
-  }
-}
-
-.message.is-success .icon {
-  color: $success;
-}
-
 .message {
   font-size: 1em;
+  background-color: $dark-bg-secondary;
+  border-radius: 6px;
+  
+  .message-body {
+    background-color: $dark-bg-secondary;
+    color: $dark-text-primary;
+    border-radius: 6px;
+    padding: 1em;
+    border-width: 1px;
+    border-style: solid;
+  }
+
+  &.is-warning {
+    background: $message-warning-bg !important;
+    .message-body {
+      border-color: $message-warning-border;
+    }
+    .icon {
+      color: $message-warning-border;
+    }
+  }
+
+  &.is-success {
+    .message-body {
+      border-color: $success;
+    }
+    .icon {
+      color: $success;
+    }
+  }
+
+  &.is-info {
+    .message-body {
+      border-color: $info;
+    }
+    .icon {
+      color: $info;
+    }
+  }
+
+  &.is-danger {
+    .message-body {
+      border-color: $danger;
+    }
+    .icon {
+      color: $danger;
+    }
+  }
 }
