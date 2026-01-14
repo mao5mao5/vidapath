@@ -25,7 +25,7 @@
     <div class="panel-block">
       <div class="search-block">
         <b-input
-          class="search-projects"
+          class="search-input"
           v-model="searchString"
           :placeholder="$t('search-placeholder')"
           type="search"
@@ -416,26 +416,23 @@ export default {
 };
 </script>
 
-<style scoped>
-.search-block {
-  display: flex;
-  background: #fff;
-  padding: 0.5em 0.75em;
-}
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
 
 .legend {
   margin-top: 0.8rem;
   margin-bottom: 1rem;
   border-radius: 10px;
   padding: 1rem 1.5em;
-  background: #f8f8f8;
+  background: $dark-bg-tertiary;
+  color: $dark-text-primary;
 }
 
 .legend p:not(:last-child) {
   margin-bottom: 0.4em;
 }
 
->>> .image-thumbnail {
+::v-deep .image-thumbnail {
   max-height: 4rem;
   max-width: 10rem;
 }
