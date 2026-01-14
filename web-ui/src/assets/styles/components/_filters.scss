@@ -1,0 +1,22 @@
+/* Filters Block */
+.filters {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
+  padding: 1rem;
+  border-bottom: 1px solid $dark-border-color;
+
+  &:not(:last-child) {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.filter-label {
+  color: $dark-text-primary;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.filter.column {
+  padding: 0.4em 0.75em;
+}

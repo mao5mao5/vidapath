@@ -1285,21 +1285,6 @@ export default {
   display: flex;
 }
 
-/* 暗黑模式下的过滤器区域 */
-.filters {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-  padding: 1rem;
-  border-bottom: 1px solid $dark-border-color;
-}
-
-.filter-label {
-  color: $dark-text-primary;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
 .status-not-ready {
   background-color: pink;
   color: white;
