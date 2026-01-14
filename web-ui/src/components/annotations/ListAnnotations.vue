@@ -832,14 +832,6 @@ export default {
   margin-bottom: 1em;
 }
 
-.filters:not(:last-child) {
-  margin-bottom: 1.25rem;
-}
-
-.filter.column {
-  padding: 0.4em 0.75em;
-}
-
 .button {
   display: block;
   margin: auto;
