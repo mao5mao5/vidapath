@@ -512,6 +512,24 @@ export default {
 </script>
 
 <style scoped>
+.table {
+  background: none;
+  position: relative;
+  margin-bottom: 0 !important;
+}
+
+td.prop-label {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+td.prop-content {
+  width: 100%;
+}
+
+td.prop-content-half {
+  width: 50%;
+}
 .format {
   text-transform: uppercase;
 }
