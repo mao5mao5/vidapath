@@ -2,10 +2,10 @@
 .card {
   background-color: $dark-bg-secondary;
   border: 1px solid $dark-border-color;
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
   color: $dark-text-primary;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
 
@@ -13,7 +13,7 @@
     background-color: $dark-bg-secondary;
     border-bottom: 1px solid $dark-border-color;
     box-shadow: none;
-    
+
     .card-header-title {
       color: $dark-text-primary;
     }
@@ -23,9 +23,10 @@
     background-color: $dark-bg-primary;
     color: $dark-text-primary;
     flex-grow: 1;
-    
+
     .content {
       color: $dark-text-primary;
+
       strong {
         color: $dark-text-primary;
       }
@@ -39,11 +40,11 @@
     .card-footer-item {
       color: $dark-text-primary;
       border-right: 1px solid $dark-border-color;
-      
+
       &:hover {
         background-color: $dark-bg-hover;
       }
-      
+
       &:last-child {
         border-right: none;
       }
@@ -53,5 +54,10 @@
   &:hover {
     border-color: $primary;
     box-shadow: 0 4px 8px rgba($primary, 0.2);
+  }
+
+  &.active {
+    border-color: $primary;
+    /* 选中状态显示蓝色边框 */
   }
 }

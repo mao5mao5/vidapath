@@ -29,6 +29,8 @@
       color: $dark-text-primary;
       border-color: $dark-border-color;
       vertical-align: middle;
+      padding: 1rem 1.25rem;
+      font-weight: 600;
     }
   }
 
@@ -36,6 +38,7 @@
     tr {
       background-color: $dark-bg-primary;
       color: $dark-text-primary;
+      transition: background-color 0.2s ease-in-out;
 
       &.is-selected {
         background-color: $dark-bg-active;
@@ -51,6 +54,7 @@
       border-color: $dark-border-color;
       color: $dark-text-primary;
       vertical-align: middle;
+      // padding: 1rem 1.25rem;
     }
   }
   
@@ -93,4 +97,32 @@
 .detail-container {
   padding: 0.45rem !important;
   font-size: 0.9rem !important;
+}
+
+/* Pagination Footer */
+.b-table {
+  .pagination-footer {
+    background-color: $dark-bg-secondary;
+    border-top: 1px solid $dark-border-color;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+    .pagination {
+      margin-bottom: 0;
+      flex-grow: 1;
+      justify-content: flex-end;
+
+      .pagination-list {
+        justify-content: flex-end;
+      }
+    }
+
+    .level-left {
+      margin-bottom: 0;
+    }
+  }
 }

@@ -29,7 +29,7 @@
         <!-- <button class="button" v-if="nbImagesDisplayed < nbFilteredImages" @click="more()">
           {{$t('button-more')}}
         </button> -->
-        <div class="space">&nbsp;</div>
+        <!-- <div class="space">&nbsp;</div> -->
       </div>
   </div>
 </template>
@@ -253,28 +253,27 @@ export default {
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
 
-
-  /* 定义滚动条样式 */
+/* 定义滚动条样式 */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #101828 !important;
+  background: $dark-wapper-bg !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1f2f4e !important;
+  background: $dark-scrollbar-thumb !important;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2d436f !important;
+  background: $dark-scrollbar-thumb-hover !important;
 }
 
 .image-selector-wrapper {
-  background-color: #101828; /* dark-bg-primary */
+  background-color: $dark-wapper-bg;
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   display: flex;
   flex-direction: column;
@@ -283,80 +282,11 @@ export default {
   z-index: 150;
   overflow-y: auto;
   overflow-x: hidden;
-  border-right: 1px solid $dark-text-disabled;
-}
-
-
-
-.header {
-  padding: 0.75em;
-  padding-bottom: 0;
-  padding-top: 0;
-  display: flex;
-  justify-content: space-between;
-}
-
-.header div {
-  display: flex;
-  align-items: baseline;
-}
-
-.header .filter-label {
-  margin-right: 0.5em;
-}
-
-.search-images {
-  margin-right: 1em;
-}
-
-.search {
-  margin-top: 0.25em;
-}
-
-.filters {
-  display: flex;
-  padding: 0;
-  background: None;
-}
-
-.filter-label {
-  font-size: 0.9em;
-  margin-top: 0.7rem;
-  margin-left: 1em;
-  margin-right: 0.5em;
-}
-
-.delete {
-  margin-top: 1.2rem;
-}
-
-.image-selector {
-  width: 100%;
-  overflow: auto;
-  display: flex;
-  align-items: center;
-  flex: 1;
+  border-right: 1px solid $dark-border-color;
 }
 
 .card {
-  background-color: #101828;
-  display: inline-block;
-  min-width: 12em;
-  flex: 0;
-  box-sizing: border-box;
-  margin: 0.75em;
-  border: 2px solid #203153;
-  border-radius: 8px;
-  transition: all 0.3s ease; /* 添加过渡效果 */
-}
-
-.card:hover {
-  border-color: #409eff; /* 鼠标悬停时显示蓝色边框 */
-  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.2); /* 添加蓝色阴影 */
-}
-
-.card.active {
-  border-color: #409eff; /* 选中状态显示蓝色边框 */
+  margin: 0.25em;
 }
 
 .card-image {
@@ -371,36 +301,9 @@ export default {
 }
 
 .card-content {
-  padding: 0.1em;
-  font-size: 0.8rem;
-  overflow-wrap: break-word;
+  padding: 0.5em;
+  font-size: 0.9rem;
   overflow: hidden;
   text-align: center;
-  color: white !important; /* 提高样式优先级 */
-  height: 2em;
-}
-
-.content {
-  text-align: center;
-  color: white !important; /* 提高样式优先级 */
-  font-size: 0.8rem;
-  overflow-wrap: break-word;
-  overflow: hidden;
-  height: 5em;
-}
-
-.space {
-  margin-left: 0.5em;
-}
-
-/* .image-selector-button has been removed as it's no longer needed with a-layout-sider */
-
-/* .active {
-  box-shadow: 0 2px 3px rgba(16, 133, 210, 0.75), 0 0 0 1px rgba(39, 120, 173, 0.75);
-  font-weight: 600;
-} */
-
-.no-result {
-  margin: 2em;
 }
 </style>

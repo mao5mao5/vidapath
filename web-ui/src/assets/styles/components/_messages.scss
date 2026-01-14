@@ -42,12 +42,34 @@
     }
   }
 
-  &.is-danger {
-    .message-body {
-      border-color: $danger;
+    &.is-danger {
+
+      .message-body {
+
+        border-color: $danger;
+
+      }
+
+      .icon {
+
+        color: $danger;
+
+      }
+
     }
-    .icon {
-      color: $danger;
-    }
+
   }
-}
+
+  
+
+  .box.error {
+
+    max-width: 600px;
+
+    margin: auto;
+
+    margin-top: 3rem;
+
+  }
+
+  

@@ -18,6 +18,11 @@
   border-color: $dark-input-border;
 }
 
+.multiselect__single {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+}
+
 .multiselect__input {
   background-color: $dark-input-bg;
   color: $dark-text-primary;
@@ -27,10 +32,16 @@
   color: $dark-text-disabled;
 }
 
+.multiselect__content-wrapper {
+  background-color: $dark-bg-secondary;
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
 .multiselect__content {
   background-color: $dark-bg-secondary;
   color: $dark-text-primary;
-  border-color: $dark-border-color;
+  border: none;
 }
 
 .multiselect__element {

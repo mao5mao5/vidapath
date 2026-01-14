@@ -46,9 +46,22 @@
   }
 }
 
+.input[readonly] {
+  background-color: $dark-bg-primary;
+}
+
+.select:not(.is-multiple):not(.is-loading) {
+  &:after {
+    border-color: $dark-text-primary;
+  }
+  &:hover:after {
+    border-color: $dark-text-primary;
+  }
+}
+
 .label {
   color: $dark-text-secondary;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 0.75em;
 }
 
