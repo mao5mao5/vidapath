@@ -30,3 +30,15 @@
 .panel-tabs {
   background: white;
 }
+
+/* Box (Generic Container) */
+.box {
+  background-color: $dark-bg-secondary; // Use secondary for boxes to distinguish from primary bg
+  color: $dark-text-primary;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
+  
+  &.error {
+    background-color: $dark-bg-secondary;
+    border-color: $dark-border-color;
+  }
+}

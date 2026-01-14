@@ -31,7 +31,7 @@
         <div class="panel-block">
           <div class="panel-heading-buttons">
 
-            <b-input class="search-block" v-model="searchString" placeholder="Search terms..." type="search"
+            <b-input class="search-input" v-model="searchString" placeholder="Search terms..." type="search"
               icon="search" />
 
             <button class="button" @click="creationModal = true" v-if="!currentUser.guestByNow">
@@ -225,7 +225,7 @@ export default {
   margin-bottom: 1rem;
 }
 
-.search-block {
+.search-input {
   max-width: 25em;
   margin-right: 1em;
 }
