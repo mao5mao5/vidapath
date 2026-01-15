@@ -34,7 +34,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .content-wrapper {
   height: 100%;
 }
@@ -43,5 +45,6 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: $dark-bg-primary;
 }
 </style>

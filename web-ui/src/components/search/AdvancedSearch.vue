@@ -20,7 +20,7 @@
 <div v-else class="content-wrapper">
   <div class="panel">
     <p class="panel-heading">
-      {{$t('advanced-search')}}
+      <strong class="panel-title">{{$t('advanced-search')}}</strong>
     </p>
     <div class="panel-block">
       <div class="search-block">
@@ -418,6 +418,11 @@ export default {
 
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
+
+.panel-title {
+  font-size: 1.2em;
+  color: $dark-text-primary;
+}
 
 .legend {
   margin-top: 0.8rem;

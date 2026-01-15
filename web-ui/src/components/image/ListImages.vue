@@ -25,7 +25,7 @@
   <b-loading :is-full-page="false" :active="loading" />
   <div v-if="!loading" class="panel">
     <p class="panel-heading">
-      {{$t('images')}}
+      <strong class="panel-title">{{$t('images')}}</strong>
       <button v-if="canAddImage" class="button is-link" @click="addImageModal = true">
         {{$t('button-add-image')}}
       </button>
@@ -492,11 +492,18 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .panel-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.panel-title {
+  font-size: 1.2em;
+  color: $dark-text-primary;
 }
 
 ::v-deep .image-thumbnail {

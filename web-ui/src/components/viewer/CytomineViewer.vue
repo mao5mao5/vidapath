@@ -318,17 +318,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .cytomine-viewer {
   display: flex;
   height: 100%;
-}
-
-.ae-sidebar {
-  width: 24rem;
-  border-right-color: #333;
-  border-right-width: 1px;
-  border-right-style: solid;
 }
 
 .maps-wrapper {
@@ -338,21 +333,26 @@ export default {
   flex-wrap: wrap;
   position: relative;
   overflow: hidden;
+  background-color: $dark-wapper-bg;
 }
 
 .map-cell {
   overflow: hidden;
+  border: 1px solid $dark-border-color;
+  box-sizing: border-box;
+
+  &.highlighted {
+    border: 4px solid $primary;
+    box-shadow: 0 0 0 2px rgba($primary, 0.3);
+  }
 }
 
 .hidden {
   display: none;
 }
 
-.highlighted {
-  border: 6px solid #0099ff;
-}
-
 .no-result {
   margin: 2em;
+  color: $dark-text-primary;
 }
 </style>

@@ -341,26 +341,33 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../../assets/styles/dark-variables';
+
 h1 {
   text-transform: initial;
   letter-spacing: initial;
   font-weight: 400;
   font-size: 1.8rem;
   margin-bottom: 0.7rem;
+  color: $dark-text-primary;
 }
 
 li {
   margin-bottom: 0.5em;
+  color: $dark-text-primary;
 }
 
-.image-thumbnail {
+::v-deep .image-thumbnail {
   max-height: 4rem;
   max-width: 10rem;
 }
 
 .box {
   position: relative;
+  background-color: $dark-bg-primary;
+  border: 1px solid $dark-border-color;
+  color: $dark-text-primary;
 }
 
 .last-update {
@@ -378,9 +385,20 @@ li {
   height: 18em;
   position: relative;
 }
+
+.level-item {
+  .heading {
+    color: $dark-text-secondary;
+  }
+  .title {
+    color: $dark-text-primary;
+  }
+}
 </style>
 
 <style lang="scss">
+@import '../../../assets/styles/dark-variables';
+
 .user-activity-wrapper {
   .table-wrapper {
     margin-bottom: 0;
@@ -399,6 +417,10 @@ li {
   .field-label {
     margin-right: 1em !important;
     padding-top: 0 !important;
+    
+    .label {
+      color: $dark-text-primary;
+    }
   }
 }
 </style>

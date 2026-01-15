@@ -18,8 +18,10 @@
   <template v-if="!loading">
   <div class="panel">
     <p class="panel-heading">
-      <i class="fas fa-user" aria-hidden="true"></i>
-      {{ $t('profile') }}
+      <strong class="panel-title">
+        <i class="fas fa-user" aria-hidden="true"></i>
+        {{ $t('profile') }}
+      </strong>
     </p>
     <div class="panel-block">
       <form @submit.prevent="editDetails()" data-vv-scope="profile">
@@ -88,8 +90,10 @@
 
   <div class="panel">
     <p class="panel-heading">
-      <i class="fas fa-briefcase" aria-hidden="true"></i>
-      {{ $t('password') }}
+      <strong class="panel-title">
+        <i class="fas fa-briefcase" aria-hidden="true"></i>
+        {{ $t('password') }}
+      </strong>
     </p>
     <div class="panel-block">
         <b-message v-if="credentialsError || this.passwordCredentials === null" type="is-danger" has-icon icon-size="is-small">
@@ -271,114 +275,24 @@ export default {
   max-width: 80em;
   margin-left: auto;
   margin-right: auto;
-  background-color: $dark-bg-primary;
-  border: 1px solid $dark-border-color;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+  
+  // Transition for subtle interactions if needed
+  transition: box-shadow 0.3s ease;
+  
+  &:hover {
+     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
 }
 
-.panel:hover {
-  border-color: #409eff;
-  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.2);
-}
-
-.panel-heading {
-  background-color: $dark-bg-secondary;
-  border-bottom: 1px solid $dark-border-color;
+.panel-title {
   color: $dark-text-primary;
-  border-radius: 8px 8px 0 0;
-}
-
-.panel-block {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-  border-radius: 0 0 8px 8px;
-}
-
-.fas {
-  margin-right: 0.3em;
-  color: $dark-text-primary;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 input.hidden {
   display: none;
-}
-
-.field-label {
-  color: $dark-text-primary;
-}
-
-.field {
-  margin-bottom: 1rem;
-}
-
-.label {
-  color: $dark-text-primary;
-}
-
-.control .input {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
-}
-
-.control .input:focus {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
-}
-
-.control .select select {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
-}
-
-.control .select select:focus {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
-}
-
-.button {
-  background-color: $dark-button-bg;
-  border-color: $dark-button-border;
-  color: $dark-text-primary;
-}
-
-.button:hover {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
-.button.is-link {
-  background-color: #409eff;
-  border-color: #409eff;
-  color: white;
-}
-
-.button.is-link:hover {
-  background-color: #338fef;
-  border-color: #338fef;
-}
-
-.tag {
-  background-color: $dark-tag-bg;
-  color: $dark-text-primary;
-}
-
-.message {
-  background-color: $dark-bg-secondary;
-  border: 1px solid $dark-border-color;
-  border-radius: 4px;
-}
-
-.message.is-danger {
-  background-color: $dark-button-danger-bg;
-  color: $dark-text-primary;
-}
-
-.message-body {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
 }
 </style>

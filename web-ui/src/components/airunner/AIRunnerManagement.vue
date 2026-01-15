@@ -3,7 +3,7 @@
     <b-loading :is-full-page="false" :active="loading" />
     <div class="panel" v-if="!loading">
       <div class="panel-heading">
-        <strong style="font-size: 1.2em; color: #fff;">
+        <strong class="panel-title">
           AI algorithm management
         </strong>
       </div>
@@ -255,6 +255,11 @@ export default {
 
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
+
+.panel-title {
+  font-size: 1.2em;
+  color: $dark-text-primary;
+}
 
 .columns.is-multiline {
   display: flex;

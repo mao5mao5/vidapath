@@ -222,7 +222,7 @@
               <div v-if="editingProjectId === project.id" class="field">
                 <b-dropdown v-model="projectRepresentatives[project.id]" multiple append-to-body>
                   <template #trigger="{ active }">
-                    <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'" style="color:royalblue;">
+                    <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'">
                       Select users
                     </b-button>
                   </template>
@@ -339,7 +339,7 @@
             </button>
           </div>
         </section>
-        <footer class="modal-card-foot" style="justify-content: flex-end;">
+        <footer class="modal-card-foot">
           <button class="button" @click="bulkActionModal = false">{{ $t('button-close') }}</button>
         </footer>
       </div>
@@ -360,20 +360,20 @@
             <div class="control">
               <b-dropdown v-model="bulkRepresentatives" multiple>
                 <template #trigger="{ active }">
-                  <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'" style="color:royalblue;"
+                  <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'"
                     expanded>
                     {{ bulkRepresentatives.length > 0 ? `${bulkRepresentatives.length} selected` : 'Select users' }}
                   </b-button>
                 </template>
 
-                <b-dropdown-item style="color: black;" v-for="user in allUsers" :key="user.id" :value="user.id">
+                <b-dropdown-item v-for="user in allUsers" :key="user.id" :value="user.id">
                   <span>{{ user.name }}</span>
                 </b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
         </section>
-        <footer class="modal-card-foot" style="justify-content: flex-end;">
+        <footer class="modal-card-foot">
           <button class="button" @click="assignToModal = false">{{ $t('button-cancel') }}</button>
           <button class="button is-primary" @click="confirmBulkAssign" :disabled="bulkRepresentatives.length === 0">
             {{ $t('button-confirm') }}
@@ -406,7 +406,7 @@
             </div>
           </div>
         </section>
-        <footer class="modal-card-foot" style="justify-content: flex-end;">
+        <footer class="modal-card-foot">
           <button class="button" @click="aiRunnerSelectionModal = false">{{ $t('button-cancel') }}</button>
           <button class="button is-primary" :disabled="!selectedAIRunner" @click="confirmRunAI">
             {{ $t('button-confirm') }}
@@ -439,7 +439,7 @@
             </div>
           </div>
         </section>
-        <footer class="modal-card-foot" style="justify-content: flex-end;">
+        <footer class="modal-card-foot">
           <button class="button" @click="singleAIRunnerSelectionModal = false">{{ $t('button-cancel') }}</button>
           <button class="button is-primary" :disabled="!selectedSingleAIRunner" @click="confirmSingleRunAI">
             {{ $t('button-confirm') }}
@@ -1286,7 +1286,7 @@ export default {
 }
 
 .status-not-ready {
-  background-color: pink;
+  background-color: $dark-button-danger-bg;
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -1294,7 +1294,7 @@ export default {
 }
 
 .status-ready {
-  background-color: orange;
+  background-color: #D08770; // Nord Aurora Orange
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -1302,7 +1302,7 @@ export default {
 }
 
 .status-reviewed {
-  background-color: darkgreen;
+  background-color: #A3BE8C; // Nord Aurora Green
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -1320,20 +1320,15 @@ export default {
   display: flex;
   flex-wrap: wrap;
   margin-right: 5px;
-}
 
-.bulk-actions .button {
-  flex: 1;
-  min-width: 120px;
-  margin-right: 5px;
+  .button {
+    flex: 1;
+    min-width: 120px;
+    margin-right: 5px;
+  }
 }
 
 .table-projects {
   margin-top: 1rem;
-}
-
-.list-projects-wrapper td,
-.list-projects-wrapper th {
-  vertical-align: middle !important;
 }
 </style>

@@ -16,7 +16,7 @@
   <div class="content-wrapper">
     <div class="panel">
       <p class="panel-heading">
-        <strong style="font-size: 1.2em; color: #fff;">
+        <strong class="panel-title">
           {{ $t('upload') }}
         </strong>
       </p>
@@ -464,43 +464,46 @@ export default {
 <style scoped lang="scss">
 @import "../../assets/styles/dark-variables.scss";
 
+.panel-title {
+  font-size: 1.2em;
+  color: $dark-text-primary;
+}
+
 .small-text {
   font-size: 0.9em;
+  color: $dark-text-secondary;
+  line-height: 1.5;
 }
 
 .upload-table {
   position: relative;
   bottom: 0.4em;
-}
 
-.upload-table td {
-  vertical-align: middle !important;
-  color: $dark-text-primary;
-  background-color: $dark-bg-secondary;
-}
+  td {
+    vertical-align: middle !important;
+    color: $dark-text-primary;
+    background-color: $dark-bg-secondary;
+  }
 
-.upload-table td {
-  vertical-align: middle !important;
-}
+  td:first-child {
+    width: 20vw;
+  }
 
-.upload-table td:first-child {
-  width: 20vw;
-}
+  td:nth-child(2) {
+    width: 10em;
+  }
 
-.upload-table td:nth-child(2) {
-  width: 10em;
-}
+  td:nth-child(3) {
+    width: 15vw;
+  }
 
-.upload-table td:nth-child(3) {
-  width: 15vw;
-}
+  td:last-child .field {
+    justify-content: flex-end;
+  }
 
-.upload-table td:last-child .field {
-  justify-content: flex-end;
-}
-
-.upload-table td:last-child .control {
-  text-align: right;
+  td:last-child .control {
+    text-align: right;
+  }
 }
 
 .buttons {
@@ -509,13 +512,6 @@ export default {
   gap: 0.5rem;
   justify-content: center;
   margin-top: 1rem;
-}
-
-.button[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
 }
 
 .has-text-grey {
@@ -527,19 +523,14 @@ export default {
   text-align: right;
 }
 
-.small-text {
-  color: $dark-text-secondary;
-  line-height: 1.5;
-}
-
 .fa-info-circle {
   color: #209cee;
   margin-left: 0.3em;
   cursor: pointer;
   transition: color 0.2s ease;
-}
 
-.fa-info-circle:hover {
-  color: #4dabf7;
+  &:hover {
+    color: lighten(#209cee, 10%);
+  }
 }
 </style>

@@ -105,9 +105,13 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .tab-content {
   position: relative;
   min-height: 20em;
+  background-color: $dark-bg-primary;
+  border: 1px solid $dark-border-color;
 }
 </style>

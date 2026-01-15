@@ -137,7 +137,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .project-activity-wrapper {
   height: 100%;
   display: flex;

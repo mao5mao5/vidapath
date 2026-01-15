@@ -25,7 +25,7 @@ limitations under the License.-->
   <b-loading :is-full-page="false" :active="loading" />
   <div v-if="!loading" class="panel">
     <p class="panel-heading">
-      {{$t('image-groups')}}
+      <strong class="panel-title">{{$t('image-groups')}}</strong>
       <button v-if="canAddImage" class="button is-link" @click="addImageGroupModal = true">
         {{$t('button-add-image-group')}}
       </button>
@@ -335,4 +335,32 @@ export default {
   }
 };
 </script>
+
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-title {
+  font-size: 1.2em;
+  color: $dark-text-primary;
+}
+
+.search-block {
+  display: flex;
+}
+
+::v-deep .search-input {
+  max-width: 30rem;
+  margin-right: 1rem;
+}
+
+::v-deep td, ::v-deep th {
+  vertical-align: middle !important;
+}
+</style>
 
