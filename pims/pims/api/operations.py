@@ -37,7 +37,7 @@ from pims.api.utils.response import serialize_cytomine_model
 from pims.config import Settings, get_settings
 from pims.files.archive import make_zip_archive
 from pims.files.file import Path
-from pims.importer.dataset import run_import_datasets, run_import_datasets_easy
+from pims.importer.dataset import run_import_datasets_easy
 from pims.importer.importer import run_import
 from pims.importer.listeners import CytomineListener
 from pims.schemas.auth import ApiCredentials, CytomineAuth
@@ -45,6 +45,7 @@ from pims.schemas.operations import ImportResponse
 from pims.tasks.queue import Task, send_task
 from pims.utils.iterables import ensure_list
 from pims.utils.strings import unique_name_generator
+from redis import Redis
 
 router = APIRouter(prefix=get_settings().api_base_path)
 
@@ -64,31 +65,37 @@ def import_datasets(
     """
     Import datasets from a predefined folder without moving the data.
     """
+    # 尝试获取锁，互斥自动扫描和手动导入
+    redis_client = Redis.from_url(config.cache_url, decode_responses=True)
+    lock_key = config.import_lock_key
+    # NX=True ensures we only set it if it doesn't exist, ex=1800 (30min) prevents deadlock
+    if not redis_client.set(lock_key, "locked", ex=1800, nx=True):
+        raise CytomineProblem("Import is currently running (either manual or auto-scan). Please try again later.")
 
-    if not os.path.exists(WRITING_PATH):
-        os.makedirs(WRITING_PATH)
+    try:
+        if not os.path.exists(WRITING_PATH):
+            os.makedirs(WRITING_PATH)
 
-    cytomine_logger.info(f"{request.method} {request.url.path}?{request.url.query}")
+        cytomine_logger.info(f"{request.method} {request.url.path}?{request.url.query}")
 
-    cytomine_auth = CytomineAuth(
-        host=INTERNAL_URL_CORE,
-        public_key=config.cytomine_public_key,
-        private_key=config.cytomine_private_key,
-    )
+        cytomine_auth = CytomineAuth(
+            host=INTERNAL_URL_CORE,
+            public_key=config.cytomine_public_key,
+            private_key=config.cytomine_private_key,
+        )
 
-    public_key, signature = parse_authorization_header(request.headers)
-    token = parse_request_token(request)
-    api_credentials = ApiCredentials(
-        public_key=public_key,
-        token=token,
-        signature=signature,
-    )
+        public_key, signature = parse_authorization_header(request.headers)
+        token = parse_request_token(request)
+        api_credentials = ApiCredentials(
+            public_key=public_key,
+            token=token,
+            signature=signature,
+        )
 
-    # 根据配置决定使用哪个导入方法
-    if config.use_easy_import:
         return run_import_datasets_easy(cytomine_auth, api_credentials, storage_id)
-    else:
-        return run_import_datasets(cytomine_auth, api_credentials, storage_id)
+    finally:
+        redis_client.delete(lock_key)
+
 
 
 @router.post('/upload', tags=['Import'])
