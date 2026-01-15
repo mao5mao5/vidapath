@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="panel">
       <div class="panel-heading">
-        {{ $t('configuration') }}
+        <strong class="panel-title">{{ $t('configuration') }}</strong>
         <button class="button is-link" @click="showModal = true">{{ $t('add-store') }}</button>
       </div>
       <section class="panel-block">
@@ -120,22 +120,29 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables.scss';
+
 .fas {
   font-size: 2rem;
 }
 
 .fas.fa-check-square {
-  color: green;
+  color: $success;
 }
 
 .fas.fa-times-circle {
-  color: red;
+  color: $danger;
 }
 
 .panel-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.panel-title {
+  font-size: 1.2em;
+  color: $dark-text-primary;
 }
 </style>

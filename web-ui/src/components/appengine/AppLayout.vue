@@ -49,12 +49,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables.scss';
+
 .app-container {
   display: flex;
   height: 100%;
   flex: 1;
-  background: #d4d4d4;
+  background: $dark-wapper-bg;
   overflow-y: auto;
   position: relative;
 }
