@@ -3,7 +3,7 @@
     <b-loading :is-full-page="false" :active="loading" />
     <div class="panel" v-if="!loading">
       <div class="panel-heading">
-        <strong style="font-size: 1.2em; color: #fff;">
+        <strong class="panel-title">
           AI algorithm management
         </strong>
       </div>
@@ -256,247 +256,11 @@ export default {
 <style scoped lang="scss">
 @import '../../assets/styles/dark-variables';
 
-.airunner-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: $dark-bg-secondary;
-  border: 1px solid $dark-border-color;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-.airunner-card:hover {
-  border-color: #409eff;
-  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.2);
-}
-
-.card-header {
-  background-color: $dark-bg-secondary;
-  border-bottom: 1px solid $dark-border-color;
-}
-
-.card-header-title {
-  color: $dark-text-primary;
-  background-color: $dark-bg-secondary;
-}
-
-.card-content {
-  flex-grow: 1;
-  background-color: $dark-bg-primary;
+.panel-title {
+  font-size: 1.2em;
   color: $dark-text-primary;
 }
 
-.content {
-  color: $dark-text-primary;
-}
-
-.content strong {
-  color: $dark-text-primary;
-}
-
-.card-footer {
-  background-color: $dark-bg-secondary;
-  border-top: 1px solid $dark-border-color;
-}
-
-.card-footer-item {
-  color: $dark-text-primary;
-  background-color: $dark-bg-secondary;
-  border-color: $dark-border-color;
-  cursor: pointer;
-}
-
-.card-footer-item:hover {
-  background-color: $dark-bg-hover;
-}
-
-.title {
-  color: $dark-text-primary;
-}
-
-.level {
-  background-color: $dark-bg-primary;
-}
-
-.level-left .title {
-  color: $dark-text-primary;
-}
-
-.button {
-  background-color: $dark-button-bg;
-  border-color: $dark-button-border;
-  color: $dark-text-primary;
-}
-
-.button:hover {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
-.button.is-primary {
-  background-color: #409eff;
-  border-color: #409eff;
-  color: white;
-}
-
-.button.is-primary:hover {
-  background-color: #338fef;
-  border-color: #338fef;
-}
-
-.has-text-centered .subtitle {
-  color: $dark-text-primary;
-}
-
-.modal-card-head {
-  background-color: $dark-bg-secondary;
-  border-bottom: 1px solid $dark-border-color;
-}
-
-.modal-card-title {
-  color: $dark-text-primary;
-}
-
-.modal-card-body {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-.modal-card-foot {
-  background-color: $dark-bg-secondary;
-  border-top: 1px solid $dark-border-color;
-}
-
-.field {
-  margin-bottom: 1rem;
-}
-
-.label {
-  color: $dark-text-primary;
-}
-
-.control .input {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
-}
-
-.control .input:focus {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
-}
-
-.control .textarea {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
-}
-
-.control .textarea:focus {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
-}
-
-.delete:before,
-.delete:after {
-  background-color: $dark-text-primary;
-}
-
-.delete:hover:before,
-.delete:hover:after {
-  background-color: #cccccc;
-}
-
-/* Panel-specific styles to match Storage component */
-.panel {
-  background-color: $dark-bg-primary;
-  border: 1px solid $dark-border-color;
-  border-radius: 6px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.panel-heading {
-  background-color: $dark-bg-secondary;
-  border-bottom: 1px solid $dark-border-color;
-  border-radius: 6px 6px 0 0;
-  padding: 0.75em 1em;
-  font-weight: 600;
-  font-size: 1.1em;
-  color: $dark-text-primary;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.panel-block {
-  background-color: $dark-bg-primary;
-  padding: 1.5em;
-  color: $dark-text-primary;
-}
-
-.columns {
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.column {
-  color: $dark-text-primary;
-}
-
-.subtitle {
-  color: $dark-text-primary;
-}
-
-/* Card styles within panel */
-.card {
-  background-color: $dark-bg-secondary;
-  border: 1px solid $dark-border-color;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.card:hover {
-  border-color: #409eff;
-  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.2);
-}
-
-.card-header {
-  background-color: $dark-bg-tertiary;
-  border-bottom: 1px solid $dark-border-color;
-  padding: 0.75rem;
-}
-
-.card-header-title {
-  color: $dark-text-primary;
-  font-weight: 600;
-}
-
-.card-content {
-  padding: 1.5rem;
-}
-
-.card-footer {
-  background-color: $dark-bg-tertiary;
-  border-top: 1px solid $dark-border-color;
-}
-
-.card-footer-item {
-  color: $dark-text-primary;
-  border-right: 1px solid $dark-border-color;
-}
-
-.card-footer-item:last-child {
-  border-right: none;
-}
-
-.card-footer-item:hover {
-  background-color: $dark-bg-hover;
-}
-
-/* Column layout for cards */
 .columns.is-multiline {
   display: flex;
   flex-wrap: wrap;
@@ -513,5 +277,9 @@ export default {
     flex: 0 0 100%;
     max-width: 100%;
   }
+}
+
+.level-right {
+  margin-bottom: 1rem;
 }
 </style>

@@ -35,7 +35,7 @@
               My cases
             </button>
           </div>
-          <b-input class="search-projects" v-model="searchString" placeholder="Search cases..." type="search"
+          <b-input class="search-input" v-model="searchString" placeholder="Search cases..." type="search"
             icon="search" />
           <button class="button" @click="toggleFilterDisplay()">
             <span class="icon">
@@ -222,7 +222,7 @@
               <div v-if="editingProjectId === project.id" class="field">
                 <b-dropdown v-model="projectRepresentatives[project.id]" multiple append-to-body>
                   <template #trigger="{ active }">
-                    <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'" style="color:royalblue;">
+                    <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'">
                       Select users
                     </b-button>
                   </template>
@@ -339,7 +339,7 @@
             </button>
           </div>
         </section>
-        <footer class="modal-card-foot" style="justify-content: flex-end;">
+        <footer class="modal-card-foot">
           <button class="button" @click="bulkActionModal = false">{{ $t('button-close') }}</button>
         </footer>
       </div>
@@ -360,20 +360,20 @@
             <div class="control">
               <b-dropdown v-model="bulkRepresentatives" multiple>
                 <template #trigger="{ active }">
-                  <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'" style="color:royalblue;"
+                  <b-button type="is-text" :icon-right="active ? 'angle-up' : 'angle-down'"
                     expanded>
                     {{ bulkRepresentatives.length > 0 ? `${bulkRepresentatives.length} selected` : 'Select users' }}
                   </b-button>
                 </template>
 
-                <b-dropdown-item style="color: black;" v-for="user in allUsers" :key="user.id" :value="user.id">
+                <b-dropdown-item v-for="user in allUsers" :key="user.id" :value="user.id">
                   <span>{{ user.name }}</span>
                 </b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
         </section>
-        <footer class="modal-card-foot" style="justify-content: flex-end;">
+        <footer class="modal-card-foot">
           <button class="button" @click="assignToModal = false">{{ $t('button-cancel') }}</button>
           <button class="button is-primary" @click="confirmBulkAssign" :disabled="bulkRepresentatives.length === 0">
             {{ $t('button-confirm') }}
@@ -406,7 +406,7 @@
             </div>
           </div>
         </section>
-        <footer class="modal-card-foot" style="justify-content: flex-end;">
+        <footer class="modal-card-foot">
           <button class="button" @click="aiRunnerSelectionModal = false">{{ $t('button-cancel') }}</button>
           <button class="button is-primary" :disabled="!selectedAIRunner" @click="confirmRunAI">
             {{ $t('button-confirm') }}
@@ -439,7 +439,7 @@
             </div>
           </div>
         </section>
-        <footer class="modal-card-foot" style="justify-content: flex-end;">
+        <footer class="modal-card-foot">
           <button class="button" @click="singleAIRunnerSelectionModal = false">{{ $t('button-cancel') }}</button>
           <button class="button is-primary" :disabled="!selectedSingleAIRunner" @click="confirmSingleRunAI">
             {{ $t('button-confirm') }}
@@ -1285,19 +1285,8 @@ export default {
   display: flex;
 }
 
-/* 暗黑模式下的过滤器区域 */
-.filters {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-}
-
-.filter-label {
-  color: $dark-text-primary;
-}
-
 .status-not-ready {
-  background-color: pink;
+  background-color: $dark-button-danger-bg;
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -1305,7 +1294,7 @@ export default {
 }
 
 .status-ready {
-  background-color: orange;
+  background-color: #D08770; // Nord Aurora Orange
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -1313,240 +1302,11 @@ export default {
 }
 
 .status-reviewed {
-  background-color: darkgreen;
+  background-color: #A3BE8C; // Nord Aurora Green
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
   font-weight: bold;
-}
-
-/* 暗黑模式下的表格样式 - 统一定义 */
-:deep(.table), 
-.table-projects :deep(.table) {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-:deep(.table tr), 
-.table-projects :deep(.table tr) {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-:deep(.table tr:hover), 
-.table-projects :deep(.table tr:hover) {
-  background-color: $dark-bg-hover;
-}
-
-:deep(.table th), 
-.table-projects :deep(.table th) {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-}
-
-:deep(.table td), 
-.table-projects :deep(.table td) {
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-}
-
-/* 暗黑模式下的分页控件 */
-:deep(.pagination) {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-}
-
-:deep(.pagination .button) {
-  background-color: $dark-button-bg;
-  color: $dark-text-primary;
-  border-color: $dark-button-border;
-}
-
-:deep(.pagination .button:hover) {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
-:deep(.pagination .button[disabled]) {
-  background-color: $dark-bg-tertiary;
-  color: $dark-text-disabled;
-  border-color: $dark-border-color;
-}
-
-/* 暗黑模式下的输入框 */
-:deep(.input) {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
-}
-
-:deep(.input::placeholder) {
-  color: $dark-text-disabled;
-}
-
-:deep(.input:focus) {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
-}
-
-/* 暗黑模式下的按钮 - 统一定义 */
-:deep(.button) {
-  background-color: $dark-button-bg;
-  color: $dark-text-primary;
-  border-color: $dark-button-border;
-}
-
-:deep(.button:hover) {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
-:deep(.button.is-link),
-:deep(.button.is-small) {
-  background-color: $dark-button-bg;
-  color: $dark-text-primary;
-  border-color: $dark-button-border;
-}
-
-:deep(.button.is-link:hover),
-:deep(.button.is-small:hover) {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
-/* 暗黑模式下的多选框 */
-:deep(.multiselect) {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
-}
-
-:deep(.multiselect:focus) {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
-}
-
-:deep(.multiselect__tags) {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
-}
-
-:deep(.multiselect__input) {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-}
-
-:deep(.multiselect__input::placeholder) {
-  color: $dark-text-disabled;
-}
-
-:deep(.multiselect__content) {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-}
-
-:deep(.multiselect__element) {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-}
-
-:deep(.multiselect__element:hover) {
-  background-color: $dark-bg-hover;
-}
-
-:deep(.multiselect__option) {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-}
-
-:deep(.multiselect__option:hover) {
-  background-color: $dark-bg-hover;
-}
-
-:deep(.multiselect__option--selected) {
-  background-color: $dark-button-bg;
-  color: $dark-text-primary;
-}
-
-:deep(.multiselect__option--selected:hover) {
-  background-color: $dark-button-hover-bg;
-}
-
-/* 暗黑模式下的滑块 */
-:deep(.slider) {
-  background-color: $dark-bg-tertiary;
-}
-
-:deep(.slider .slider-track) {
-  background-color: $dark-bg-panel;
-}
-
-:deep(.slider .slider-fill) {
-  background-color: $dark-button-bg;
-}
-
-:deep(.slider .slider-thumb) {
-  background-color: $dark-text-primary;
-  border-color: $dark-button-border;
-}
-
-:deep(.slider .slider-thumb:hover) {
-  background-color: $dark-text-primary;
-  border-color: $dark-button-hover-border;
-}
-
-/* 暗黑模式下的折叠面板 */
-:deep(.collapse) {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-:deep(.collapse .collapse-trigger) {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-}
-
-:deep(.collapse .collapse-content) {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-}
-
-/* 暗黑模式下的加载动画 */
-:deep(.loading) {
-  background-color: rgba(30, 30, 30, 0.7);
-  color: $dark-text-primary;
-}
-
-/* 暗黑模式下的错误提示框 */
-.box.error {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-color: $dark-border-color;
-}
-
-/* 暗黑模式下的链接 */
-:deep(a) {
-  color: $dark-text-primary;
-}
-
-:deep(a:hover) {
-  color: $dark-text-disabled;
-}
-
-:deep(a.button) {
-  background-color: $dark-button-bg;
-  color: $dark-text-primary;
-  border-color: $dark-button-border;
-}
-
-:deep(a.button:hover) {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
 }
 
 .buttons {
@@ -1560,129 +1320,15 @@ export default {
   display: flex;
   flex-wrap: wrap;
   margin-right: 5px;
-}
 
-.bulk-actions .button {
-  flex: 1;
-  min-width: 120px;
-  margin-right: 5px;
-}
-
-.bulk-action-button {
-  background-color: $dark-button-bg;
-  border-color: $dark-button-border;
-  color: $dark-text-primary;
-}
-
-.bulk-action-button:hover {
-  background-color: $dark-button-hover-bg;
-  border-color: $dark-button-hover-border;
-}
-
-.modal-card {
-  max-width: 800px;
-  min-height: 40%;
-  width: auto;
-  margin: 0 auto;
-}
-
-.modal-card-head {
-  background-color: $dark-bg-secondary;
-  color: $dark-text-primary;
-  border-bottom: 1px solid $dark-border-color;
-}
-
-.modal-card-body {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-  max-height: 70vh;
-}
-
-.modal-card-foot {
-  background-color: $dark-bg-secondary;
-  border-top: 1px solid $dark-border-color;
-}
-
-.modal-card-title {
-  color: $dark-text-primary;
-}
-
-.field {
-  margin-bottom: 1rem;
-}
-
-.label {
-  color: $dark-text-primary;
-}
-
-.select select {
-  background-color: $dark-input-bg;
-  color: $dark-text-primary;
-  border-color: $dark-input-border;
-}
-
-.select select:focus {
-  border-color: $dark-input-focus-border;
-  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
-}
-
-.select option {
-  background-color: $dark-bg-primary;
-  color: $dark-text-primary;
-}
-
-/* 模态框背景 */
-.modal-background {
-  background-color: rgba(30, 30, 30, 0.8);
-}
-
-/* Toggle switch styles */
-.buttons.has-addons .switch {
-  margin-bottom: 0;
-}
-
-.buttons.has-addons .switch+.switch {
-  border-left: none;
-}
-
-.search-projects {
-  max-width: 25em;
-  margin-right: 1em;
+  .button {
+    flex: 1;
+    min-width: 120px;
+    margin-right: 5px;
+  }
 }
 
 .table-projects {
   margin-top: 1rem;
-}
-
-.list-projects-wrapper td,
-.list-projects-wrapper th {
-  vertical-align: middle !important;
-}
-
-/* 暗黑模式下滚动条样式 */
-.list-projects-wrapper::-webkit-scrollbar,
-.panel-block::-webkit-scrollbar,
-.filters::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.list-projects-wrapper::-webkit-scrollbar-track,
-.panel-block::-webkit-scrollbar-track,
-.filters::-webkit-scrollbar-track {
-  background: $dark-scrollbar-track;
-}
-
-.list-projects-wrapper::-webkit-scrollbar-thumb,
-.panel-block::-webkit-scrollbar-thumb,
-.filters::-webkit-scrollbar-thumb {
-  background: $dark-scrollbar-thumb;
-  border-radius: 4px;
-}
-
-.list-projects-wrapper::-webkit-scrollbar-thumb:hover,
-.panel-block::-webkit-scrollbar-thumb:hover,
-.filters::-webkit-scrollbar-thumb:hover {
-  background: $dark-scrollbar-thumb-hover;
 }
 </style>

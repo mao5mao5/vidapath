@@ -1,0 +1,68 @@
+/* Buttons */
+.button {
+  border-radius: 4px; /* Standard rounded corners, less "boxy" than 2px */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  font-weight: 600;
+
+  /* Default Style (Solid Dark Blue-Grey) */
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+  border-color: $dark-button-border;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background-color: $dark-button-hover-bg;
+    border-color: $dark-button-hover-border;
+    color: $dark-text-primary;
+  }
+
+  &.is-small {
+    font-size: 0.75rem;
+    padding: 0.5em 1em;
+  }
+
+  &.is-medium {
+    font-size: 1rem;
+    padding: 0.75em 1.5em;
+  }
+
+  &.is-large {
+    font-size: 1.25rem;
+    padding: 1em 2em;
+  }
+
+  &.is-primary {
+    background-color: $primary;
+    border-color: $primary;
+    color: white;
+
+    &:hover {
+      background-color: darken($primary, 5%);
+      border-color: darken($primary, 5%);
+      color: white;
+    }
+  }
+
+  /* Redesigned is-link (Ghost/Transparent Style) */
+  &.is-link {
+    background-color: transparent;
+    color: $primary;
+    border-color: transparent;
+    box-shadow: none;
+
+    &:hover {
+      background-color: rgba($primary, 0.1);
+      color: lighten($primary, 10%);
+      border-color: transparent;
+      transform: translateY(-1px);
+      box-shadow: none;
+    }
+
+    &:active, &:focus {
+      background-color: rgba($primary, 0.2);
+      box-shadow: none;
+    }
+  }
+}

@@ -1,0 +1,145 @@
+/* Dark Mode Overrides for Third-Party Components */
+
+/* Multiselect */
+.multiselect {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.multiselect:focus {
+  border-color: $dark-input-focus-border;
+  box-shadow: 0 0 0 0.2rem $dark-input-focus-shadow;
+}
+
+.multiselect__tags {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+  border-color: $dark-input-border;
+}
+
+.multiselect__single {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+}
+
+.multiselect__input {
+  background-color: $dark-input-bg;
+  color: $dark-text-primary;
+}
+
+.multiselect__input::placeholder {
+  color: $dark-text-disabled;
+}
+
+.multiselect__content-wrapper {
+  background-color: $dark-bg-secondary;
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.multiselect__content {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border: none;
+}
+
+.multiselect__element {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+}
+
+.multiselect__element:hover {
+  background-color: $dark-bg-hover;
+}
+
+.multiselect__option {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+}
+
+.multiselect__option:hover {
+  background-color: $dark-bg-hover;
+}
+
+.multiselect__option--selected {
+  background-color: $dark-button-bg;
+  color: $dark-text-primary;
+}
+
+.multiselect__option--selected:hover {
+  background-color: $dark-button-hover-bg;
+}
+
+/* Slider */
+.slider {
+  background-color: $dark-bg-tertiary;
+}
+
+.slider .slider-track {
+  background-color: $dark-bg-panel;
+}
+
+.slider .slider-fill {
+  background-color: $dark-button-bg;
+}
+
+.slider .slider-thumb {
+  background-color: $dark-text-primary;
+  border-color: $dark-button-border;
+}
+
+.slider .slider-thumb:hover {
+  background-color: $dark-text-primary;
+  border-color: $dark-button-hover-border;
+}
+
+/* Collapse */
+.collapse {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+}
+
+.collapse .collapse-trigger {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
+}
+
+.collapse .collapse-content {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
+}
+
+/* Pagination */
+.pagination {
+  .pagination-link,
+  .pagination-previous,
+  .pagination-next {
+    background-color: $dark-button-bg;
+    color: $dark-text-primary;
+    border-color: $dark-button-border;
+
+    &:hover {
+      background-color: $dark-button-hover-bg;
+      border-color: $dark-button-hover-border;
+      color: $dark-text-primary;
+    }
+
+    &.is-current {
+      background-color: $primary;
+      border-color: $primary;
+      color: white;
+    }
+
+    &[disabled],
+    &[disabled]:hover {
+      background-color: $dark-bg-tertiary;
+      color: $dark-text-disabled;
+      border-color: $dark-border-color;
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

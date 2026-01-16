@@ -26,6 +26,7 @@ from pims.api import (
     operations,
     histograms, filters, colormaps
 )
+from pims.importer.scanner import AutoImportScanner
 
 app = FastAPI(
     title="Cytomine Python Image Management Server PIMS",
@@ -38,9 +39,11 @@ app = FastAPI(
     redoc_url=f"{get_settings().api_base_path}/docs",
 )
 
+scanner_thread = None
 
 @app.on_event("startup")
 async def startup():
+    global scanner_thread
     # Check PIMS configuration
     try:
         settings = get_settings()
@@ -82,10 +85,23 @@ async def startup():
             sys.exit(
                 f"Timeout while connecting to cache \"{get_settings().cache_url}\": {str(e)}."
             )
+    
+    # Auto Import Scanner
+    if get_settings().enable_auto_import_scan:
+        logger.info("Starting AutoImportScanner...")
+        scanner_thread = AutoImportScanner()
+        scanner_thread.start()
+    else:
+        logger.info("AutoImportScanner is disabled by configuration.")
 
 
 @app.on_event("shutdown")
 async def shutdown() -> None:
+    global scanner_thread
+    if scanner_thread and scanner_thread.is_alive():
+        logger.info("Stopping AutoImportScanner...")
+        scanner_thread.stop()
+        scanner_thread.join(timeout=5)
     await shutdown_cache()
 
 

@@ -2,26 +2,47 @@
 @import './v-tooltip.scss';
 @import './vue-sl-tree.scss';
 @import './dark-variables.scss';
+@import './base.scss';
 
-/* 定义滚动条样式 */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+// Global Typography
+html {
+  font-size: 12px;
+
+  @include widescreen {
+    font-size: 13px;
+  }
+
+  @include fullhd {
+    font-size: 14px;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: $dark-scrollbar-track;
+// IE Compatibility
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+  .tile {
+    flex-basis: auto !important;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: $dark-scrollbar-thumb;
-  border-radius: 4px;
-}
+// Components
+@import './components/scrolling';
+@import './components/tables';
+@import './components/panels';
+@import './components/modals';
+@import './components/loading';
+@import './components/messages';
+@import './components/progress';
+@import './components/buttons';
+@import './components/cards';
+@import './components/forms';
+@import './components/notifications';
+@import './components/filters';
+@import './components/properties';
+@import './components/search';
+@import './components/vendors';
 
-::-webkit-scrollbar-thumb:hover {
-  background: $dark-scrollbar-thumb-hover;
-}
-
+// Vendor Styles
 @import '~quill/dist/quill.core.css';
 @import '~quill/dist/quill.snow.css';
 

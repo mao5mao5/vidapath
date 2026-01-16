@@ -154,93 +154,6 @@
         <draw-tools :index="index" @screenshot="takeScreenshot()" />
       </div>
 
-      <!-- <div class="panels">
-        <ul>
-          <li>
-            <a @click="$emit('close')" class="close">
-              <i class="fas fa-times-circle"></i>
-            </a>
-          </li>
-
-          <template v-if="isPanelDisplayed('hide-tools')">
-            <li v-if="isPanelDisplayed('info')">
-              <a @click="togglePanel('info')" :class="{ active: ['info', 'metadata'].includes(activePanel) }">
-                <i class="fas fa-info"></i>
-              </a>
-              <information-panel class="panel-options" v-show="activePanel === 'info'" :index="index"
-                @openMetadata="togglePanel('metadata')" />
-              <div v-show="activePanel === 'metadata'">
-                <metadata-panel class="panel-metadata" :index="index" />
-              </div>
-            </li>
-
-            <li v-if="isPanelDisplayed('digital-zoom')">
-              <a @click="togglePanel('digital-zoom')" :class="{ active: activePanel === 'digital-zoom' }">
-                <i class="fas fa-search"></i>
-              </a>
-              <digital-zoom class="panel-options" v-show="activePanel === 'digital-zoom'" :index="index"
-                @resetZoom="$refs.view.animate({ zoom: image.zoom })" @fitZoom="fitZoom" />
-            </li>
-
-            <li v-if="isPanelDisplayed('link') && nbImages > 1">
-              <a @click="togglePanel('link')" :class="{ active: activePanel === 'link' }">
-                <i class="fas fa-link"></i>
-              </a>
-              <link-panel class="panel-options" v-show="activePanel === 'link'" :index="index" />
-            </li>
-
-            <li v-if="isPanelDisplayed('color-manipulation')">
-              <a @click="togglePanel('colors')" :class="{ active: activePanel === 'colors' }">
-                <i class="fas fa-adjust"></i>
-              </a>
-              <color-manipulation class="panel-options" v-show="activePanel === 'colors'" :index="index" />
-            </li>
-
-            <li v-if="isPanelDisplayed('image-layers')">
-              <a @click="togglePanel('layers')" :class="{ active: activePanel === 'layers' }">
-                <i class="fas fa-copy"></i>
-              </a>
-              <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
-                :layers-to-preload="layersToPreload" />
-            </li>
-
-            <li v-if="isPanelDisplayed('ontology')>
-              <a @click="togglePanel('ontology')" :class="{ active: activePanel === 'ontology' }">
-                <i class="fas fa-hashtag"></i>
-              </a>
-              <ontology-panel class="panel-options" v-show="activePanel === 'ontology'" :index="index" />
-            </li>
-
-            <li v-if="isPanelDisplayed('property')">
-              <a @click="togglePanel('properties')" :class="{ active: activePanel === 'properties' }">
-                <i class="fas fa-tag"></i>
-              </a>
-              <properties-panel class="panel-options" v-show="activePanel === 'properties'" :index="index" />
-            </li>
-
-            <li v-if="isPanelDisplayed('follow')">
-              <a @click="togglePanel('follow')" :class="{ active: activePanel === 'follow' }">
-                <i class="fas fa-street-view"></i>
-              </a>
-              <follow-panel class="panel-options" v-show="activePanel === 'follow'" :index="index" :view="$refs.view" />
-            </li>
-
-            <li v-if="isPanelDisplayed('review') && canEdit">
-              <a @click="togglePanel('review')" :class="{ active: activePanel === 'review' }">
-                <i class="fas fa-check-circle"></i>
-              </a>
-              <review-panel class="panel-options" v-show="activePanel === 'review'" :index="index" />
-            </li>
-          </template>
-</ul>
-</div> -->
-
-      <!-- <image-controls :index="index" class="image-controls-wrapper" /> -->
-
-      <!-- <div class="broadcast" v-if="imageWrapper.tracking.broadcast">
-        <i class="fas fa-circle"></i> {{ $t('live') }}
-      </div> -->
-
       <scale-line v-show="scaleLineCollapsed" :image="image" :zoom="zoom" :mousePosition="projectedMousePosition" />
 
       <toggle-scale-line :index="index" />
@@ -1069,15 +982,16 @@ export default {
 
 <style lang="scss">
 @import '~vuelayers/lib/style.css';
+@import '../../assets/styles/colors';
 @import '../../assets/styles/dark-variables';
 
-$backgroundPanelBar: #101828;
 $widthPanelBar: 2.8rem;
-$backgroundPanel: #101828;
-$colorPanelLink: #eee;
-$colorHoverPanelLink: white;
-$colorBorderPanelLink: #3e3e3e;
-$colorOpenedPanelLink: #6c95c8;
+// Map to global variables
+$backgroundPanelBar: $dark-wapper-bg;
+$colorPanelLink: $dark-text-secondary;
+$colorHoverPanelLink: $dark-text-primary;
+$colorBorderPanelLink: $dark-border-color;
+$colorOpenedPanelLink: $primary;
 
 .ai-analysis-panel {
   position: absolute;
@@ -1103,7 +1017,7 @@ $colorOpenedPanelLink: #6c95c8;
 
 .map-container {
   display: flex;
-  background-color: #101828;
+  background-color: $dark-wapper-bg;
   width: 100%;
   height: 100%;
 }
@@ -1115,11 +1029,11 @@ $colorOpenedPanelLink: #6c95c8;
   z-index: 30;
 
   .close {
-    color: #d0c4c4;
+    color: $dark-text-secondary;
     font-size: 1.5rem;
 
     :hover {
-      color: #ffffff;
+      color: $dark-text-primary;
     }
   }
 }
@@ -1146,50 +1060,6 @@ $colorOpenedPanelLink: #6c95c8;
 
   i.fas {
     margin-right: 0.3em;
-  }
-}
-
-.panels {
-  background: $backgroundPanelBar;
-  display: flex;
-  font-size: 0.9em;
-
-  >ul {
-    padding: 0;
-    margin: 0;
-
-    >li {
-      position: relative;
-
-      >a {
-        position: relative;
-        display: block;
-        width: $widthPanelBar;
-        padding: 0.35rem 0.8rem;
-        font-size: 1.25rem;
-        color: $colorPanelLink;
-        border-bottom: 1px solid $colorBorderPanelLink;
-        text-decoration: none;
-        text-align: center;
-
-        &:hover {
-          color: $colorHoverPanelLink;
-        }
-
-        &.active {
-          background: $backgroundPanel;
-          color: $colorOpenedPanelLink;
-        }
-
-        &.close {
-          color: #ffc4c4;
-
-          :hover {
-            color: #ff7070;
-          }
-        }
-      }
-    }
   }
 }
 
@@ -1222,22 +1092,6 @@ $colorOpenedPanelLink: #6c95c8;
   }
 }
 
-.panels li:nth-child(-n+8) .panel-options {
-  bottom: -7.5em;
-  min-height: 13em;
-}
-
-.panels li:nth-child(-n+4) .panel-options {
-  top: -1.75em;
-  bottom: auto;
-  min-height: 7.5em;
-}
-
-.panels li:nth-child(5) .panel-options {
-  top: -5.5em;
-  bottom: auto;
-}
-
 /* ----- Metadata panel ---- */
 
 .panel-metadata {
@@ -1246,7 +1100,7 @@ $colorOpenedPanelLink: #6c95c8;
   right: $widthPanelBar;
   min-width: 30em;
   min-height: 30em;
-  background: $backgroundPanel;
+  background: $backgroundPanelBar;
   padding: 0.75em;
   border-radius: 5px 0 0 5px;
 }
@@ -1329,11 +1183,8 @@ $colorOpenedPanelLink: #6c95c8;
 }
 
 .map-tools {
-
   background: $backgroundPanelBar;
-
   display: flex;
-
   font-size: 0.9em;
   border-left: 1px solid $colorBorderPanelLink;
 
@@ -1357,7 +1208,7 @@ $colorOpenedPanelLink: #6c95c8;
         }
 
         &.active {
-          background: $backgroundPanel;
+          background: $dark-bg-secondary;
           color: $colorOpenedPanelLink;
         }
       }
@@ -1365,55 +1216,29 @@ $colorOpenedPanelLink: #6c95c8;
   }
 }
 
-
-
 .map-tools-list {
-
   padding: 0;
-
   margin: 0;
-
   list-style: none;
-
 }
-
-
 
 .map-tools-list>li {
-
   position: relative;
-
 }
-
-
 
 .map-tools-list>li>a {
-
   position: relative;
-
   display: block;
-
   width: $widthPanelBar;
-
   padding: 0.35rem 0.8rem;
-
   font-size: 1.25rem;
-
   color: $colorPanelLink;
-
   text-decoration: none;
-
   text-align: center;
-
   cursor: pointer;
-
 }
 
-
-
 .map-tools-list>li>a:hover {
-
   color: $colorHoverPanelLink;
-
 }
 </style>

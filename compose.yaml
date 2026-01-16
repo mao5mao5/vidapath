@@ -59,6 +59,8 @@ services:
   pims-cache:
     image: redis:7.2
     restart: unless-stopped
+    volumes:
+      - ${DATA_PATH:-./data}/pims-cache:/data
     networks:
       host_network:
         ipv4_address: 172.16.238.6

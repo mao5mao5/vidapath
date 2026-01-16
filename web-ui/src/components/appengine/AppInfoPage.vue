@@ -135,7 +135,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables.scss';
+
 /* ----- Upper Section (Logo + Update) ----- */
 .logo {
   width: 17rem;
@@ -164,6 +166,7 @@ img {
 
 .app-title {
   font-size: 1.9rem;
+  color: $dark-text-primary;
 }
 
 .panel-heading {
@@ -179,10 +182,18 @@ img {
 
 .update-btn {
   margin: 3%;
-  size: 2rem;
+  // size: 2rem; // size is not a valid CSS property, use width/height or font-size if intended
 }
 
 .metadata {
   margin-top: 5%;
+}
+
+.title {
+  color: $dark-text-primary;
+}
+
+.heading {
+  color: $dark-text-secondary;
 }
 </style>

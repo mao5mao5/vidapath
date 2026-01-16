@@ -1,7 +1,7 @@
 <template>
   <div class="content-wrapper">
     <div class="panel">
-      <p class="panel-heading">{{ $t('app-store') }}</p>
+      <p class="panel-heading"><strong class="panel-title">{{ $t('app-store') }}</strong></p>
       <section class="panel-block lower-section-flex">
         <AppCard v-for="app in applications" :key="app.id" :app="app" :installable="true" />
       </section>
@@ -48,7 +48,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables.scss';
+
 .lower-section-flex {
   display: flex;
   flex-direction: row;
@@ -70,5 +72,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.panel-title {
+  font-size: 1.2em;
+  color: $dark-text-primary;
 }
 </style>

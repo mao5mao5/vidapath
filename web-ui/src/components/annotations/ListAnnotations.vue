@@ -825,23 +825,42 @@ export default {
 };
 </script>
 
-<style scoped>
-.list-annots{
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
+.list-annots {
   max-height: 80vh;
   overflow: auto;
   margin-bottom: 1em;
-}
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
 
-.filters:not(:last-child) {
-  margin-bottom: 1.25rem;
-}
+  &::-webkit-scrollbar-track {
+    background: $dark-scrollbar-track;
+  }
 
-.filter.column {
-  padding: 0.4em 0.75em;
+  &::-webkit-scrollbar-thumb {
+    background: $dark-scrollbar-thumb;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $dark-scrollbar-thumb-hover;
+  }
 }
 
 .button {
   display: block;
   margin: auto;
+}
+
+.box {
+  background-color: $dark-bg-primary;
+  border: 1px solid $dark-border-color;
+  color: $dark-text-primary;
 }
 </style>

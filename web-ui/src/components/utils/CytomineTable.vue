@@ -217,82 +217,15 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../assets/styles/dark-variables.scss";
+// @import "../../assets/styles/dark-variables.scss";
 
 .cytomine-table-wrapper {
-  background-color: $dark-bg-secondary;
+  // background-color: $dark-bg-secondary;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   min-height: 10em;  
-}
-
-.b-table {
-  background-color: transparent;
-
-  .table {
-    background-color: transparent;
-    color: $dark-text-primary;
-  }
-
-  .thead {
-    background-color: $dark-bg-tertiary;
-    
-    th {
-      background-color: $dark-bg-tertiary;
-      color: $dark-text-primary;
-      font-weight: 600;
-      border-bottom-color: $dark-border-color;
-      padding: 1rem 1.25rem;
-    }
-  }
-
-  .tbody {
-    tr {
-      transition: background-color 0.2s ease-in-out;
-      
-      &:hover {
-        background-color: $dark-bg-hover !important;
-      }
-
-      td {
-        padding: 1rem 1.25rem;
-        border-bottom-color: $dark-border-color;
-        vertical-align: middle;
-      }
-    }
-  }
-
-  .pagination-footer {
-    padding: 1rem;
-    background-color: $dark-bg-secondary;
-    border-top: 1px solid $dark-border-color;
-
-    .pagination-list {
-      .pagination-link, .pagination-previous, .pagination-next {
-        background-color: $dark-button-bg;
-        border-color: $dark-button-border;
-        color: $dark-text-primary;
-
-        &:hover {
-          background-color: $dark-button-hover-bg;
-          border-color: $dark-button-hover-border;
-        }
-
-        &.is-current {
-          background-color: $dark-bg-primary;
-          border-color: $dark-bg-primary;
-          color: $dark-text-primary;
-        }
-      }
-    }
-
-    .select select {
-      background-color: $dark-input-bg;
-      color: $dark-text-primary;
-      border-color: $dark-input-border;
-    }
-  }
+  // border: 1px solid $dark-border-color;
 }
 </style>

@@ -103,9 +103,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../assets/styles/dark-variables';
+
 .box {
   position: relative;
   min-height: 20em;
+  background-color: $dark-bg-primary;
 }
 </style>

@@ -77,8 +77,19 @@ class Settings(ReadableSettings):
     task_queue_user: str = "router"
     task_queue_password: str = "router"
 
-    # 控制是否使用简化版导入功能
-    use_easy_import: bool = False
+    # Auto Import Scanner Configuration
+    enable_auto_import_scan: bool = False
+    auto_import_scan_interval: int = 60
+    auto_import_target_storage_username: str = "admin"
+    
+    # Easy Import Project Name Parsing Configuration
+    easy_import_project_name_length: int = 12
+    easy_import_project_name_offset: int = 0
+    
+    # Redis Keys Configuration
+    import_lock_key: str = "pims:import_lock"
+    processed_files_cache_key: str = "pims:imported_files"
+
 
 @lru_cache()
 def get_settings():

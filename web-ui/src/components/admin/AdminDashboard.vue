@@ -217,7 +217,7 @@ td:first-child {
   position: relative;
 }
 
->>> .chart {
+::v-deep .chart {
   position: absolute;
   height: 100%;
   width: 100%;

@@ -23,7 +23,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="checkbox-column"><span class="far fa-eye" style="color: white;"></span></th>
+          <th class="checkbox-column"><span class="far fa-eye"></span></th>
           <th class="name-column">
             <b-input v-model="searchString" :placeholder="$t('search-placeholder')" size="is-small" expanded />
           </th>
@@ -492,7 +492,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../../assets/styles/dark-variables';
+@import '../../../assets/styles/colors';
+
 .table {
   margin-bottom: 1em !important;
   font-size: 0.9em;
@@ -543,7 +546,7 @@ th, ::v-deep td {
 }
 
 .button.is-selected {
-  background-color: #6899d0;
+  background-color: $primary;
   color: white;
   stroke: white;
 }

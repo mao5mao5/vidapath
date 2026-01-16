@@ -1,0 +1,15 @@
+/* Loading */
+
+.loading-overlay .loading-icon::after {
+  width: 5em;
+  height: 5em;
+  border-left-color: $loading-color;
+  border-bottom-color: $loading-color;
+}
+
+.loading-overlay.small .loading-icon::after {
+  width: 2em;
+  height: 2em;
+  border-left-color: $loading-color;
+  border-bottom-color: $loading-color;
+}

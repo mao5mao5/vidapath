@@ -16,7 +16,7 @@
   <div class="content-wrapper">
     <div class="panel">
       <p class="panel-heading">
-        <strong style="font-size: 1.2em; color: #fff;">
+        <strong class="panel-title">
           {{ $t('upload') }}
         </strong>
       </p>
@@ -27,7 +27,7 @@
       </div>
       <div class="panel-block" v-else>
         <b-message type="is-info" has-icon icon-size="is-small">
-          <h2 style="color: white;">{{ $t('important-notes') }}</h2>
+          <h2>{{ $t('important-notes') }}</h2>
           <ul class="small-text">
             <!--          <li>{{$t('max-size-upload-info')}}</li>-->
             <li>
@@ -51,7 +51,7 @@
 
         <div class="columns">
           <div class="column is-one-quarter has-text-right">
-            <strong style="color: white;">{{ $t('storage') }}</strong>
+            <strong>{{ $t('storage') }}</strong>
           </div>
           <div class="column is-half">
             <cytomine-multiselect v-model="selectedStorage" :options="storages" label="extendedName" track-by="id"
@@ -68,7 +68,7 @@
 
         <div class="columns">
           <div class="column is-one-quarter has-text-right">
-            <strong style="color: white;">Link with case</strong>
+            <strong>Link with case</strong>
           </div>
           <div class="column is-half">
             <cytomine-multiselect v-model="selectedProjects" :options="projects" label="name" track-by="id"
@@ -78,7 +78,7 @@
 
         <div class="columns">
           <div class="column is-one-quarter has-text-right">
-            <strong style="color: white;">{{ $t('files') }}</strong>
+            <strong>{{ $t('files') }}</strong>
           </div>
           <div class="column is-half">
             <table v-if="dropFiles.length > 0" class="table is-fullwidth upload-table">
@@ -464,111 +464,46 @@ export default {
 <style scoped lang="scss">
 @import "../../assets/styles/dark-variables.scss";
 
+.panel-title {
+  font-size: 1.2em;
+  color: $dark-text-primary;
+}
+
 .small-text {
   font-size: 0.9em;
+  color: $dark-text-secondary;
+  line-height: 1.5;
 }
 
 .upload-table {
   position: relative;
   bottom: 0.4em;
-}
 
-.upload-table td {
-  vertical-align: middle !important;
-  color: $dark-text-primary;
-  background-color: $dark-bg-secondary;
-}
+  td {
+    vertical-align: middle !important;
+    color: $dark-text-primary;
+    background-color: $dark-bg-secondary;
+  }
 
-.upload-table td {
-  vertical-align: middle !important;
-}
+  td:first-child {
+    width: 20vw;
+  }
 
-.upload-table td:first-child {
-  width: 20vw;
-}
+  td:nth-child(2) {
+    width: 10em;
+  }
 
-.upload-table td:nth-child(2) {
-  width: 10em;
-}
+  td:nth-child(3) {
+    width: 15vw;
+  }
 
-.upload-table td:nth-child(3) {
-  width: 15vw;
-}
+  td:last-child .field {
+    justify-content: flex-end;
+  }
 
-.upload-table td:last-child .field {
-  justify-content: flex-end;
-}
-
-.upload-table td:last-child .control {
-  text-align: right;
-}
-
-/* 暗色主题进度条样式 */
-.progress {
-  background-color: $dark-bg-secondary;
-  border-radius: 4px;
-  height: 1.25em;
-  overflow: hidden;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.progress::-webkit-progress-bar {
-  background-color: $dark-bg-secondary;
-}
-
-.progress::-webkit-progress-value {
-  background-color: #48c774;
-  /* 保持进度条的绿色 */
-  transition: width 0.3s ease;
-}
-
-.progress::-moz-progress-bar {
-  background-color: #48c774;
-  /* 保持进度条的绿色 */
-}
-
-.progress.is-info {
-  background-color: $dark-bg-secondary;
-}
-
-.progress.is-info::-webkit-progress-value {
-  background-color: #209cee;
-  /* 保持信息进度条的蓝色 */
-}
-
-.progress.is-info::-moz-progress-bar {
-  background-color: #209cee;
-  /* 保持信息进度条的蓝色 */
-}
-
-.progress.is-success::-webkit-progress-value {
-  background-color: #48c774;
-  /* 成功进度条的绿色 */
-}
-
-.progress.is-success::-moz-progress-bar {
-  background-color: #48c774;
-  /* 成功进度条的绿色 */
-}
-
-.progress:not(:last-child) {
-  margin-bottom: 0.75em;
-}
-
-/* 暗色主题标签样式 */
-.tag {
-  background-color: $dark-tag-bg;
-  color: $dark-text-primary;
-  border: 1px solid $dark-tag-border;
-  border-radius: 4px;
-  padding: 0.25em 0.5em;
-  font-size: 0.85em;
-}
-
-.tag.is-danger {
-  background-color: $dark-button-danger-bg;
-  color: $dark-text-primary;
-  border-color: #ff3860;
+  td:last-child .control {
+    text-align: right;
+  }
 }
 
 .buttons {
@@ -577,13 +512,6 @@ export default {
   gap: 0.5rem;
   justify-content: center;
   margin-top: 1rem;
-}
-
-.button[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
 }
 
 .has-text-grey {
@@ -595,50 +523,14 @@ export default {
   text-align: right;
 }
 
-.small-text {
-  color: $dark-text-secondary;
-  line-height: 1.5;
-}
-
 .fa-info-circle {
   color: #209cee;
   margin-left: 0.3em;
   cursor: pointer;
   transition: color 0.2s ease;
-}
 
-.fa-info-circle:hover {
-  color: #4dabf7;
-}
-
- /* 暗色主题消息框样式 */
-.message.is-info {
-  background-color: $dark-bg-secondary;
-  border: 1px solid #209cee;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.message.is-info .message-body {
-  color: $dark-text-primary;
-  border-color: #209cee;
-  background-color: $dark-bg-secondary;
-  padding: 1em;
-  border-radius: 6px;
-}
-
-.message.is-danger {
-  background-color: $dark-bg-secondary;
-  border: 1px solid #ff3860;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.message.is-danger .message-body {
-  color: $dark-text-primary;
-  border-color: #ff3860;
-  background-color: $dark-bg-secondary;
-  padding: 1em;
-  border-radius: 6px;
+  &:hover {
+    color: lighten(#209cee, 10%);
+  }
 }
 </style>

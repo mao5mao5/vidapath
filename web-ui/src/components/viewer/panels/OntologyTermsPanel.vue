@@ -311,7 +311,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../../../assets/styles/dark-variables';
+
 .ontology-terms-panel-container {
   width: auto !important;
 }
@@ -322,7 +324,7 @@ export default {
 
 .ontology-container {
   margin-right: 1em;
-  border: 1px solid #eee;
+  border: 1px solid $dark-border-color;
   border-radius: 4px;
   padding: 0.5em;
   width: 22rem;
@@ -333,7 +335,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5em;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid $dark-border-color;
 }
 
 .ontology-title {
@@ -349,7 +351,7 @@ export default {
 
 .no-ontology-message {
   padding: 1em;
-  border: 1px dashed #ccc;
+  border: 1px dashed $dark-border-color;
   border-radius: 4px;
   margin-bottom: 1em;
 }
@@ -367,7 +369,7 @@ input[type="range"].slider {
   z-index: 5;
   padding-bottom: 0.3em;
   background: transparent;
-  border: 2px solid #DBDBDB;
+  border: 2px solid $dark-border-color;
   border-width: 0 0 2px !important;
 }
 
@@ -399,12 +401,12 @@ input[type="range"].slider {
   display: block;
 }
 
->>>.checkbox .control-label {
+::v-deep .checkbox .control-label {
   padding: 0 !important;
 }
 
->>>.ontology-tree .sl-vue-tree-node-item,
->>>.ontology-tree .no-result {
+::v-deep .ontology-tree .sl-vue-tree-node-item,
+::v-deep .ontology-tree .no-result {
   line-height: 2;
   font-size: 0.9em;
 }

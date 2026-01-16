@@ -80,9 +80,9 @@ export default {
 @import "../../assets/styles/dark-variables.scss";
 
 .rotation-selector-wrapper {
-  border-radius: 2px;
-  box-shadow: 0 0 1px #777;
-  background: $dark-bg-primary;
+  // border-radius: 2px;
+  // box-shadow: 0 0 1px #777;
+  // background: $dark-bg-primary;
   // margin-left: 2px;
 }
 

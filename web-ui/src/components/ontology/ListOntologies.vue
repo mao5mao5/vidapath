@@ -24,14 +24,14 @@
 
       <div v-else class="panel">
         <p class="panel-heading">
-          <strong style="font-size: 1.2em; color: #fff;">
+          <strong class="panel-title">
             Term management
           </strong>
         </p>
         <div class="panel-block">
           <div class="panel-heading-buttons">
 
-            <b-input class="search-block" v-model="searchString" placeholder="Search terms..." type="search"
+            <b-input class="search-input" v-model="searchString" placeholder="Search terms..." type="search"
               icon="search" />
 
             <button class="button" @click="creationModal = true" v-if="!currentUser.guestByNow">
@@ -210,43 +210,88 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+
 @import '../../assets/styles/dark-variables';
 
 
+
 .panel {
+
   height: auto;
+
 }
+
+
 
 .panel-heading-buttons {
+
   display: flex;
+
   padding-right: 0.5rem;
+
   justify-content: flex-end;
+
   margin-bottom: 1rem;
+
 }
 
-.search-block {
-  max-width: 25em;
-  margin-right: 1em;
+
+
+.panel-title {
+
+  font-size: 1.2em;
+
+  color: $dark-text-primary;
+
 }
+
+
+
+.search-input {
+
+  max-width: 25em;
+
+  margin-right: 1em;
+
+}
+
+
 
 .panel-icon {
+
   font-size: 1.2em;
+
 }
+
+
 
 .ontology-list {
+
   flex-direction: column;
+
   width: 100%;
+
   height: auto;
+
   overflow-y: auto;
+
 }
+
+
 
 .columns.is-fullwidth {
+
   width: 100%;
+
 }
 
+
+
 .box.error .columns {
+
   align-items: center;
+
 }
 
 
@@ -336,6 +381,9 @@ export default {
 }
 
 .has-text-grey {
+
   color: $dark-text-disabled !important;
+
 }
+
 </style>

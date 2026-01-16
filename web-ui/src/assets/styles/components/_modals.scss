@@ -1,0 +1,85 @@
+/* Modal */
+
+.modal {
+  z-index: 3000 !important;
+
+  &.is-active {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .modal-background {
+    background-color: rgba($dark-bg-primary, 0.85);
+  }
+
+  .animation-content {
+    max-width: none !important;
+    z-index: 2000 !important;
+  }
+
+  .modal-card {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: slideInUp 0.4s ease-in-out;
+    max-width: 600px;
+    max-height: 80vh;
+
+    .modal-card-head {
+      background-color: $dark-bg-secondary;
+      border-bottom: 1px solid $dark-border-color;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      padding: 1.5rem;
+
+      .modal-card-title {
+        color: $dark-text-primary;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    }
+
+    .modal-card-body {
+      background-color: $dark-bg-primary;
+      padding: 2rem;
+      line-height: 1.5;
+    }
+
+    .modal-card-foot {
+      background-color: $dark-bg-secondary;
+      border-top: 1px solid $dark-border-color;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      padding: 1.5rem;
+      justify-content: flex-end;
+
+      .button {
+        font-size: 1rem;
+        font-weight: normal !important;
+        margin-left: 1rem;
+      }
+    }
+  }
+}
+
+.autocomplete.control .dropdown-menu {
+  z-index: 3000 !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

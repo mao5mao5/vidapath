@@ -1,0 +1,128 @@
+/* Table */
+
+.table tbody tr:last-child td {
+  border-bottom-width: 1px !important;
+}
+
+.table tbody tr:last-child th {
+  border-bottom-width: 2px !important;
+}
+
+.table tbody>tr:last-child>td,
+.table tbody>tr:last-child>th {
+  border-bottom-width: 0 !important;
+}
+
+/* Dark Mode Colors & Borders */
+.b-table .table {
+  background-color: $dark-bg-primary !important;
+  color: $dark-text-primary;
+}
+
+.table {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+
+  thead {
+    th {
+      background-color: $dark-bg-secondary;
+      color: $dark-text-primary;
+      border-color: $dark-border-color;
+      vertical-align: middle;
+      padding: 1rem 1.25rem;
+      font-weight: 600;
+    }
+  }
+
+  tbody {
+    tr {
+      background-color: $dark-bg-primary;
+      color: $dark-text-primary;
+      transition: background-color 0.2s ease-in-out;
+
+      &.is-selected {
+        background-color: $dark-bg-active;
+        color: $dark-text-primary;
+      }
+
+      &:hover {
+        background-color: $dark-bg-hover;
+      }
+    }
+
+    td {
+      border-color: $dark-border-color;
+      color: $dark-text-primary;
+      vertical-align: middle;
+      // padding: 1rem 1.25rem;
+    }
+  }
+  
+  tfoot {
+    th {
+      border-color: $dark-border-color;
+      color: $dark-text-primary;
+      vertical-align: middle;
+    }
+  }
+}
+
+/* Sort Icons */
+.b-table .table th.is-sortable:not(.is-current-sort) .th-wrap::after {
+  font-family: "Font Awesome 5 Free";
+  content: "\f0dc";
+  position: relative;
+  color: $dark-text-primary;
+  left: 8px;
+  top: 1px;
+}
+
+.b-table .table th.is-current-sort {
+  font-weight: 600 !important;
+  color: $dark-text-primary;
+}
+
+.b-table .table .th-wrap {
+  color: $dark-text-primary;
+}
+
+.b-table .table th .button {
+  font-weight: 400;
+}
+
+.b-table .table tr.detail {
+  background-color: $dark-bg-primary !important;
+}
+
+.detail-container {
+  padding: 0.45rem !important;
+  font-size: 0.9rem !important;
+}
+
+/* Pagination Footer */
+.b-table {
+  .pagination-footer {
+    background-color: $dark-bg-secondary;
+    border-top: 1px solid $dark-border-color;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+    .pagination {
+      margin-bottom: 0;
+      flex-grow: 1;
+      justify-content: flex-end;
+
+      .pagination-list {
+        justify-content: flex-end;
+      }
+    }
+
+    .level-left {
+      margin-bottom: 0;
+    }
+  }
+}

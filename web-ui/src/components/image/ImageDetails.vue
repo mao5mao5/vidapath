@@ -18,7 +18,7 @@
     <h2> {{ $t('error') }} </h2>
     <p> {{ $t('unexpected-error-info-message') }} </p>
   </b-message>
-  <table v-else class="table">
+  <table v-else class="table properties-table">
     <b-loading :is-full-page="false" :active="loading" class="small" />
     <tbody v-if="!loading">
       <tr v-if="isPropDisplayed('overview')">
@@ -530,7 +530,6 @@ td.prop-content {
 td.prop-content-half {
   width: 50%;
 }
-
 .format {
   text-transform: uppercase;
 }

@@ -138,15 +138,25 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .box-title {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+@import '../../assets/styles/dark-variables';
 
-    h1 {
-      flex: auto
-    }
+.box-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  h1 {
+    flex: auto;
+    color: $dark-text-primary;
+    text-transform: none; // Override uppercase if needed
   }
+}
+
+.box {
+  background-color: $dark-bg-primary;
+  border: 1px solid $dark-border-color;
+  color: $dark-text-primary;
+}
 </style>

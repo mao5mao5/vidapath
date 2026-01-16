@@ -1,0 +1,44 @@
+/* Panel */
+
+.panel-heading {
+  border-radius: 8px 8px 0 0;
+  font-weight: 400 !important;
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-bottom: 1px solid $dark-border-color;
+  padding: 0.75em 1em;
+  font-weight: 600;
+  font-size: 1.1em;
+  
+  /* Flex layout for titles with actions */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-block {
+  display: block;
+  color: $dark-text-primary;
+  background-color: $dark-bg-primary;
+  padding: 1em;
+
+  &:last-of-type {
+    border-radius: 0 0 8px 8px;
+  }
+}
+
+.panel-tabs {
+  background: white;
+}
+
+/* Box (Generic Container) */
+.box {
+  background-color: $dark-bg-secondary; // Use secondary for boxes to distinguish from primary bg
+  color: $dark-text-primary;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
+  
+  &.error {
+    background-color: $dark-bg-secondary;
+    border-color: $dark-border-color;
+  }
+}

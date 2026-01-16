@@ -1,0 +1,48 @@
+/* Filters Block */
+.filters {
+  background-color: $dark-bg-secondary;
+  color: $dark-text-primary;
+  border-color: $dark-border-color;
+  padding: 1rem;
+  border-bottom: 1px solid $dark-border-color;
+  margin-top: 1.2rem;
+  border-radius: 10px;
+
+  &:not(:last-child) {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.filter-label {
+  color: $dark-text-primary;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin-left: 1em;
+
+  .no-uppercase {
+    text-transform: none;
+  }
+}
+
+.nb-active-filters {
+  display: inline-block;
+  background: $primary;
+  color: $primary-invert;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  font-weight: 600;
+  border-radius: 0.625rem;
+  margin-left: 0.5em;
+  font-size: 0.9em;
+  line-height: 1.25em;
+  padding: 0 0.25em;
+  position: absolute;
+  top: -0.3em;
+  right: -0.6em;
+}
+
+.filter.column {
+  padding: 0.4em 0.75em;
+}

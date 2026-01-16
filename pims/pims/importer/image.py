@@ -122,13 +122,20 @@ class ImageImporter:
                 message="Already imported",
             )
 
+        if not WRITING_PATH.exists():
+            WRITING_PATH.mkdir(parents=True, exist_ok=True)
+
         tmp_path = Path(WRITING_PATH, file_path.name)
+        # Remove existing symlink/file if it exists to avoid FileExistsError
+        if tmp_path.exists() or tmp_path.is_symlink():
+            tmp_path.unlink()
+
         tmp_path.symlink_to(file_path, target_is_directory=file_path.is_dir())
 
         uploadedFile = UploadedFile(
             original_filename=file_path.name,
             filename=str(tmp_path),
-            size=file_path.size,
+            size=file_path.stat().st_size,
             ext="",
             content_type="",
             id_projects=[],
