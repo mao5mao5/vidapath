@@ -5,7 +5,7 @@ from redis import Redis
 from pathlib import Path
 
 from cytomine import Cytomine
-from cytomine.models import ProjectCollection, StorageCollection
+from cytomine.models import ProjectCollection, StorageCollection, User
 
 from pims.config import get_settings
 from pims.importer.utils import iter_importable_files, FileImportCache, process_import_batch
@@ -49,8 +49,7 @@ class AutoImportScanner(threading.Thread):
         self.stop_event.set()
 
     def acquire_lock(self):
-        # NX=True ensures we only set it if it doesn't exist
-        # ex=1800 sets a 30 min expiration to prevent deadlocks if crash
+        # NX=True ensures we only set it if it doesn't exist, ex=1800 (30 min expiration)
         return self.redis.set(self.lock_key, "locked", ex=1800, nx=True)
 
     def release_lock(self):
@@ -86,18 +85,35 @@ class AutoImportScanner(threading.Thread):
 
         with Cytomine(**cytomine_auth.model_dump(), configure_logging=False) as c:
             if not c.current_user:
-                # Try setting credentials directly if not logged in by token (which we aren't)
                 c.set_credentials(self.settings.cytomine_public_key, self.settings.cytomine_private_key)
                 if not c.current_user:
                      logger.error("Auto scan authentication failed.")
                      return
 
-            # Find a storage.
+            # Find target storage
             storages = StorageCollection().fetch()
             if not storages:
                 logger.error("No storage found for auto-import.")
                 return
-            storage_id = storages[0].id
+            
+            target_username = self.settings.auto_import_target_storage_username
+            storage_id = None
+            
+            # Try to find storage owned by target user
+            for storage in storages:
+                try:
+                    storage_user = User().fetch(storage.user)
+                    if storage_user and storage_user.username == target_username:
+                        storage_id = storage.id
+                        logger.info(f"Selected storage '{storage.name}' (ID: {storage_id}) owned by user '{target_username}'.")
+                        break
+                except Exception:
+                    continue
+            
+            # Fallback
+            if not storage_id:
+                storage_id = storages[0].id
+                logger.warning(f"Target storage for user '{target_username}' not found. Falling back to storage ID: {storage_id}")
 
             # Cache projects to avoid repeated API calls
             project_collection = ProjectCollection().fetch()

@@ -80,6 +80,7 @@ class Settings(ReadableSettings):
     # Auto Import Scanner Configuration
     enable_auto_import_scan: bool = False
     auto_import_scan_interval: int = 60
+    auto_import_target_storage_username: str = "admin"
     
     # Easy Import Project Name Parsing Configuration
     easy_import_project_name_length: int = 12
