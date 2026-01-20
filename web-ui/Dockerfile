@@ -1,4 +1,3 @@
-ARG PROXY_CACHE=registry.cytomine.org/docker
 ARG WEB_UI_VERSION
 ARG WEB_UI_REVISION
 ARG NODE_VERSION=20.19.4
@@ -6,7 +5,7 @@ ARG NGINX_VERSION=1.22.1
 
 #######################################################################################
 ## Stage: build front-end
-FROM ${PROXY_CACHE}/node:${NODE_VERSION}-alpine AS frontend-builder
+FROM node:${NODE_VERSION}-alpine AS frontend-builder
 
 WORKDIR /app
 
@@ -17,13 +16,13 @@ COPY ./src /app/src
 COPY ./public /app/public
 COPY ./scripts /app/scripts
 COPY ./babel.config.js /app/babel.config.js
-COPY ./.eslintrc.js /app/.eslintrc.js
+
 
 RUN npm install && npm run build
 
 #######################################################################################
 ## Stage: dev image (with hot swap)
-FROM ${PROXY_CACHE}/node:${NODE_VERSION}-bookworm-slim AS dev-server
+FROM node:${NODE_VERSION}-bookworm-slim AS dev-server
 
 WORKDIR /app
 
@@ -33,7 +32,7 @@ CMD ["npm", "run", "serve"]
 
 #######################################################################################
 ## Stage: building nginx image serving the front-end
-FROM ${PROXY_CACHE}/nginx:${NGINX_VERSION}-alpine AS prod-server
+FROM nginx:${NGINX_VERSION}-alpine AS prod-server
 
 ARG WEB_UI_VERSION
 ARG WEB_UI_REVISION
