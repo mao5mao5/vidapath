@@ -245,6 +245,7 @@
         <draw-tools :index="index" @screenshot="takeScreenshot()" />
       </div>
       <scale-line v-show="scaleLineCollapsed" :image="image" :zoom="zoom" :mousePosition="projectedMousePosition" />
+      <magnification-selector v-if="image.magnification" :image="image" :zoom="zoom" @setMagnification="setMagnification" @fit="fitZoom" />
       <toggle-scale-line :index="index" />
       <annotations-container :index="index" @centerView="centerViewOnAnnot" />
       <div class="custom-overview" ref="overview">
@@ -262,6 +263,7 @@ import ImageName from '@/components/image/ImageName';
 import AnnotationLayer from './AnnotationLayer';
 import RotationSelector from './RotationSelector';
 import ScaleLine from './ScaleLine';
+import MagnificationSelector from './MagnificationSelector';
 import DrawTools from './DrawTools';
 import ImageControls from './ImageControls';
 import AnnotationsContainer from './AnnotationsContainer';
@@ -303,6 +305,7 @@ export default {
     AnnotationLayer,
     RotationSelector,
     ScaleLine,
+    MagnificationSelector,
     DrawTools,
     ImageControls,
     AnnotationsContainer,
@@ -562,6 +565,11 @@ export default {
     },
     zoomOut() {
       this.$refs.view.animate({ zoom: this.zoom - 1, duration: 250 });
+    },
+    setMagnification(mag) {
+      if (!this.image || !this.image.magnification) return;
+      let targetZoom = this.image.zoom + Math.log2(mag / this.image.magnification);
+      this.$refs.view.animate({ zoom: targetZoom, duration: 500 });
     },
     activatePan() {
       this.$store.dispatch(this.imageModule + 'draw/activateTool', 'pan');
