@@ -1,23 +1,11 @@
 <template>
-  <div>
-    <div class="annotations-list-opened">
-      <!-- <button class="delete" @click="opened = false"></button> -->
+  <div class="annotations-list-wrapper">
+    <div v-if="opened" class="annotations-list-opened">
+      <button class="delete" @click="opened = false"></button>
 
       <div class="annotations-list-sidebar">
-        <!--<b-field position="is-centered" v-if="hasTracks">
-          <b-radio-button v-model="displayType" native-value="TERM" size="is-small">
-            {{$t('by-term')}}
-          </b-radio-button>
-          <b-radio-button v-model="displayType" native-value="TRACK" size="is-small">
-            {{$t('by-track')}}
-          </b-radio-button>
-        </b-field>-->
-
-        <ontology-tree v-if="isDisplayedByTerm" v-model="selectedTermsIds" :ontology="ontology"
-          :multiple-selection="false" :hidden-nodes="hiddenTermsIds" :additional-nodes="[noTermOption]" />
-
-        <track-tree v-if="!isDisplayedByTerm" v-model="selectedTracksIds" :tracks="tracks"
-          :multiple-selection="false" />
+        <ontology-tree v-model="selectedTermsIds" :ontologys="ontologies" :multiple-selection="false"
+          :hidden-nodes="hiddenTermsIds" :additional-nodes="[noTermOption]" />
       </div>
 
       <div class="annotations-list-container">
@@ -32,8 +20,10 @@
           @delete="$emit('delete', $event)" @select="select" />
       </div>
     </div>
-
-    <!-- <div v-show="!opened" class="opener" @click="opened = true">{{$t("annotations-list")}} <i class="fas fa-caret-up"></i></div> -->
+    <div v-show="!opened" class="opener" @click="opened = true">
+      {{ $t("annotations-list") }}
+      <i class="fas fa-caret-up"></i>
+    </div>
   </div>
 </template>
 
@@ -44,30 +34,25 @@ import { get } from '@/utils/store-helpers';
 
 import ListAnnotationsBy from '@/components/annotations/ListAnnotationsBy';
 import OntologyTree from '@/components/ontology/OntologyTree';
-import TrackTree from '@/components/track/TrackTree';
 
 export default {
   name: 'annotations-list',
   components: {
     ListAnnotationsBy,
     OntologyTree,
-    TrackTree,
   },
   props: [
     'index',
   ],
   data() {
     return {
-      nbPerPage: 30,
+      nbPerPage: 20,
       noTermOption: { id: 0, name: this.$t('no-term') },
-
       users: [],
-
       revision: 0
     };
   },
   computed: {
-    ontology: get('currentProject/ontology'),
     configUI: get('currentProject/configUI'),
 
     imageModule() {
@@ -99,21 +84,20 @@ export default {
       return this.displayType === 'TERM';
     },
     items() {
-      return (this.isDisplayedByTerm) ? this.termsOptions : this.tracks;
+      this.termsOptions;
     },
     currentItem() {
-      if (this.isDisplayedByTerm) {
-        return this.termsOptions.find(term => term.id === this.selectedTermId);
-      } else {
-        return this.tracks.find(track => track.id === this.selectedTrackId);
-      }
+      return this.termsOptions.find(term => term.id === this.selectedTermId);
     },
 
     additionalNodes() {
       return [this.noTermOption];
     },
     terms() {
-      return this.$store.getters['currentProject/terms'] || [];
+      return this.$store.getters[this.imageModule + 'terms'] || [];
+    },
+    ontologies() {
+      return this.$store.getters[this.imageModule + 'ontologies'];
     },
     hiddenTermsIds() {
       return this.$store.getters[this.imageModule + 'hiddenTermsIds'];
@@ -164,6 +148,7 @@ export default {
 
     opened: {
       get() {
+        console.log('opened', this.imageWrapper);
         return this.imageWrapper.annotationsList.open;
       },
       set(value) {
@@ -285,7 +270,14 @@ export default {
 .annotations-list-opened {
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.5), 0 0 0 1px rgba(10, 10, 10, 0.5);
   background: $dark-bg-secondary;
-  height: 80%;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  pointer-events: none;
+  height: 25vh;
+  width: 80%;
   overflow-y: auto;
   pointer-events: auto;
   display: flex;

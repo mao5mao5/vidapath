@@ -31,79 +31,76 @@
       <!-- Pathology Report Drawer -->
       <pathology-report-drawer :active="showReportDrawer" @close="showReportDrawer = false" />
 
-            <div class="map-tools">
+      <div class="map-tools">
 
-              <ul class="map-tools-list">
+        <ul class="map-tools-list">
 
-                <li><a title="Zoom in" @click="zoomIn()"><i class="fas fa-search-plus fa-fw"></i></a></li>
+          <li><a title="Zoom in" @click="zoomIn()"><i class="fas fa-search-plus fa-fw"></i></a></li>
 
-                <li><a title="Zoom out" @click="zoomOut()"><i class="fas fa-search-minus fa-fw"></i></a></li>
+          <li><a title="Zoom out" @click="zoomOut()"><i class="fas fa-search-minus fa-fw"></i></a></li>
 
-                <li><a title="Pan" @click="activatePan()"><i class="fas fa-arrows-alt fa-fw"></i></a></li>
+          <li><a title="Pan" @click="activatePan()"><i class="fas fa-arrows-alt fa-fw"></i></a></li>
 
-      
 
-                <li v-if="isPanelDisplayed('digital-zoom')">
 
-                  <a @click="togglePanel('digital-zoom')" :class="{ active: activePanel === 'digital-zoom' }">
+          <li v-if="isPanelDisplayed('digital-zoom')">
 
-                    <i class="fas fa-search fa-fw"></i>
+            <a @click="togglePanel('digital-zoom')" :class="{ active: activePanel === 'digital-zoom' }">
 
-                  </a>
+              <i class="fas fa-search fa-fw"></i>
 
-                  <digital-zoom class="panel-options" v-show="activePanel === 'digital-zoom'" :index="index"
+            </a>
 
-                    @resetZoom="$refs.view.animate({ zoom: image.zoom })" @fitZoom="fitZoom" />
+            <digital-zoom class="panel-options" v-show="activePanel === 'digital-zoom'" :index="index"
+              @resetZoom="$refs.view.animate({ zoom: image.zoom })" @fitZoom="fitZoom" />
 
-                </li>
+          </li>
 
-                <li>
+          <li>
 
-                  <a title="Rotate" @click="togglePanel('rotation')" :class="{ active: activePanel === 'rotation' }">
+            <a title="Rotate" @click="togglePanel('rotation')" :class="{ active: activePanel === 'rotation' }">
 
-                    <i class="fa fa-undo fa-fw" aria-hidden="true"></i>
+              <i class="fa fa-undo fa-fw" aria-hidden="true"></i>
 
-                  </a>
+            </a>
 
-                  <rotation-selector class="panel-options" v-show="activePanel === 'rotation'" :index="index" />
+            <rotation-selector class="panel-options" v-show="activePanel === 'rotation'" :index="index" />
 
-                </li>
+          </li>
 
-                <hr class="is-divider">
+          <hr class="is-divider">
 
-      
 
-                <li>
 
-                  <a @click="togglePanel('layers')" :class="{ active: activePanel === 'layers' }">
+          <li>
 
-                    <i class="fas fa-copy fa-fw"></i>
+            <a @click="togglePanel('layers')" :class="{ active: activePanel === 'layers' }">
 
-                  </a>
+              <i class="fas fa-copy fa-fw"></i>
 
-                  <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index"
+            </a>
 
-                    />
+            <layers-panel class="panel-options" v-show="activePanel === 'layers'" :index="index" />
 
-                </li>
+          </li>
 
-      
 
-                <li v-if="isPanelDisplayed('color-manipulation')">
 
-                  <a @click="togglePanel('colors')" :class="{ active: activePanel === 'colors' }">
+          <li v-if="isPanelDisplayed('color-manipulation')">
 
-                    <i class="fas fa-adjust fa-fw"></i>
+            <a @click="togglePanel('colors')" :class="{ active: activePanel === 'colors' }">
 
-                  </a>
+              <i class="fas fa-adjust fa-fw"></i>
 
-                  <color-manipulation class="panel-options" v-show="activePanel === 'colors'" :index="index" />
+            </a>
 
-                </li>
+            <color-manipulation class="panel-options" v-show="activePanel === 'colors'" :index="index" />
 
-      
+          </li>
 
-                <!-- <li v-if="isPanelDisplayed('ontology')">
+
+
+          <!-- <li v-if="isPanelDisplayed('ontology')">
 
                   <a @click="togglePanel('ontology')" :class="{ active: activePanel === 'ontology' }">
 
@@ -115,63 +112,47 @@
 
                 </li> -->
 
-      
 
-                <li v-if="isPanelDisplayed('ontology')">
 
-                  <a @click="togglePanel('ontology-terms')" :class="{ active: activePanel === 'ontology-terms' }">
+          <li v-if="isPanelDisplayed('ontology')">
 
-                    <i class="fa fa-hashtag fa-fw" aria-hidden="true"></i>
+            <a @click="togglePanel('ontology-terms')" :class="{ active: activePanel === 'ontology-terms' }">
 
-                  </a>
+              <i class="fa fa-hashtag fa-fw" aria-hidden="true"></i>
 
-                  <ontology-terms-panel class="panel-options" v-show="activePanel === 'ontology-terms'" :index="index" />
+            </a>
 
-                </li>
+            <ontology-terms-panel class="panel-options" v-show="activePanel === 'ontology-terms'" :index="index" />
 
-      
+          </li>
 
-                <li v-if="isPanelDisplayed('annotations-list')">
+          <!-- AI Analysis Panel Button -->
 
-                  <a @click="togglePanel('annotations-list')" :class="{ active: activePanel === 'annotations-list' }">
+          <li>
 
-                    <i class="fas fa-list fa-fw" aria-hidden="true"></i>
+            <a title="AI Analysis" @click="toggleAIAnalysisPanel" :class="{ active: showAIAnalysisPanel }">
 
-                  </a>
+              <i class="fas fa-robot fa-fw"></i>
 
-                  <annotations-list-panel class="annotations-list-panel-container" v-show="activePanel === 'annotations-list'" :index="index" />
+            </a>
 
-                </li>
+          </li>
 
-      
 
-                <!-- AI Analysis Panel Button -->
 
-                <li>
+          <li>
 
-                  <a title="AI Analysis" @click="toggleAIAnalysisPanel" :class="{ active: showAIAnalysisPanel }">
+            <a title="Pathology Report" @click="toggleReportDrawer" :class="{ active: showReportDrawer }">
 
-                    <i class="fas fa-robot fa-fw"></i>
+              <i class="fas fa-file-medical fa-fw"></i>
 
-                  </a>
+            </a>
 
-                </li>
+          </li>
 
-      
 
-                <li>
 
-                  <a title="Pathology Report" @click="toggleReportDrawer" :class="{ active: showReportDrawer }">
-
-                    <i class="fas fa-file-medical fa-fw"></i>
-
-                  </a>
-
-                </li>
-
-      
-
-                <!-- <li v-if="isPanelDisplayed('property')">
+          <!-- <li v-if="isPanelDisplayed('property')">
 
                   <a @click="togglePanel('properties')" :class="{ active: activePanel === 'properties' }">
 
@@ -183,59 +164,59 @@
 
                 </li> -->
 
-      
 
-                <hr class="is-divider">
 
-                <li v-if="isPanelDisplayed('info')">
+          <hr class="is-divider">
 
-                  <a @click="togglePanel('info')" :class="{ active: ['info', 'metadata'].includes(activePanel) }">
+          <li v-if="isPanelDisplayed('info')">
 
-                    <i class="fas fa-info fa-fw"></i>
+            <a @click="togglePanel('info')" :class="{ active: ['info', 'metadata'].includes(activePanel) }">
 
-                  </a>
+              <i class="fas fa-info fa-fw"></i>
 
-                  <information-panel class="panel-options" v-show="activePanel === 'info'" :index="index" />
+            </a>
 
-                </li>
+            <information-panel class="panel-options" v-show="activePanel === 'info'" :index="index" />
 
-      
+          </li>
 
-                <li v-if="configUI['project-tools-screenshot']">
 
-                  <a @click="takeScreenshot()" :class="{ active: activePanel === 'screenshot' }">
 
-                    <i class="fas fa-camera fa-fw"></i>
+          <li v-if="configUI['project-tools-screenshot']">
 
-                  </a>
+            <a @click="takeScreenshot()" :class="{ active: activePanel === 'screenshot' }">
 
-                </li>
+              <i class="fas fa-camera fa-fw"></i>
 
-      
+            </a>
 
-                <li>
+          </li>
 
-                  <a @click="toggleFullscreen">
 
-                    <i :class="isFullscreen ? 'fas fa-compress fa-fw' : 'fas fa-expand fa-fw'"></i>
 
-                  </a>
+          <li>
 
-                </li>
+            <a @click="toggleFullscreen">
 
-                <li v-if="!$keycloak.hasTemporaryToken">
+              <i :class="isFullscreen ? 'fas fa-compress fa-fw' : 'fas fa-expand fa-fw'"></i>
 
-                  <a @click="ShareByLink()">
+            </a>
 
-                    <i class="fa fa-share-alt fa-fw" aria-hidden="true"></i>
+          </li>
 
-                  </a>
+          <li v-if="!$keycloak.hasTemporaryToken">
 
-                </li>
+            <a @click="ShareByLink()">
 
-              </ul>
+              <i class="fa fa-share-alt fa-fw" aria-hidden="true"></i>
 
-            </div>
+            </a>
+
+          </li>
+
+        </ul>
+
+      </div>
       <vl-map :data-projection="projectionName" :load-tiles-while-animating="true" :load-tiles-while-interacting="true"
         :keyboard-event-target="document" @pointermove="projectedMousePosition = $event.coordinate"
         @mounted="updateKeyboardInteractions" ref="map">
@@ -293,7 +274,6 @@ import LinkPanel from './panels/LinkPanel';
 import LayersPanel from './panels/LayersPanel';
 import OntologyPanel from './panels/OntologyPanel';
 import OntologyTermsPanel from './panels/OntologyTermsPanel.vue';
-import AnnotationsListPanel from './panels/AnnotationsListPanel.vue';
 import PropertiesPanel from './panels/PropertiesPanel';
 import FollowPanel from './panels/FollowPanel';
 import ReviewPanel from './panels/ReviewPanel';
@@ -335,7 +315,6 @@ export default {
     LayersPanel,
     OntologyPanel,
     OntologyTermsPanel,
-    AnnotationsListPanel,
     PropertiesPanel,
     FollowPanel,
     ReviewPanel,
@@ -855,24 +834,24 @@ export default {
         }
       }
     },
-        handleFullscreenChange() {
-          this.isFullscreen = !!(document.fullscreenElement ||
-            document.webkitFullscreenElement ||
-            document.mozFullScreenElement ||
-            document.msFullscreenElement);
-        },
-    
-        async fetchLayers() {
-          this.layers = (await this.project.fetchUserLayers(this.image.id)).array;
-    
-          let layers = (await Cytomine.instance.api.get(`image-instances/${this.image.id}/annotation-layers`)).data;
-          this.layers.push(...layers);
-    
-          // if image instance was changed (e.g. with previous/next image navigation), some of the selected layers
-          // may not be relevant for the current image => filter them
-          let idLayers = this.layers.map(layer => layer.id);
-          this.$store.commit(this.imageModule + 'filterSelectedLayers', idLayers);
-        },
+    handleFullscreenChange() {
+      this.isFullscreen = !!(document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement);
+    },
+
+    async fetchLayers() {
+      this.layers = (await this.project.fetchUserLayers(this.image.id)).array;
+
+      let layers = (await Cytomine.instance.api.get(`image-instances/${this.image.id}/annotation-layers`)).data;
+      this.layers.push(...layers);
+
+      // if image instance was changed (e.g. with previous/next image navigation), some of the selected layers
+      // may not be relevant for the current image => filter them
+      let idLayers = this.layers.map(layer => layer.id);
+      this.$store.commit(this.imageModule + 'filterSelectedLayers', idLayers);
+    },
   },
   async created() {
     if (!getProj(this.projectionName)) { // if image opened for the first time
@@ -993,6 +972,7 @@ $colorPanelLink: $dark-text-secondary;
 $colorHoverPanelLink: $dark-text-primary;
 $colorBorderPanelLink: $dark-border-color;
 $colorOpenedPanelLink: $primary;
+
 .ai-analysis-panel {
   position: absolute;
   top: 60px;
@@ -1005,6 +985,7 @@ $colorOpenedPanelLink: $primary;
   max-height: 80vh;
   overflow-y: auto;
 }
+
 @media (max-width: 768px) {
   .ai-analysis-panel {
     top: 50%;
@@ -1013,25 +994,30 @@ $colorOpenedPanelLink: $primary;
     max-width: 90vw;
   }
 }
+
 .map-container {
   display: flex;
   background-color: $dark-wapper-bg;
   width: 100%;
   height: 100%;
 }
+
 .map-container-header {
   position: absolute;
   top: 0;
   right: 0;
   z-index: 30;
+
   .close {
     color: $dark-text-secondary;
     font-size: 1.5rem;
+
     :hover {
       color: $dark-text-primary;
     }
   }
 }
+
 .draw-tools {
   position: absolute;
   top: 0.7em;
@@ -1039,6 +1025,7 @@ $colorOpenedPanelLink: $primary;
   right: $widthPanelBar;
   z-index: 30;
 }
+
 .broadcast {
   position: absolute;
   right: 4.5rem;
@@ -1050,10 +1037,12 @@ $colorOpenedPanelLink: $primary;
   padding: 0.25em 0.75em 0.25em 0.55em;
   border-radius: 5px;
   border: 2px solid white;
+
   i.fas {
     margin-right: 0.3em;
   }
 }
+
 .panel-options {
   position: absolute;
   bottom: -1.75em;
@@ -1066,6 +1055,7 @@ $colorOpenedPanelLink: $primary;
   padding: 0.75em;
   border-radius: 5px;
   z-index: 100;
+
   h1 {
     font-size: 1.5rem;
     padding-top: 0.3rem !important;
@@ -1073,6 +1063,7 @@ $colorOpenedPanelLink: $primary;
     background: $dark-bg-primary;
     color: $dark-text-primary;
   }
+
   table {
     background: none;
     width: 100%;
@@ -1080,6 +1071,7 @@ $colorOpenedPanelLink: $primary;
     color: $dark-text-primary;
   }
 }
+
 .annotations-list-panel-container {
   position: absolute;
   top: -30vh;
@@ -1091,6 +1083,7 @@ $colorOpenedPanelLink: $primary;
   overflow-y: auto;
   z-index: 100;
 }
+
 /* Responsive styles for annotations list panel */
 @media (max-width: 768px) {
   .annotations-list-panel-container {
@@ -1100,6 +1093,7 @@ $colorOpenedPanelLink: $primary;
     max-width: 90vw;
   }
 }
+
 /* ----- Metadata panel ---- */
 .panel-metadata {
   position: absolute;
@@ -1111,28 +1105,34 @@ $colorOpenedPanelLink: $primary;
   padding: 0.75em;
   border-radius: 5px 0 0 5px;
 }
+
 /* ----- CUSTOM STYLE FOR OL CONTROLS ----- */
 .ol-zoom {
   display: none;
 }
+
 .ol-rotate {
   background: none !important;
   z-index: 20;
   // display: none;
 }
+
 .ol-control button {
   background: white !important;
   color: black !important;
   border-radius: 2px !important;
   box-shadow: 0 0 1px #777;
+
   &:hover {
     box-shadow: 0 0 1px black;
     cursor: pointer;
   }
 }
+
 .ol-zoom-in {
   margin-bottom: 5px !important;
 }
+
 .custom-overview {
   position: absolute;
   bottom: 0.5em;
@@ -1141,23 +1141,28 @@ $colorOpenedPanelLink: $primary;
   display: flex;
   flex-direction: column;
   border-radius: 4px;
+
   .ol-overviewmap {
     position: static;
     background: none;
   }
+
   .ol-overviewmap:not(.ol-collapsed) button {
     bottom: 2px !important;
   }
+
   .image-name {
     font-size: 0.8em;
     padding: 2px 5px;
     width: 158px;
     word-wrap: break-word;
+
     &.hidden {
       display: none;
     }
   }
 }
+
 /* ----- Image controls ----- */
 .image-controls-wrapper {
   position: absolute;
@@ -1166,6 +1171,7 @@ $colorOpenedPanelLink: $primary;
   right: calc(#{$widthPanelBar} + 20%);
   z-index: 5;
 }
+
 /* ----- Annotation list ----- */
 .annotations-table-wrapper {
   position: absolute;
@@ -1175,16 +1181,20 @@ $colorOpenedPanelLink: $primary;
   z-index: 40;
   pointer-events: none;
 }
+
 .map-tools {
   background: $backgroundPanelBar;
   display: flex;
   font-size: 0.9em;
   border-left: 1px solid $colorBorderPanelLink;
+
   >ul {
     padding: 0;
     margin: 0;
+
     >li {
       position: relative;
+
       >a {
         position: relative;
         display: block;
@@ -1192,9 +1202,11 @@ $colorOpenedPanelLink: $primary;
         color: $colorPanelLink;
         text-decoration: none;
         text-align: center;
+
         &:hover {
           color: $colorHoverPanelLink;
         }
+
         &.active {
           background: $dark-bg-secondary;
           color: $colorOpenedPanelLink;
@@ -1203,14 +1215,17 @@ $colorOpenedPanelLink: $primary;
     }
   }
 }
+
 .map-tools-list {
   padding: 0;
   margin: 0;
   list-style: none;
 }
+
 .map-tools-list>li {
   position: relative;
 }
+
 .map-tools-list>li>a {
   position: relative;
   display: block;
@@ -1222,6 +1237,7 @@ $colorOpenedPanelLink: $primary;
   text-align: center;
   cursor: pointer;
 }
+
 .map-tools-list>li>a:hover {
   color: $colorHoverPanelLink;
 }
